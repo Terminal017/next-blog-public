@@ -1,0 +1,117 @@
+.header {
+  position: fixed;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.nav-container {                 /*导航栏Flexbox*/
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;      /*两子项水平靠左靠右对齐*/
+  align-items: center;                 /*子项垂直对齐*/
+  margin-left: auto;            /*整个元素相对于屏幕居中对齐*/
+  margin-right: auto;
+  width: 100%;
+  max-width: 56rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 100%;
+  margin-left: 1.5rem;
+  text-decoration: none;
+  color:#000;
+}
+
+.logo-svg {
+  height: 100%;
+}
+
+.blog-title {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.blog-title > span {
+  padding: 0 0 0.25rem 0;
+  position: relative;             /*设置伪元素的绝对定位参照*/
+}
+
+.blog-title > span::after {       /*下划线动画*/
+  content:"";
+  display: block;
+  position: absolute;             /*与父元素绝对定位，调整下划线位置*/
+  width: 0;
+  height: 3px;
+  background-color: #000;
+  transition: 1s;
+}
+
+.blog-title > span:hover::after {
+  width: 100%;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  height: 100%;
+  margin-right: 2rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  height: 100%;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.nav-links > a {
+  color: #000;
+  text-decoration: none;
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  
+}
+
+.separator {            /*分隔线*/
+  height: 1.5rem;
+  width: 1px;
+  background-color: rgb(229, 231, 235)
+}
+
+.nav-mode {
+  display: flex;
+  align-items: center;
+  height: 2rem;
+  width: 2rem;
+}
+
+.nav-mode:hover {
+  background-color: #7aa2f7;
+  border-radius: 0.25rem;
+}
+
+.nav-mode > button {
+  all: unset;             /*清空button原本的样式*/
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.2rem 0.25rem 0.3rem;
+}
+
+.nav-links > a:hover {
+  background-color: #7aa2f7;
+}
+
+.nav-links > a.selected {
+  background-color: #7aa2f7;
+}
