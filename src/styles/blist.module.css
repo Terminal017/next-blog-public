@@ -1,0 +1,128 @@
+.blog-list-page {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.blog-list {
+  display: flex;
+  width: 90%;
+  max-width: 45rem;
+  margin: 5rem 1rem 0 1rem;
+}
+
+.blog-list-ul {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap:2rem;
+}
+
+.blog-list-box {
+  position: relative;
+  overflow: hidden;  /* 阻止渐变效果溢出 */
+  min-height: 13.125rem;
+  padding: 12px 20px; /* 上下 12px，左右 20px */
+  border: 3px solid transparent; /* 预留透明边框 */
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.blog-list-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  border: #0070f3 3px solid;
+}
+
+/* 创建渐变光效 */
+.blog-list-box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: calc(-100% - 97px);
+  width: 100%;
+  height: 100%;
+  background: rgba(86, 182, 255, 0.15);
+  transform: skewX(-25deg);
+  pointer-events: none; /* 确保不会干扰鼠标事件 */
+  opacity: 0;   /* 初始隐藏 */
+  transition: opacity 0.2s ease; /* 添加过渡效果 */
+}
+
+.blog-list-box:hover::before {
+  opacity: 1;  /*hover时显示光效动画 */
+  animation: shineGradient 1.5s forwards; 
+}
+
+/* 定义渐变滑动动画 */
+@keyframes shineGradient {
+  0% {
+    left: calc(-100% - 97px);
+  }
+  100% {
+    left: calc(100% + 97px);
+  }
+}
+
+.blog-list-link {
+  display: flex;
+  justify-content: start;
+  gap: 1.5rem;
+  position: relative;
+}
+
+.blog-list-img {
+  display: flex;
+  width: 120px;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.blog-list-content {
+  display: flex;
+  flex-direction: column;  /* 纵向排列文本内容 */
+}
+
+.blog-list-content h3 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #222;
+  margin-top: 0.5rem;
+}
+
+.blog-list-content p {
+  font-size: 1.2rem;
+  color: #52525b;
+  line-height: 1.6;
+  margin: 6px 0;
+}
+
+.blog-list-time {
+  font-size: 1rem;
+  color: #717171;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.blog-list-tag {
+  display: flex;
+  flex-direction: row;
+  margin-top: 4px;
+  gap: 0.5rem;
+}
+
+.blog-list-tag > div {
+  padding: 0 0.75rem;
+  font-size: 0.9rem;
+  color: #717171;
+  background-color: #f0f7ff;
+  border-radius: 0.75rem;
+  border: 1px solid #e6f0fd;
+  transition: all 0.2s ease;
+}
+
+.blog-list-tag > div:hover {
+  background-color: #e1edff; 
+}

@@ -1,14 +1,10 @@
 "use client";
 
 import styles from "@/styles/nav.module.css";
-import { Roboto } from "next/font/google";
+import "@/styles/globals.css";
+import { roboto, inter } from "./font";
 import { useState } from "react";
 import { motion } from "framer-motion";
-
-const roboto = Roboto({
-  //定义字体类名
-  subsets: ["latin"],
-});
 
 export default function Header() {
   const [selectorindex, setSelectorIndex] = useState(null);
@@ -66,7 +62,7 @@ export default function Header() {
             </div>
           </a>
           <div className={styles["nav-right"]}>
-            <div className={styles["nav-links"] + " " + roboto.className}>
+            <div className={styles["nav-links"] + " " + inter.className}>
               <a
                 href="#"
                 onClick={() => setSelectorIndex(1)}
