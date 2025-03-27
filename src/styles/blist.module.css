@@ -33,37 +33,15 @@
 .blog-list-box:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  border: #0070f3 3px solid;
+  border: rgba(0, 112, 243, 0.9) 3px solid;
 }
 
-/* 创建渐变光效 */
-.blog-list-box::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: calc(-100% - 97px);
-  width: 100%;
-  height: 100%;
-  background: rgba(86, 182, 255, 0.15);
-  transform: skewX(-25deg);
-  pointer-events: none; /* 确保不会干扰鼠标事件 */
-  opacity: 0;   /* 初始隐藏 */
-  transition: opacity 0.2s ease; /* 添加过渡效果 */
-}
+.blog-list-content > h3 {
+  transition: 0.2s ease;
+} 
 
-.blog-list-box:hover::before {
-  opacity: 1;  /*hover时显示光效动画 */
-  animation: shineGradient 1.5s forwards; 
-}
-
-/* 定义渐变滑动动画 */
-@keyframes shineGradient {
-  0% {
-    left: calc(-100% - 97px);
-  }
-  100% {
-    left: calc(100% + 97px);
-  }
+.blog-list-box:hover .blog-list-content > h3 {
+  color: rgba(0, 112, 243, 0.8);
 }
 
 .blog-list-link {

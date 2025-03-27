@@ -19,6 +19,8 @@ export default function Header() {
     }
   }
 
+  const navlist = ["主页", "文章", "项目", "关于"];
+
   return (
     <header className={styles["header"]}>
       <nav>
@@ -63,27 +65,16 @@ export default function Header() {
           </a>
           <div className={styles["nav-right"]}>
             <div className={styles["nav-links"] + " " + inter.className}>
-              <a
-                href="#"
-                onClick={() => setSelectorIndex(1)}
-                className={selectorindex === 1 ? styles["selected"] : ""}
-              >
-                Blog
-              </a>
-              <a
-                href="#"
-                onClick={() => setSelectorIndex(2)}
-                className={selectorindex === 2 ? styles["selected"] : ""}
-              >
-                Projects
-              </a>
-              <a
-                href="#"
-                onClick={() => setSelectorIndex(3)}
-                className={selectorindex === 3 ? styles["selected"] : ""}
-              >
-                About
-              </a>
+              {navlist.map((item, index) => (
+                <a
+                  href="#"
+                  key={index}
+                  onClick={() => setSelectorIndex(index)}
+                  className={selectorindex === index ? styles["selected"] : ""}
+                >
+                  {item}
+                </a>
+              ))}
             </div>
             <div role="separator" className={styles["separator"]}></div>
             <div className={styles["nav-mode"]}>
