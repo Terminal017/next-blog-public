@@ -3,7 +3,9 @@ import {
   Inter,
   Space_Grotesk,
   Orbitron,
-  JetBrains_Mono,
+  Open_Sans,
+  Lato,
+  Noto_Sans_SC,
 } from "next/font/google";
 
 export const roboto = Roboto({
@@ -21,4 +23,18 @@ export const space_Grotesk = Space_Grotesk({
 export const orbitron = Orbitron({
   subsets: ["latin"],
   weight: ["400", "700"],
+});
+
+export const open_sans = Open_Sans({
+  subsets: ["latin"],
+});
+
+export const lato = Lato({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
+//思源黑体简体中文
+export const note_sans_sc = Noto_Sans_SC({
+  subsets: ["latin"],
 });

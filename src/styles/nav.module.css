@@ -11,7 +11,7 @@
   margin-left: auto;            /*整个元素相对于屏幕居中对齐*/
   margin-right: auto;
   width: 100%;
-  max-width: 50rem;
+  max-width: 60rem;
   height: 3.5rem;
   border-radius: 0.5rem;
 }
@@ -78,7 +78,6 @@
   text-decoration: none;
   border-radius: 0.25rem;
   padding: 0.5rem 0.75rem;
-  
 }
 
 .separator {            /*分隔线*/

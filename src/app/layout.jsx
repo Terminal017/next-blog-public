@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import Header from "@/ui/head_nav";
 
 export default function RootLayout({ children }) {
   return (
@@ -10,7 +11,10 @@ export default function RootLayout({ children }) {
         <meta name="description" content="A blog based on Next.js" />
         <link rel="icon" href="/favicon.png" />
       </head>
-      <body>{children}</body>
+      <body>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }

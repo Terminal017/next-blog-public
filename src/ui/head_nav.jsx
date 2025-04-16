@@ -2,9 +2,10 @@
 
 import styles from "@/styles/nav.module.css";
 import "@/styles/globals.css";
-import { roboto, inter } from "./font";
+import { roboto } from "./font";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function Header() {
   const [selectorindex, setSelectorIndex] = useState(null);
@@ -19,13 +20,18 @@ export default function Header() {
     }
   }
 
-  const navlist = ["主页", "文章", "项目", "关于"];
+  const navlist = [
+    { name: "主页", path: "/" },
+    { name: "文章", path: "/articles" },
+    { name: "项目", path: "/projects" },
+    { name: "关于", path: "/about" },
+  ];
 
   return (
     <header className={styles["header"]}>
       <nav>
         <div className={styles["nav-container"]}>
-          <a className={styles["nav-left"]} href="#">
+          <Link href="/" className={styles["nav-left"]}>
             <svg
               alt="logo"
               className={styles["logo-svg"]}
@@ -62,18 +68,18 @@ export default function Header() {
                 Terminal.ntc
               </span>
             </div>
-          </a>
+          </Link>
           <div className={styles["nav-right"]}>
-            <div className={styles["nav-links"] + " " + inter.className}>
+            <div className={styles["nav-links"]}>
               {navlist.map((item, index) => (
-                <a
-                  href="#"
+                <Link
+                  href={item.path}
                   key={index}
                   onClick={() => setSelectorIndex(index)}
                   className={selectorindex === index ? styles["selected"] : ""}
                 >
-                  {item}
-                </a>
+                  {item.name}
+                </Link>
               ))}
             </div>
             <div role="separator" className={styles["separator"]}></div>
