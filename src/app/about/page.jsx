@@ -1,4 +1,3 @@
-import "@/styles/globals.css";
 import "@/styles/about.css";
 import { inter } from "@/ui/font";
 

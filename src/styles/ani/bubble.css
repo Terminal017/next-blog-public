@@ -1,0 +1,40 @@
+.bubble-box {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: calc(70rem - 4rem);
+  height: 6rem;
+  margin: 1.5rem 0;
+  background-color: #87bfff;
+  border-radius: 0.5rem;
+}
+
+.bubble-box > h1 {
+  font-family: 'MiSans','Segoe UI', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333333; 
+  margin: 0;
+  padding: 0 2rem;
+  line-height: 6rem;
+  letter-spacing: 0.5px;
+  position: relative;
+  z-index: 2; 
+}
+
+.bubbles-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none; 
+}
+
+.motion-bubble {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.7); 
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+}

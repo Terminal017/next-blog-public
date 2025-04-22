@@ -1,5 +1,4 @@
 import styles from "@/styles/blist.module.css";
-import "@/styles/globals.css";
 import { inter } from "./font";
 
 export default function BlogList() {

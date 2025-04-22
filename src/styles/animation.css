@@ -1,4 +1,4 @@
-/* 创建滑动动画 */
+/* 创建滑动动画（未使用） */
 .blog-list-box::before {
   content: "";
   position: absolute;
@@ -27,3 +27,4 @@
     transform: translateX(calc(-100% - 97px))
   }
 }
+/*未使用终止 */
