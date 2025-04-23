@@ -11,7 +11,7 @@ export default function RootLayout({ children }) {
         <meta name="description" content="A blog based on Next.js" />
         <link rel="icon" href="/favicon.png" />
       </head>
-      <body>
+      <body className="bg-background">
         <Header />
         {children}
       </body>

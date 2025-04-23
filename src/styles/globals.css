@@ -1,4 +1,15 @@
 @import "tailwindcss";
+@import "./theme/light.css";
+@import "./theme/dark.css";
+
+@theme {
+  --color-background: var(--md-sys-color-background);
+  --color-on-background: var(--md-sys-color-on-background);
+  --color-background2: var(--md-sys-color-surface);
+  --color-on-background2: var(--md-sys-color-on-surface);
+  --color-background3: var(--md-sys-color-tertiary-container);
+  --color-on-background3: var(--md-sys-color-on-tertiary);
+}
 
 * {
   box-sizing: border-box;

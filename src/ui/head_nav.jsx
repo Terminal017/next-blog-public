@@ -3,7 +3,7 @@
 import styles from "@/styles/nav.module.css";
 import "@/styles/globals.css";
 import { roboto } from "./font";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -11,13 +11,18 @@ export default function Header() {
   const [selectorindex, setSelectorIndex] = useState(null);
   const [mode, setMode] = useState("light"); //定义深浅模式的state
 
+  useEffect(() => {
+    const saved = localStorage.getItem("theme") || "light";
+    setMode(saved);
+    document.documentElement.classList = saved;
+  }, []);
+
   //切换深浅模式函数
   function changemode() {
-    if (mode === "light") {
-      setMode("dark");
-    } else {
-      setMode("light");
-    }
+    const newmode = mode === "light" ? "dark" : "light";
+    setMode(newmode);
+    document.documentElement.classList = newmode;
+    localStorage.setItem("theme", newmode);
   }
 
   const navlist = [
