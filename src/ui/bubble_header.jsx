@@ -4,7 +4,7 @@ import "@/styles/ani/bubble.css";
 import { motion } from "framer-motion";
 import { useEffect, useState, useCallback, useRef } from "react";
 
-export default function BubbleHeader() {
+export default function BubbleHeader({ content, maxwidth }) {
   const [bubbles, setBubbles] = useState([]);
   const [isHoveringbox, setIsHoveringBox] = useState(false);
   const hoverTimerRef = useRef(null); //设置定时器，控制动画切换延迟
@@ -17,7 +17,7 @@ export default function BubbleHeader() {
 
   const hoverDelay = 1000;
   const mincount = 0; // 默认气泡数量，这里预设没有，后续上线时可以优化
-  const maxcount = 100;
+  const maxcount = maxwidth * 1.5;
 
   const handleHoverChange = useCallback((isHovering) => {
     // 清除之前的定时器，防止多次触发
@@ -114,10 +114,18 @@ export default function BubbleHeader() {
   return (
     <div
       className="bubble-box"
+      style={{ maxWidth: `${maxwidth}rem` }} // 设置最大宽度
+      // onClick={() => {
+      //   if (!isHoveringbox) {
+      //     handleHoverChange(true); // 点击效果
+      //   } else {
+      //     handleHoverChange(false);
+      //   }
+      // }}
       onMouseEnter={() => handleHoverChange(true)} // 鼠标进入时设置状态为true
       onMouseLeave={() => handleHoverChange(false)} // 鼠标离开时设置状态为false
     >
-      <h1>Project</h1>
+      <h1>{content}</h1>
       <div className="bubbles-container">
         {bubbles.map((bubble) => (
           <motion.div

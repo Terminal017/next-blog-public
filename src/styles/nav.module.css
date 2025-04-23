@@ -11,7 +11,7 @@
   margin-left: auto;            /*整个元素相对于屏幕居中对齐*/
   margin-right: auto;
   width: 100%;
-  max-width: 70rem;
+  max-width: var(--width-header);
   height: 3.5rem;
   border-radius: 0.5rem;
 }

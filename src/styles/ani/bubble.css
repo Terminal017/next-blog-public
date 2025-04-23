@@ -1,10 +1,9 @@
 .bubble-box {
   position: relative;
   overflow: hidden;
-  width: 100%;
-  max-width: calc(70rem - 4rem);
+  width: 90%;
   height: 6rem;
-  margin: 1.5rem 0;
+  margin: 2rem 0 1rem 0;
   background-color: #87bfff;
   border-radius: 0.5rem;
 }

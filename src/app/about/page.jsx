@@ -1,12 +1,14 @@
 import "@/styles/about.css";
 import { inter } from "@/ui/font";
+import BubbleHeader from "@/ui/bubble_header";
 
 export default function About() {
   return (
     <main id="about">
-      <div className="about-header">
+      <BubbleHeader content="About" maxwidth={54} />
+      {/* <div className="about-header">
         <h1 className={inter.className}>About</h1>
-      </div>
+      </div> */}
       <article className="about-container">
         <h2>关于本站</h2>
         <p>这里是星轨的前哨基地，基地已开放所有探索的权限。</p>

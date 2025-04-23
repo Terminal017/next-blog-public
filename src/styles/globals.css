@@ -32,3 +32,6 @@ body {
   font-display: swap;
 }
 
+:root {
+  --width-header: 70rem;
+}

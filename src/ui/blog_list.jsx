@@ -1,4 +1,5 @@
 import styles from "@/styles/blist.module.css";
+import BubbleHeader from "@/ui/bubble_header";
 import { inter } from "./font";
 
 export default function BlogList() {
@@ -11,6 +12,7 @@ export default function BlogList() {
 
   return (
     <main className={styles["blog-list-page"]}>
+      <BubbleHeader content="Article" maxwidth={45} />
       <div className={styles["blog-list"]}>
         <ul className={styles["blog-list-ul"]}>
           <ArticleLi article_data={article_data} />

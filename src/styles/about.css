@@ -5,7 +5,8 @@
   width: 100%;
 }
 
-.about-header {
+/*备选设计方案
+ .about-header {
   display: flex;
   justify-content: start;
   width: 90%;
@@ -21,7 +22,7 @@
   letter-spacing: 1px;
   padding: 0.5rem 1.5rem;
   margin: 0;
-}
+} */
 
 .about-container {
   display: flex;

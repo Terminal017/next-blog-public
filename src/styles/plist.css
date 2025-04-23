@@ -4,3 +4,26 @@
   align-items: center;
   width: 100%;
 }
+
+.plist-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 90%;
+  max-width: calc(var(--width-header) - 4rem);
+  /* grid-auto-rows: 200px; */
+  gap: 2rem;
+}
+
+.plist-box {
+  background-color: rgb(138, 251, 176);
+  border: solid 2px #18f884;
+}
+
+.plist-box-link {
+  display: flex;
+  flex-direction: column;
+}
+
+.plist-box-img {
+  width: 400px;
+}
