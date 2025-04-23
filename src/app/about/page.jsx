@@ -1,15 +1,14 @@
-import "@/styles/about.css";
-import { inter } from "@/ui/font";
+import styles from "@/styles/about.module.css";
 import BubbleHeader from "@/ui/bubble_header";
 
 export default function About() {
   return (
-    <main id="about">
+    <main className={styles["about-main"]}>
       <BubbleHeader content="About" maxwidth={54} />
       {/* <div className="about-header">
         <h1 className={inter.className}>About</h1>
       </div> */}
-      <article className="about-container">
+      <article className={styles["about-container"]}>
         <h2>关于本站</h2>
         <p>这里是星轨的前哨基地，基地已开放所有探索的权限。</p>
         <h2>关于星轨</h2>
@@ -23,7 +22,7 @@ export default function About() {
 
 function TableAbout() {
   return (
-    <div className="table-infor">
+    <div className={styles["table-infor"]}>
       <table>
         <thead>
           <tr>
@@ -68,15 +67,15 @@ function TableAbout() {
 
 function ContactLink() {
   return (
-    <div className="contact-list">
+    <div className={styles["contact-list"]}>
       <a
         href="https://github.com/Terminal017"
         target="_blank"
         rel="noopener noreferrer"
-        className="contact-item1"
+        className={styles["contact-item1"]}
       >
-        <div className="contact-box">
-          <span className={"font-bold text-lg text-white"}>Github</span>
+        <div className={styles["contact-box"]}>
+          <span className="font-bold text-lg text-white">Github</span>
           <svg
             height="512px"
             id="Layer_1"
@@ -106,9 +105,9 @@ function ContactLink() {
       <a
         href="mailto:wni387005@gmail.com"
         rel="noopener noreferrer"
-        className="contact-item2"
+        className={styles["contact-item2"]}
       >
-        <div className="contact-box">
+        <div className={styles["contact-box"]}>
           <span className={"font-bold text-lg text-white"}>Email</span>
           <svg
             role="img"
