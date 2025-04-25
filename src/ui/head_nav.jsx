@@ -6,10 +6,11 @@ import { roboto } from "./font";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
-  const [selectorindex, setSelectorIndex] = useState(null);
   const [mode, setMode] = useState("light"); //定义深浅模式的state
+  const pathname = usePathname();
 
   useEffect(() => {
     const saved = localStorage.getItem("theme") || "light";
@@ -80,10 +81,9 @@ export default function Header() {
                 <Link
                   href={item.path}
                   key={index}
-                  onClick={() => setSelectorIndex(index)}
                   className={
                     "text-on-surface hover:text-on-third-container hover:bg-third-container " +
-                    (selectorindex === index ? "selected" : "")
+                    (pathname === item.path ? "bg-third-container" : "")
                   }
                 >
                   {item.name}
