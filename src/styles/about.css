@@ -47,7 +47,7 @@
   width: 6px;
   height: 1.75rem;
   text-align: center;
-  background-color: oklch(0.809 0.105 251.813);
+  background-color: var(--md-sys-color-inverse-primary);
 }
 
 .about-container > p {
@@ -56,7 +56,7 @@
 }
 
 .table-infor {
-  border: solid 1px oklch(0.809 0.105 251.813);
+  border: solid 1px var(--md-sys-color-secondary-container);
   border-radius: 0.5rem;
   overflow: hidden;
   font-family: "MiSans", sans-serif;
@@ -76,10 +76,6 @@
   text-align: left;
 }
 
-.table-infor tbody tr:nth-child(odd) {
-  background: aliceblue;
-}
-
 .contact-list {
   display: flex;
   flex-direction: column;
@@ -95,25 +91,23 @@
   transition: all 0.2s ease;
 }
 
-.contact-item1 {
-  background: #000;
-  
-}
-
-.contact-item2 {
-  background:  #0078D4;
-}
-
 .contact-item1:hover {
   transform: translateY(-2px);
-  background: #1a1a1a; 
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0,0,0,0.04);
 }
 
 .contact-item2:hover {
   transform: translateY(-2px);
-  background: #106EBE; 
-  box-shadow: 0 8px 20px rgba(0, 120, 212, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.13);
+}
+
+/* 深色模式下，配合 Tailwind 的 dark class */
+.dark .contact-item1:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.08);
+}
+
+.dark .contact-item2:hover {
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.35);
 }
 
 .contact-box {

@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "@/styles/nav.module.css";
+import "@/styles/nav.css";
 import "@/styles/globals.css";
 import { roboto } from "./font";
 import { useState, useEffect } from "react";
@@ -33,13 +33,13 @@ export default function Header() {
   ];
 
   return (
-    <header className={styles["header"]}>
+    <header className="header">
       <nav>
-        <div className={styles["nav-container"]}>
-          <Link href="/" className={styles["nav-left"]}>
+        <div className="nav-container bg-surface">
+          <Link href="/" className="nav-left text-on-surface">
             <svg
               alt="logo"
-              className={styles["logo-svg"]}
+              className="logo-svg"
               width="40"
               height="40"
               viewBox="0 0 200 200"
@@ -49,7 +49,7 @@ export default function Header() {
                 cx="100"
                 cy="100"
                 r="80"
-                stroke="black"
+                stroke="currentColor"
                 strokeWidth="15"
                 fill="none"
               />
@@ -60,12 +60,12 @@ export default function Header() {
                 width="64"
                 height="64"
                 fill="none"
-                stroke="black"
+                stroke="currentColor"
                 strokeWidth="15"
                 transform="rotate(45 100 100)"
               />
             </svg>
-            <div className={styles["blog-title"]}>
+            <div className="blog-title">
               <span
                 className={roboto.className}
                 style={{ fontWeight: "700 ", fontSize: "1.5rem" }}
@@ -74,21 +74,24 @@ export default function Header() {
               </span>
             </div>
           </Link>
-          <div className={styles["nav-right"]}>
-            <div className={styles["nav-links"]}>
+          <div className="nav-right">
+            <div className="nav-links">
               {navlist.map((item, index) => (
                 <Link
                   href={item.path}
                   key={index}
                   onClick={() => setSelectorIndex(index)}
-                  className={selectorindex === index ? styles["selected"] : ""}
+                  className={
+                    "text-on-surface hover:text-on-third-container hover:bg-third-container " +
+                    (selectorindex === index ? "selected" : "")
+                  }
                 >
                   {item.name}
                 </Link>
               ))}
             </div>
-            <div role="separator" className={styles["separator"]}></div>
-            <div className={styles["nav-mode"]}>
+            <div role="separator" className="separator bg-outline-v/50"></div>
+            <div className="nav-mode text-on-surface hover:bg-third-container hover:text-on-third-container">
               {/* 切换深色和浅色模式 */}
               <button type="button" onClick={changemode}>
                 <motion.svg
@@ -96,7 +99,7 @@ export default function Header() {
                   height="22px"
                   viewBox="0 -960 960 960"
                   width="22px"
-                  fill="#1f1f1f"
+                  fill="currentColor"
                   animate={{ rotate: mode === "light" ? 180 : 0 }}
                   initial={false}
                   whileHover={{ scale: 1.1 }}

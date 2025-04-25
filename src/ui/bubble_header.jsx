@@ -113,7 +113,7 @@ export default function BubbleHeader({ content, maxwidth }) {
 
   return (
     <div
-      className="bubble-box"
+      className="bubble-box bg-primary-container"
       style={{ maxWidth: `${maxwidth}rem` }} // 设置最大宽度
       // onClick={() => {
       //   if (!isHoveringbox) {
@@ -125,7 +125,7 @@ export default function BubbleHeader({ content, maxwidth }) {
       onMouseEnter={() => handleHoverChange(true)} // 鼠标进入时设置状态为true
       onMouseLeave={() => handleHoverChange(false)} // 鼠标离开时设置状态为false
     >
-      <h1>{content}</h1>
+      <h1 className="text-on-primary-container">{content}</h1>
       <div className="bubbles-container">
         {bubbles.map((bubble) => (
           <motion.div

@@ -26,7 +26,6 @@
   padding: 12px 20px; /* 上下 12px，左右 20px */
   border: 3px solid transparent; /* 预留透明边框 */
   border-radius: 8px;
-  background-color: #fff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
@@ -34,7 +33,7 @@
 .blog-list-box:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  border: rgba(0, 112, 243, 0.9) 3px solid;
+  border: var(--md-sys-color-primary) 3px solid;
 }
 
 .blog-list-content > h3 {
@@ -42,7 +41,7 @@
 } 
 
 .blog-list-box:hover .blog-list-content > h3 {
-  color: rgba(0, 112, 243, 0.8);
+  color: var(--md-sys-color-primary)
 }
 
 .blog-list-link {
@@ -66,21 +65,21 @@
 
 .blog-list-content h3 {
   font-size: 1.8rem;
+  font-family: "MiSans", sans-serif;
   font-weight: 700;
-  color: #222;
   margin-top: 0.5rem;
 }
 
 .blog-list-content p {
   font-size: 1.2rem;
-  color: #52525b;
+  font-family: "MiSans", sans-serif;
   line-height: 1.6;
   margin: 6px 0;
 }
 
 .blog-list-time {
   font-size: 1rem;
-  color: #717171;
+  font-family: "MiSans", sans-serif;
   margin-bottom: 4px;
   letter-spacing: 0.5px;
 }
@@ -95,13 +94,7 @@
 .blog-list-tag > div {
   padding: 0 0.75rem;
   font-size: 0.9rem;
-  color: #717171;
-  background-color: #f0f7ff;
+  font-family: "MiSans", sans-serif;
   border-radius: 0.75rem;
-  border: 1px solid #e6f0fd;
   transition: all 0.2s ease;
-}
-
-.blog-list-tag > div:hover {
-  background-color: #e1edff; 
 }

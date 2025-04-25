@@ -1,14 +1,14 @@
-import styles from "@/styles/about.module.css";
+import "@/styles/about.css";
 import BubbleHeader from "@/ui/bubble_header";
 
 export default function About() {
   return (
-    <main className={styles["about-main"]}>
+    <main className="about-main">
       <BubbleHeader content="About" maxwidth={54} />
       {/* <div className="about-header">
         <h1 className={inter.className}>About</h1>
       </div> */}
-      <article className={styles["about-container"]}>
+      <article className="about-container text-on-surface">
         <h2>关于本站</h2>
         <p>这里是星轨的前哨基地，基地已开放所有探索的权限。</p>
         <h2>关于星轨</h2>
@@ -22,7 +22,7 @@ export default function About() {
 
 function TableAbout() {
   return (
-    <div className={styles["table-infor"]}>
+    <div className="table-infor">
       <table>
         <thead>
           <tr>
@@ -31,7 +31,7 @@ function TableAbout() {
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr className="bg-second-container/50">
             <td>生日</td>
             <td>2004/10/18</td>
           </tr>
@@ -39,7 +39,7 @@ function TableAbout() {
             <td>特征</td>
             <td>日常自动生产bug&#xFF0C;需要经常维修和更新</td>
           </tr>
-          <tr>
+          <tr className="bg-second-container/50">
             <td>从事</td>
             <td>计算机科班大二学牲</td>
           </tr>
@@ -47,11 +47,7 @@ function TableAbout() {
             <td>爱好</td>
             <td>RTS游戏&#xFF0C;听纯音乐&#xFF0C;开发新东西</td>
           </tr>
-          <tr>
-            <td>理想</td>
-            <td>建造控制中心</td>
-          </tr>
-          <tr>
+          <tr className="bg-second-container/50">
             <td>理想</td>
             <td>建造控制中心</td>
           </tr>
@@ -67,14 +63,14 @@ function TableAbout() {
 
 function ContactLink() {
   return (
-    <div className={styles["contact-list"]}>
+    <div className="contact-list">
       <a
         href="https://github.com/Terminal017"
         target="_blank"
         rel="noopener noreferrer"
-        className={styles["contact-item1"]}
+        className="contact-item1 bg-[rgb(24,23,23)] dark:bg-[rgb(33,37,41)]"
       >
-        <div className={styles["contact-box"]}>
+        <div className="contact-box">
           <span className="font-bold text-lg text-white">Github</span>
           <svg
             height="512px"
@@ -105,9 +101,9 @@ function ContactLink() {
       <a
         href="mailto:wni387005@gmail.com"
         rel="noopener noreferrer"
-        className={styles["contact-item2"]}
+        className="contact-item2 bg-[rgb(25,118,210)] dark:bg-[rgb(25,118,210)]"
       >
-        <div className={styles["contact-box"]}>
+        <div className="contact-box">
           <span className={"font-bold text-lg text-white"}>Email</span>
           <svg
             role="img"

@@ -24,7 +24,6 @@
   height: 100%;
   margin-left: 1.5rem;
   text-decoration: none;
-  color:#000;
 }
 
 .logo-svg {
@@ -48,7 +47,7 @@
   position: absolute;             /*与父元素绝对定位，调整下划线位置*/
   width: 0;
   height: 3px;
-  background-color: #000;
+  background-color: var(--md-sys-color-on-background);
   transition: 1s;
 }
 
@@ -74,7 +73,6 @@
 }
 
 .nav-links > a {
-  color: #000;
   text-decoration: none;
   border-radius: 0.25rem;
   padding: 0.5rem 0.75rem;
@@ -83,7 +81,6 @@
 .separator {            /*分隔线*/
   height: 1.5rem;
   width: 1px;
-  background-color: rgb(229, 231, 235)
 }
 
 .nav-mode {
@@ -94,7 +91,6 @@
 }
 
 .nav-mode:hover {
-  background-color: #7aa2f7;
   border-radius: 0.25rem;
 }
 
@@ -106,10 +102,6 @@
   padding: 0.25rem 0.2rem 0.25rem 0.3rem;
 }
 
-.nav-links > a:hover {
-  background-color: #7aa2f7;
-}
-
 .nav-links > a.selected {
-  background-color: #7aa2f7;
+  background-color: var(--md-sys-color-tertiary-container);
 }

@@ -2,13 +2,42 @@
 @import "./theme/light.css";
 @import "./theme/dark.css";
 
+
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-background: var(--md-sys-color-background);
   --color-on-background: var(--md-sys-color-on-background);
-  --color-background2: var(--md-sys-color-surface);
-  --color-on-background2: var(--md-sys-color-on-surface);
-  --color-background3: var(--md-sys-color-tertiary-container);
-  --color-on-background3: var(--md-sys-color-on-tertiary);
+
+  --color-surface: var(--md-sys-color-surface);  /*一般卡片颜色*/
+  --color-on-surface: var(--md-sys-color-on-surface);
+  --color-surface-v: var(--md-sys-color-surface-variant); /*表面变体色*/
+  --color-on-surface-v: var(--md-sys-color-on-surface-variant);
+  --color-surface-tint: var(--md-sys-color-surface-tint);  /*悬浮表面色*/
+
+  --color-surface-low: var(--md-sys-color-surface-container-low); /*表面容器低层背景色*/
+  --color-surface-lowest: var(--md-sys-color-surface-container-lowest); /*表面容器最低层背景色*/
+  --color-surface-container: var(--md-sys-color-surface-container); /*表面容器默认层背景色*/
+
+
+  --color-primary: var(--md-sys-color-primary);
+  --color-on-primary: var(--md-sys-color-on-primary);
+  --color-primary-container: var(--md-sys-color-primary-container);
+  --color-on-primary-container: var(--md-sys-color-on-primary-container);
+
+  --color-second: var(--md-sys-color-secondary);
+  --color-on-secondary: var(--md-sys-color-on-secondary);
+  --color-second-container: var(--md-sys-color-secondary-container);
+  --color-on-second-container: var(--md-sys-color-on-secondary-container);
+
+  --color-third: var(--md-sys-color-tertiary);
+  --color-on-third: var(--md-sys-color-on-tertiary);
+  --color-third-container: var(--md-sys-color-tertiary-container);
+  --color-on-third-container: var(--md-sys-color-on-tertiary-container);
+
+  --color-outline: var(--md-sys-color-outline);
+  --color-outline-v: var(--md-sys-color-outline-variant);
+  --color-shadow: var(--md-sys-color-shadow);
 }
 
 * {
