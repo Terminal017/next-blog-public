@@ -1,9 +1,10 @@
 import "@/styles/blist.css";
 import BubbleHeader from "@/ui/bubble_header";
-import { inter } from "./font";
+import Link from "next/link";
 
 export default function BlogList() {
   let article_data = {
+    link: "git-base",
     title: "Article Title",
     date: "2025.3.25",
     desc: "Article Description Article Description Article Description Article Description Article Description",
@@ -30,7 +31,7 @@ function ArticleLi({ article_data }) {
   return (
     <li>
       <div className="blog-list-box bg-surface-low hover:bg-surface-container">
-        <a href="#" className="blog-list-link">
+        <Link href={`/article/${article_data.link}`} className="blog-list-link">
           <div className="blog-list-img">
             <img src="./images/A1.png" />
           </div>
@@ -53,7 +54,7 @@ function ArticleLi({ article_data }) {
               })}
             </div>
           </div>
-        </a>
+        </Link>
       </div>
     </li>
   );

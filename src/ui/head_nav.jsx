@@ -28,8 +28,8 @@ export default function Header() {
 
   const navlist = [
     { name: "主页", path: "/" },
-    { name: "文章", path: "/articles" },
-    { name: "项目", path: "/projects" },
+    { name: "文章", path: "/article" },
+    { name: "项目", path: "/project" },
     { name: "关于", path: "/about" },
   ];
 
