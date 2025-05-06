@@ -1,55 +1,127 @@
 .light {
+  /* 主色，用于按钮、链接等强调元素 */
   --md-sys-color-primary: rgb(20 102 131);
+  /* 表面色（也可做整体调色基准，常与 background 一致） */
   --md-sys-color-surface-tint: rgb(20 102 131);
+  /* 主色上的文字/图标颜色 */
   --md-sys-color-on-primary: rgb(255 255 255);
+  /* 主色容器背景色（比主色更浅，用于卡片、按钮背景） */
   --md-sys-color-primary-container: rgb(191 233 255);
+  /* 主色容器上的文字/图标颜色 */
   --md-sys-color-on-primary-container: rgb(0 31 42);
+  
+  /* 次要色，用于辅助强调（如次级按钮、次级标签） */
   --md-sys-color-secondary: rgb(77 97 108);
+  /* 次要色上的文字/图标颜色 */
   --md-sys-color-on-secondary: rgb(255 255 255);
+  /* 次要色容器背景色 */
   --md-sys-color-secondary-container: rgb(208 230 242);
+  /* 次要色容器上的文字/图标颜色 */
   --md-sys-color-on-secondary-container: rgb(8 30 39);
+  
+  /* 第三色，用于强调细节点或装饰元素 */
   --md-sys-color-tertiary: rgb(94 91 125);
+  /* 第三色上的文字/图标颜色 */
   --md-sys-color-on-tertiary: rgb(255 255 255);
+  /* 第三色容器背景色 */
   --md-sys-color-tertiary-container: rgb(228 223 255);
+  /* 第三色容器上的文字/图标颜色 */
   --md-sys-color-on-tertiary-container: rgb(26 24 54);
+  
+  /* 错误色，用于提示错误状态（如表单校验、警告） */
   --md-sys-color-error: rgb(186 26 26);
+  /* 错误色上的文字/图标颜色 */
   --md-sys-color-on-error: rgb(255 255 255);
+  /* 错误色容器背景色 */
   --md-sys-color-error-container: rgb(255 218 214);
+  /* 错误色容器上的文字/图标颜色 */
   --md-sys-color-on-error-container: rgb(65 0 2);
+  
+  /* 页面背景色 */
   --md-sys-color-background: rgb(246 250 254);
+  /* 背景色上的文字/图标颜色 */
   --md-sys-color-on-background: rgb(23 28 31);
+  
+  /* 表面色（如卡片、容器背景） */
   --md-sys-color-surface: rgb(246 250 254);
+  /* 表面色上的文字/图标颜色 */
   --md-sys-color-on-surface: rgb(23 28 31);
+  
+  /* 表面变体色，用于分层或微妙区分 */
   --md-sys-color-surface-variant: rgb(220 228 233);
+  /* 表面变体色上的文字/图标颜色 */
   --md-sys-color-on-surface-variant: rgb(64 72 76);
+  
+  /* 轮廓/边框色 */
   --md-sys-color-outline: rgb(112 120 125);
+  /* 轮廓变体色 */
   --md-sys-color-outline-variant: rgb(192 200 205);
+  
+  /* 阴影色，用于卡片、浮层 */
   --md-sys-color-shadow: rgb(0 0 0);
+  /* 遮罩色，用于模态或加载遮罩 */
   --md-sys-color-scrim: rgb(0 0 0);
+  
+  /* 反转表面色（用于深色模式中高亮显示） */
   --md-sys-color-inverse-surface: rgb(44 49 52);
+  /* 反转表面色上的文字/图标 */
   --md-sys-color-inverse-on-surface: rgb(237 241 245);
+  /* 反转主色（深色模式下的强调色） */
   --md-sys-color-inverse-primary: rgb(140 207 240);
+  
+  /* 主色固定（fixed）背景色，通常用于浮层或不随滚动变化 */
   --md-sys-color-primary-fixed: rgb(191 233 255);
+  /* 主色固定上的文字 */
   --md-sys-color-on-primary-fixed: rgb(0 31 42);
+  /* 主色固定暗色调 */
   --md-sys-color-primary-fixed-dim: rgb(140 207 240);
+  /* 主色固定的变体 */
   --md-sys-color-on-primary-fixed-variant: rgb(0 77 101);
+  
+  /* 次要色固定背景色 */
   --md-sys-color-secondary-fixed: rgb(208 230 242);
+  /* 次要色固定上的文字 */
   --md-sys-color-on-secondary-fixed: rgb(8 30 39);
+  /* 次要色固定暗色调 */
   --md-sys-color-secondary-fixed-dim: rgb(180 202 214);
+  /* 次要色固定变体 */
   --md-sys-color-on-secondary-fixed-variant: rgb(53 74 84);
+  
+  /* 第三色固定背景色 */
   --md-sys-color-tertiary-fixed: rgb(228 223 255);
+  /* 第三色固定上的文字 */
   --md-sys-color-on-tertiary-fixed: rgb(26 24 54);
+  /* 第三色固定暗色调 */
   --md-sys-color-tertiary-fixed-dim: rgb(199 194 234);
+  /* 第三色固定变体 */
   --md-sys-color-on-tertiary-fixed-variant: rgb(70 67 100);
+  
+  /* 表面较暗（dim）色，用于阴影/覆盖层 */
   --md-sys-color-surface-dim: rgb(214 219 222);
+  /* 表面较亮色 */
   --md-sys-color-surface-bright: rgb(246 250 254);
+  
+  /* 表面容器最低层背景色 */
   --md-sys-color-surface-container-lowest: rgb(255 255 255);
+  /* 表面容器低层背景色 */
   --md-sys-color-surface-container-low: rgb(240 244 248);
+  /* 表面容器默认层背景色 */
   --md-sys-color-surface-container: rgb(234 238 242);
+  /* 表面容器高层背景色 */
   --md-sys-color-surface-container-high: rgb(228 233 236);
+  /* 表面容器最高层背景色 */
   --md-sys-color-surface-container-highest: rgb(223 227 231);
+  
+  /* 自定义扩展色：自定义色名称，在需要时单独使用 */
   --md-extended-color-custom-color1-color: rgb(0 107 95);
   --md-extended-color-custom-color1-on-color: rgb(255 255 255);
   --md-extended-color-custom-color1-color-container: rgb(158 242 227);
   --md-extended-color-custom-color1-on-color-container: rgb(0 32 28);
+
+  --md-code-color-surface: rgb(220 228 233);
+
+  /* hover 状态：8% alpha 的 on-surface */
+  --md-sys-state-layer-hover-on-surface: rgba(23,28,31,0.08);
+  /* pressed（按下）状态/Focus：12% alpha 的 on-surface */
+  --md-sys-state-layer-pressed-on-surface: rgba(23,28,31,0.12);
 }

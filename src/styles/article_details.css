@@ -1,0 +1,183 @@
+.article-container {
+  width: 90%;
+  max-width: 53rem;
+  padding: 2rem 5rem;
+  margin: 3rem auto;
+  color: var(--md-sys-color-on-surface);
+  background-color: var(--md-sys-color-surface-container-low);  
+  border-radius: 4px;
+  box-shadow: 
+    0 3px 6px rgba(0, 0, 0, 0.08),
+    0 8px 15px rgba(0, 0, 0, 0.06),
+    0 15px 25px rgba(0, 0, 0, 0.03);
+  font-family: "MiSans", sans-serif;
+}
+
+.article-toc-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 18rem;
+  height: 100%;
+  padding-right: 2rem;
+}
+
+.article-toc {
+  position: sticky;
+  top: 2rem;
+  padding: 1rem;
+  border-radius: 4px;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.04),
+    0 4px 10px rgba(0, 0, 0, 0.03),
+    0 8px 15px rgba(0, 0, 0, 0.015);
+  color: var(--md-sys-color-on-surface);
+  font-family: "MiSans", sans-serif;
+  background-color: var(--md-sys-color-surface-container-low);
+}
+
+.article-toc > h6 {
+  margin-bottom: 0.5rem;
+}
+
+.toc-item {
+  display: block;
+  width: 100%;
+  border-radius: 3px;
+  padding-left: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.toc-item-active {
+  background-color: var(--md-sys-state-layer-pressed-on-surface);
+}
+.toc-item:hover {
+  cursor: pointer;   /*更改鼠标样式*/
+  background-color: var(--md-sys-state-layer-hover-on-surface);
+}
+
+
+.article-container h1 {
+  font-weight: 600;
+  font-size: 2.25rem;
+  text-align: center;
+  line-height: 2;
+  border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-on-surface), transparent 70%);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.article-container h3 {
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.25;
+  margin-top: 3rem;
+  margin-bottom: 0.5em;
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.article-container p {
+  font-size: 1rem;
+  line-height: 1.25;
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
+/* .article-container strong {
+  font-weight: 600;
+}
+
+.article-container em {
+  font-style: italic;
+}
+
+.article-container ul,
+.article-container ol {
+  margin-top: 0;
+  margin-bottom: 1em;
+  padding-left: 2em;
+}
+
+.article-container ul {
+  list-style-type: disc;
+}
+
+.article-container ol {
+  list-style-type: decimal;
+}
+
+.article-container li {
+  margin-bottom: 0.5em;
+}
+
+.article-container li > ul,
+.article-container li > ol {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+} */
+
+.article-container a {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+}
+
+.article-container a:hover {
+  text-decoration: underline;
+}
+
+/* 代码样式 */
+.article-container code {
+  font-family:  "Consolas", "Minsans", monospace;
+  font-size: 85%;
+  padding: 0.2em 0.4em;
+  margin: 0;
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 3px;
+}
+
+.article-container pre {
+  font-family: Consolas, "Roboto Mono", "DejaVu Sans Mono", "Courier New", monospace;
+  font-size: 100%;
+  line-height: 1.45;
+  overflow: auto;
+  padding: 1em;
+  margin: 1em 0;
+  background-color: var(--md-code-color-surface);
+  /* background-color: var(--md-sys-color-surface-container-high); */
+  /* background-color: var(--md-sys-color-surface-variant); */
+  border-radius: 3px;
+}
+
+.article-container pre code {
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  line-height: inherit;
+  word-wrap: normal;
+  border-radius: 0;
+}
+
+/* .article-container img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.5em auto;
+  border-radius: 4px;
+}
+
+.article-container hr {
+  height: 0.25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: #e1e4e8;
+  border: 0;
+}
+
+.article-container pre.hljs {
+  padding: 16px;
+  overflow: auto;
+  line-height: 1.45;
+  background-color: #f6f8fa;
+  border-radius: 3px;
+} */
