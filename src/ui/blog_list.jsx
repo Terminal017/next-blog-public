@@ -4,11 +4,11 @@ import Link from "next/link";
 
 export default function BlogList() {
   let article_data = {
-    link: "git-base",
-    title: "Article Title",
-    date: "2025.3.25",
-    desc: "Article Description Article Description Article Description Article Description Article Description",
-    tags: ["#Tag1", "#Tag2", "#Tag3"],
+    slug: "next-darkmode",
+    title: "Next.js 中 Tailwind v4 的深浅模式切换",
+    date: "2025-05-07",
+    desc: "演示如何在Next.js v15中使用Tailwind v4新版本实现深浅色模式切换。",
+    tags: ["Next.js", "Tailwind", "dark-mode"],
   };
 
   return (
@@ -16,9 +16,6 @@ export default function BlogList() {
       <BubbleHeader content="Article" maxwidth={45} />
       <div className="blog-list">
         <ul className="blog-list-ul">
-          <ArticleLi article_data={article_data} />
-          <ArticleLi article_data={article_data} />
-          <ArticleLi article_data={article_data} />
           <ArticleLi article_data={article_data} />
           <ArticleLi article_data={article_data} />
         </ul>
@@ -31,7 +28,7 @@ function ArticleLi({ article_data }) {
   return (
     <li>
       <div className="blog-list-box bg-surface-low hover:bg-surface-container">
-        <Link href={`/article/${article_data.link}`} className="blog-list-link">
+        <Link href={`/article/${article_data.slug}`} className="blog-list-link">
           <div className="blog-list-img">
             <img src="./images/A1.png" />
           </div>
@@ -48,7 +45,7 @@ function ArticleLi({ article_data }) {
                     key={tag}
                     className="text-on-surface-v bg-surface-v hover:bg-surface-tint/10"
                   >
-                    {tag}
+                    {`#${tag}`}
                   </div>
                 );
               })}

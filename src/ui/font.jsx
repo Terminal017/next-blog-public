@@ -10,7 +10,9 @@ import {
 
 export const roboto = Roboto({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "600", "700"],
+  adjustFontFallback: false, //禁用自动回调
+  preload: true,
 });
 //现代化字体
 export const inter = Inter({ subsets: ["latin"] });

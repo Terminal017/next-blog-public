@@ -10,7 +10,6 @@
     0 3px 6px rgba(0, 0, 0, 0.08),
     0 8px 15px rgba(0, 0, 0, 0.06),
     0 15px 25px rgba(0, 0, 0, 0.03);
-  font-family: "MiSans", sans-serif;
 }
 
 .article-toc-container {
@@ -32,7 +31,6 @@
     0 4px 10px rgba(0, 0, 0, 0.03),
     0 8px 15px rgba(0, 0, 0, 0.015);
   color: var(--md-sys-color-on-surface);
-  font-family: "MiSans", sans-serif;
   background-color: var(--md-sys-color-surface-container-low);
 }
 
@@ -77,13 +75,16 @@
 }
 
 .article-container p {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   font-size: 1rem;
-  line-height: 1.25;
+  line-height: 1.5;
   margin-top: 0;
   margin-bottom: 1em;
 }
 
-/* .article-container strong {
+.article-container strong {
   font-weight: 600;
 }
 
@@ -91,6 +92,49 @@
   font-style: italic;
 }
 
+.article-container a {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+}
+
+.article-container a:hover {
+  text-decoration: underline;
+}
+
+/* 代码样式 */
+.article-container code:not(pre code) {
+  display: inline-block;
+  vertical-align: middle;
+  font-family:  "Consolas", "Minsans", monospace;
+  font-size: 95%;
+  padding: 0.15em 0.4em;
+  margin: 0;
+  background-color: var(--md-sys-color-surface-container-highest);
+  border-radius: 3px;
+}
+
+.article-container pre {
+  font-family: Consolas, "Roboto Mono", "DejaVu Sans Mono", "Courier New", monospace;
+  font-size: 100%;
+  line-height: 1.45;
+  overflow: auto;
+  padding: 1em;
+  margin: 1em 0;
+  background-color: var(--md-code-color-surface);
+  border-radius: 3px;
+}
+
+.article-container pre code {
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  line-height: inherit;
+  word-wrap: normal;
+  border-radius: 0;
+}
+
+/* 
 .article-container ul,
 .article-container ol {
   margin-top: 0;
@@ -114,51 +158,9 @@
 .article-container li > ol {
   margin-top: 0.25em;
   margin-bottom: 0.25em;
-} */
+} 
 
-.article-container a {
-  color: var(--md-sys-color-primary);
-  text-decoration: none;
-}
-
-.article-container a:hover {
-  text-decoration: underline;
-}
-
-/* 代码样式 */
-.article-container code {
-  font-family:  "Consolas", "Minsans", monospace;
-  font-size: 85%;
-  padding: 0.2em 0.4em;
-  margin: 0;
-  background-color: rgba(27, 31, 35, 0.05);
-  border-radius: 3px;
-}
-
-.article-container pre {
-  font-family: Consolas, "Roboto Mono", "DejaVu Sans Mono", "Courier New", monospace;
-  font-size: 100%;
-  line-height: 1.45;
-  overflow: auto;
-  padding: 1em;
-  margin: 1em 0;
-  background-color: var(--md-code-color-surface);
-  /* background-color: var(--md-sys-color-surface-container-high); */
-  /* background-color: var(--md-sys-color-surface-variant); */
-  border-radius: 3px;
-}
-
-.article-container pre code {
-  background-color: transparent;
-  padding: 0;
-  margin: 0;
-  overflow: visible;
-  line-height: inherit;
-  word-wrap: normal;
-  border-radius: 0;
-}
-
-/* .article-container img {
+.article-container img {
   max-width: 100%;
   height: auto;
   display: block;
@@ -173,11 +175,4 @@
   background-color: #e1e4e8;
   border: 0;
 }
-
-.article-container pre.hljs {
-  padding: 16px;
-  overflow: auto;
-  line-height: 1.45;
-  background-color: #f6f8fa;
-  border-radius: 3px;
-} */
+*/
