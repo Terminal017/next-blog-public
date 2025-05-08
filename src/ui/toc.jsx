@@ -1,14 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function ArticleTOC({ headings }) {
   const [activeId, setActiveId] = useState("");
+  const clickedRef = useRef(false);
+  const timeoutRef = useRef(null);
 
   useEffect(() => {
     // 创建一个 Intersection Observer 实例（会一直观测直到组件卸载），检测标题位置
+    //Intersection Observer 会针对每一个脱离或进入阈值区域的目标元素都触发一次回调。
     const observer = new IntersectionObserver(
       (entries) => {
+        if (clickedRef.current) {
+          return; // 如果是点击滚动，则跳过观察
+        }
         entries.forEach((entry) => {
           // 如果元素正在进入视口
           if (entry.isIntersecting) {
@@ -18,12 +24,14 @@ export default function ArticleTOC({ headings }) {
       },
       // Observer 的配置选项
       {
-        rootMargin: "-100px 0px -70% 0px", // 设置观察区域
+        rootMargin: "-20px 0px -75% 0px", // 设置观察区域
         threshold: 0.1, // 定义了元素多少比例，当10%的元素可见时触发
       }
     );
 
-    const headingElements = document.querySelectorAll("h3");
+    const headingElements = document.querySelectorAll(
+      "article.article-container h3"
+    );
     console.log("检测到标题元素：", headingElements);
 
     //观察所有元素
@@ -33,6 +41,10 @@ export default function ArticleTOC({ headings }) {
 
     // 清理函数，组件卸载时停止观察
     return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
       headingElements.forEach((element) => {
         observer.unobserve(element);
       });
@@ -43,14 +55,25 @@ export default function ArticleTOC({ headings }) {
   const handleTocItemClick = (e, id) => {
     const headingElement = document.getElementById(id);
 
+    clickedRef.current = true;
+
+    setActiveId(id); //立即高亮再跳转
+
     if (headingElement) {
       headingElement.scrollIntoView({
         behavior: "smooth",
         block: "start", // 滚动到元素顶部对齐视口顶部
       });
-
-      setActiveId(id);
     }
+
+    // 清理原本的定时器，避免高频点击时计时器冲突
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      clickedRef.current = false;
+    }, 1000);
   };
 
   return (

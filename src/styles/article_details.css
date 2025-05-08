@@ -75,9 +75,6 @@
 }
 
 .article-container p {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
   font-size: 1rem;
   line-height: 1.5;
   margin-top: 0;
@@ -104,8 +101,10 @@
 /* 代码样式 */
 .article-container code:not(pre code) {
   display: inline-block;
-  vertical-align: middle;
-  font-family:  "Consolas", "Minsans", monospace;
+  vertical-align: baseline;
+  position: relative;
+  top: -0.05em;
+  font-family:  Consolas, "Roboto Mono", "DejaVu Sans Mono", "Courier New", monospace;
   font-size: 95%;
   padding: 0.15em 0.4em;
   margin: 0;
