@@ -13,8 +13,20 @@ export default function Header() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const saved = localStorage.getItem("theme") || "light";
-    setMode(saved);
+    const match = document.cookie.match(/theme=(dark|light)/);
+    let theme = match ? match[1] : null;
+
+    //如果没有 cookie，则检测系统偏好
+    if (!theme) {
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      theme = prefersDark ? "dark" : "light";
+      document.cookie = `theme=${theme}; path=/; max-age=${60 * 60 * 24 * 365}`;
+    }
+
+    setMode(theme);
+    document.documentElement.className = theme;
   }, []);
 
   //切换深浅模式函数
@@ -22,7 +34,8 @@ export default function Header() {
     const newmode = mode === "light" ? "dark" : "light";
     setMode(newmode);
     document.documentElement.classList = newmode;
-    localStorage.setItem("theme", newmode);
+    document.cookie = `theme=${newmode}; path=/; max-age=${60 * 60 * 24 * 365}`;
+    console.log(document.cookie);
   }
 
   const navlist = [
