@@ -131,4 +131,13 @@
 body {
   width: 100vw;
   font-family: "MiSans", sans-serif;
+  opacity: 0;
+  animation: fadeIn 0.5s ease-in forwards;
+  animation-delay: 0.3s; 
+}
+
+/* 添加淡入动画 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

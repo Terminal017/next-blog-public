@@ -15,7 +15,6 @@ export default function Header() {
   useEffect(() => {
     const saved = localStorage.getItem("theme") || "light";
     setMode(saved);
-    document.documentElement.classList = saved;
   }, []);
 
   //切换深浅模式函数

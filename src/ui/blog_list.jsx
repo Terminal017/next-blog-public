@@ -17,7 +17,6 @@ export default function BlogList() {
       <div className="blog-list">
         <ul className="blog-list-ul">
           <ArticleLi article_data={article_data} />
-          <ArticleLi article_data={article_data} />
         </ul>
       </div>
     </main>
