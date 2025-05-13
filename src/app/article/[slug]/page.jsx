@@ -2,7 +2,6 @@ import fs from "fs/promises";
 import path from "path";
 import { marked, Renderer } from "marked";
 import { notFound } from "next/navigation";
-import "@/styles/article_details.css";
 import ArticleTOC from "@/ui/toc.jsx";
 
 // gene用于生成动态路由的所有可用路由，返回值应该当是一个对象数组：{ id: string }[]。在构建时会自动调用
@@ -63,12 +62,12 @@ export default async function Page({ params }) {
   const html = marked.parse(content);
 
   return (
-    <main className="relative">
+    <>
       <article
         className="article-container"
         dangerouslySetInnerHTML={{ __html: html }}
       />
       <ArticleTOC headings={headings} />
-    </main>
+    </>
   );
 }

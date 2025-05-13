@@ -1,6 +1,5 @@
 import "@/styles/globals.css";
 import Header from "@/ui/head_nav";
-import Script from "next/script";
 import { roboto } from "@/ui/font";
 import { cookies } from "next/headers";
 

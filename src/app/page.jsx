@@ -1,5 +1,9 @@
-import "@/styles/globals.css";
+import "@/styles/mainpage.css";
 
 export default function Home() {
-  return <div className="flex justify-center">这里什么也没有</div>;
+  return (
+    <div className="base">
+      <div></div>
+    </div>
+  );
 }

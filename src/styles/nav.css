@@ -1,6 +1,7 @@
 .header {
-  /* position: fixed;  暂时考虑不固定*/
+  position: fixed;
   width: 100%;
+  z-index: 10;
 }
 
 .nav-container {                 /*导航栏Flexbox*/
