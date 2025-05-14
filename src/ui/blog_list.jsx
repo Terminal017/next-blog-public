@@ -2,21 +2,15 @@ import "@/styles/blist.css";
 import BubbleHeader from "@/ui/bubble_header";
 import Link from "next/link";
 
-export default function BlogList() {
-  let article_data = {
-    slug: "next-darkmode",
-    title: "Next.js 中 Tailwind v4 的深浅模式切换",
-    date: "2025-05-07",
-    desc: "演示如何在Next.js v15中使用Tailwind v4新版本实现深浅色模式切换。",
-    tags: ["Next.js", "Tailwind", "dark-mode"],
-  };
-
+export default function BlogList({ article_data }) {
   return (
     <main className="blog-list-page">
       <BubbleHeader content="Article" maxwidth={45} />
       <div className="blog-list">
         <ul className="blog-list-ul">
-          <ArticleLi article_data={article_data} />
+          {article_data.map((data) => {
+            return <ArticleLi key={data.slug} article_data={data} />;
+          })}
         </ul>
       </div>
     </main>
