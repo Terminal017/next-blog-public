@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 import Header from "@/ui/head_nav";
-import { roboto } from "@/ui/font";
+import { roboto, misans } from "@/ui/fonts/font";
 import { cookies } from "next/headers";
 
 export const metadata = {
@@ -20,7 +20,7 @@ export default async function RootLayout({ children }) {
   const theme = cookieStore.get("theme")?.value || "light";
   return (
     <html lang="zh-CN" className={theme}>
-      <body className={`bg-background ${roboto.className}`}>
+      <body className={`bg-background ${roboto.variable} ${misans.variable}`}>
         <Header />
         {children}
       </body>

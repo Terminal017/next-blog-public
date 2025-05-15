@@ -9,7 +9,7 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-/public/fonts/MiSans/
+/src/ui/fonts/MiSans/
 
 # testing
 /coverage

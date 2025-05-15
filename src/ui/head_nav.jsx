@@ -2,7 +2,7 @@
 
 import "@/styles/nav.css";
 import "@/styles/globals.css";
-import { roboto } from "./font";
+import { roboto } from "./fonts/font";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
