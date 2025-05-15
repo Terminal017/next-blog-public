@@ -8,7 +8,7 @@ Tailwind CSS v4 进行了一次大更新，之前 v3 的 dark mode 设置方式�
 
 1、首先安装 tailwind v4，官方推荐使用 PostCSS 插件将 tailwind 集成到 next.js 中。（参考[tailwind installation](https://tailwindcss.com/docs/installation/using-postcss)）
 
-安装步骤：
+安装步骤：  
 （1）先通过 npm 等管理工具安装
 
 ```sh
@@ -33,10 +33,11 @@ export default {
 ```
 
 现在可以使用 Tailwind CSS 了！
-</br>
+
+<br />
 2、手动创建深色模式：
 
-创建步骤：
+创建步骤：  
 （1）绑定 dark 模式：在`global.css`中进行以下配置
 
 ```css
@@ -98,7 +99,7 @@ export default function Page() {
 
 如果你有两个颜色模版文件，例如 Google 的 MD3 规范配色方案，你也可以通过控制导入的颜色模版来控制使用的模式。
 
-相关步骤：
+相关步骤：  
 （1）颜色模版示例：
 
 ```css
@@ -113,7 +114,7 @@ export default function Page() {
 /*dark.css*/
 .dark {
   --md-sys-color-background: #191c1c;
-  --md-sys-color-on-background: #e0e3e2;
+  --md-sys-color-on-background: #e0e3e2;
 }
 ```
 
@@ -122,8 +123,8 @@ export default function Page() {
 ```css
 /*global.css*/
 @theme {
-  --color-background: var(--md-sys-color-background);
-  --color-on-background: var(--md-sys-color-on-background);
+  --color-background: var(--md-sys-color-background);
+  --color-on-background: var(--md-sys-color-on-background);
 }
 ```
 
