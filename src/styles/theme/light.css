@@ -118,8 +118,6 @@
   --md-extended-color-custom-color1-color-container: rgb(158 242 227);
   --md-extended-color-custom-color1-on-color-container: rgb(0 32 28);
 
-  --md-code-color-surface: rgb(220 228 233);
-
   /* hover 状态：8% alpha 的 on-surface */
   --md-sys-state-layer-hover-on-surface: rgba(23,28,31,0.08);
   /* pressed（按下）状态/Focus：12% alpha 的 on-surface */

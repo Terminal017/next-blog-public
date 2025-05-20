@@ -18,6 +18,8 @@
   --color-surface-low: var(--md-sys-color-surface-container-low); /*表面容器低层背景色*/
   --color-surface-lowest: var(--md-sys-color-surface-container-lowest); /*表面容器最低层背景色*/
   --color-surface-container: var(--md-sys-color-surface-container); /*表面容器默认层背景色*/
+  --color-surface-high: var(--md-sys-color-surface-container-high); /*表面容器高层背景色*/
+  --color-surface-highest: var(--md-sys-color-surface-container-highest); /*表面容器最高层背景色*/
 
 
   --color-primary: var(--md-sys-color-primary);

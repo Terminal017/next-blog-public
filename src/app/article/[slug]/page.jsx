@@ -2,11 +2,14 @@ import fs from "fs/promises";
 import path from "path";
 import { notFound } from "next/navigation";
 import ArticleTOC from "@/ui/toc.jsx";
+import PrismLoader from "./prism_loader.jsx";
+import CodeBlock from "./code_copy.jsx";
 import { article_map } from "../data";
 import { MDXRemote } from "next-mdx-remote-client/rsc";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import remarkSlug from "remark-slug";
+import rehypePrismPlus from "rehype-prism-plus";
 import { visit } from "unist-util-visit";
 
 // gene用于生成动态路由的所有可用路由，返回值应该当是一个对象数组：{ id: string }[]。在构建时会自动调用
@@ -76,16 +79,42 @@ export default async function Page({ params }) {
         remarkSlug,
         remarkExtractHeadings(headings),
       ],
+      rehypePlugins: [
+        [
+          rehypePrismPlus,
+          {
+            showLineNumbers: true, // 显示行号
+            ignoreMissing: true, // 忽略缺失的语言定义
+            defaultLanguage: "plaintext", // 默认语言
+          },
+        ],
+      ],
     },
     parseFrontmatter: true, // 是否解析 frontmatter，默认为 false
   };
 
-  const components = {};
+  const components = {
+    pre: (props) => {
+      const codeClass = props.className;
+
+      // 检查是否有 className 并且是否包含语言标识
+      if (codeClass.startsWith("language-")) {
+        const language = codeClass.replace(/language-/, "");
+
+        const preElement = <pre {...props} />;
+        return <CodeBlock pre={preElement} language={language} />;
+      }
+
+      // 如果不是代码块，返回原始的pre
+      return <pre {...props} />;
+    },
+  };
 
   return (
     <>
       <article className="article-container">
         <MDXRemote source={content} options={options} components={components} />
+        <PrismLoader />
       </article>
       <ArticleTOC headings={headings} />
     </>
