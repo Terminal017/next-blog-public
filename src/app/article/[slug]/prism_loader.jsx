@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import "prismjs";
 // 导入你喜欢的主题
-import "prismjs/components/prism-shell-session";
 import "prismjs/components/prism-javascript";
 import "prismjs/components/prism-jsx";
 import "prismjs/components/prism-typescript";

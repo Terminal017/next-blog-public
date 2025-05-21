@@ -11,7 +11,7 @@ import localFont from "next/font/local";
 
 export const roboto = Roboto({
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: ["400", "500", "600", "700"],
   adjustFontFallback: false, //禁用自动回调
   preload: true,
   variable: "--font-roboto",

@@ -44,7 +44,7 @@ export function get_mdx_options(headings) {
   return {
     mdxOptions: {
       remarkPlugins: [
-        remarkFrontmatter,
+        // remarkFrontmatter,
         remarkGfm,
         remarkSlug,
         remarkExtractHeadings(headings),
@@ -60,7 +60,7 @@ export function get_mdx_options(headings) {
         ],
       ],
     },
-    parseFrontmatter: true, // 是否解析 frontmatter，默认为 false
+    parseFrontmatter: true, // 解析 frontmatter
   };
 }
 

@@ -36,8 +36,6 @@ export default function CodeBlock({ pre, language }) {
     const CodeElement = pre.props.children;
     const codeText = get_code_text(CodeElement);
 
-    console.log(codeText);
-
     navigator.clipboard
       .writeText(codeText)
       .then(() => {
@@ -55,7 +53,7 @@ export default function CodeBlock({ pre, language }) {
   return (
     <div className="relative">
       <button
-        className="absolute top-0 right-0 px-2 py-1 m-1.5 text-sm font-[Roboto] rounded text-on-surface hover:bg-[rgb(198,206,211)] dark:hover:bg-[rgb(53,58,62)]"
+        className="absolute top-0 right-0 px-2 py-1 m-1.5 text-sm font-[Roboto] font-normal rounded text-on-surface hover:bg-[rgb(198,206,211)] dark:hover:bg-[rgb(53,58,62)]"
         onClick={handleCodeCopy}
       >
         {copied ? "已复制" : code_language}

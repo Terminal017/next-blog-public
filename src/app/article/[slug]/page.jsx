@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 import { article_map } from "../data";
 import { MDXRemote } from "next-mdx-remote-client/rsc";
+import { getFrontmatter } from "next-mdx-remote-client/utils";
 import { read_mdx_file, get_mdx_options, mdx_components } from "./mdx-process";
 import { generateStaticPath } from "./slug_control";
 import ArticleTOC from "@/ui/toc.jsx";
-import PrismLoader from "./prism_loader.jsx";
 
 // gene用于生成动态路由的所有可用路由，返回值应该当是一个对象数组：{ id: string }[]。在构建时会自动调用
 export async function generateStaticParams() {
@@ -38,15 +38,28 @@ export default async function Page({ params }) {
   const headings = [];
   const mdx_options = get_mdx_options(headings);
 
+  //提取元标签
+  const { frontmatter } = getFrontmatter(content);
+
+  const title = frontmatter.title || "unknown title";
+  const datatime = frontmatter.data
+    ? new Date(frontmatter.data).toLocaleDateString("zh-CN", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "unknown time";
+
   return (
     <>
       <article className="article-container">
+        <h1>{title}</h1>
+        <time>{datatime}</time>
         <MDXRemote
           source={content}
           options={mdx_options}
           components={mdx_components}
         />
-        <PrismLoader />
       </article>
       <ArticleTOC headings={headings} />
     </>
