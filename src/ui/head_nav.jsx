@@ -35,7 +35,6 @@ export default function Header() {
     setMode(newmode);
     document.documentElement.classList = newmode;
     document.cookie = `theme=${newmode}; path=/; max-age=${60 * 60 * 24 * 365}`;
-    console.log(document.cookie);
   }
 
   const navlist = [

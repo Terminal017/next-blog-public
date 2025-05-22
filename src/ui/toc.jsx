@@ -32,7 +32,6 @@ export default function ArticleTOC({ headings }) {
     const headingElements = document.querySelectorAll(
       "article.article-container h3"
     );
-    console.log("检测到标题元素：", headingElements);
 
     //观察所有元素
     headingElements.forEach((element) => {
