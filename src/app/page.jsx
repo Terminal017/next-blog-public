@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div className="base">
       <div className="avatar_container">
-        <img src="images/avatar.gif" alt="-" />
+        <img src="images/avatar.webp" alt="error" />
       </div>
       <div className="base-text">
         <span>

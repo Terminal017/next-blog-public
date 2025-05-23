@@ -4,7 +4,7 @@ import { roboto, misans } from "@/ui/fonts/font";
 import { cookies } from "next/headers";
 
 export const metadata = {
-  title: "ST Blog",
+  title: "Star Trail",
   description: "A blog based on Next.js",
   icons: { icon: "/favicon.png" },
 };
