@@ -40,7 +40,7 @@ export default function Header() {
   const navlist = [
     { name: "主页", path: "/" },
     { name: "文章", path: "/article" },
-    { name: "项目", path: "/project" },
+    // { name: "项目", path: "/project" },
     { name: "关于", path: "/about" },
   ];
 
@@ -82,7 +82,7 @@ export default function Header() {
                 className={roboto.className}
                 style={{ fontWeight: "700 ", fontSize: "1.5rem" }}
               >
-                Terminal.ntc
+                StarTrails
               </span>
             </div>
           </Link>
