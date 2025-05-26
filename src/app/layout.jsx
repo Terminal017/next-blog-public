@@ -2,11 +2,12 @@ import "@/styles/globals.css";
 import Header from "@/ui/head_nav";
 import { roboto, misans } from "@/ui/fonts/font";
 import { cookies } from "next/headers";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata = {
   title: "Star Trail",
   description: "A blog based on Next.js",
-  icons: { icon: "/favicon.png" },
+  icons: { icon: "/favicon.svg" },
 };
 
 //静态导出视口设置
@@ -23,6 +24,7 @@ export default async function RootLayout({ children }) {
       <body className={`bg-background ${roboto.variable} ${misans.variable}`}>
         <Header />
         {children}
+        <Analytics />
       </body>
     </html>
   );
