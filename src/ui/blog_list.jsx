@@ -1,10 +1,18 @@
+"use client";
 import "@/styles/blist.css";
 import BubbleHeader from "@/ui/bubble_header";
 import Link from "next/link";
+import { motion } from "motion/react";
 
 export default function BlogList({ article_data }) {
   return (
-    <main className="blog-list-page">
+    <motion.main
+      className="blog-list-page"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+    >
       <BubbleHeader content="Article" maxwidth={45} />
       <div className="blog-list">
         <ul className="blog-list-ul">
@@ -13,7 +21,7 @@ export default function BlogList({ article_data }) {
           })}
         </ul>
       </div>
-    </main>
+    </motion.main>
   );
 }
 

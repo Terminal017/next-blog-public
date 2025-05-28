@@ -4,7 +4,7 @@ import "@/styles/nav.css";
 import "@/styles/globals.css";
 import { roboto } from "./fonts/font";
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -45,7 +45,12 @@ export default function Header() {
   ];
 
   return (
-    <header className="header">
+    <motion.header
+      className="header"
+      initial={{ opacity: 0, transform: "translateY(-50px)" }}
+      animate={{ opacity: 1, transform: "translateY(0)" }}
+      transition={{ duration: 0.8, ease: "easeInOut" }}
+    >
       <nav>
         <div className="nav-container bg-surface">
           <Link href="/" className="nav-left text-on-surface">
@@ -82,7 +87,7 @@ export default function Header() {
                 className={roboto.className}
                 style={{ fontWeight: "700 ", fontSize: "1.5rem" }}
               >
-                StarTrails
+                Terminal.ntc
               </span>
             </div>
           </Link>
@@ -128,6 +133,6 @@ export default function Header() {
           </div>
         </div>
       </nav>
-    </header>
+    </motion.header>
   );
 }

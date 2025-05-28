@@ -1,7 +1,7 @@
 "use client";
 
 import "@/styles/ani/bubble.css";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { useEffect, useState, useCallback, useRef } from "react";
 
 export default function BubbleHeader({ content, maxwidth }) {
