@@ -1,10 +1,12 @@
 import "@/styles/home_page.css";
-import StarAni from "./star_ani";
+import HomePage from "./base-content";
+import ApertureAni from "@/ui/animation/aperture";
 
 export default function Home() {
   return (
     <div className="base">
-      <StarAni />
+      <HomePage />
+      <ApertureAni />
     </div>
   );
 }

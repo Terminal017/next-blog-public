@@ -52,7 +52,7 @@ export default function Header() {
       transition={{ duration: 0.8, ease: "easeInOut" }}
     >
       <nav>
-        <div className="nav-container bg-surface">
+        <div className="nav-container bg-transparent">
           <Link href="/" className="nav-left text-on-surface">
             <svg
               alt="logo"

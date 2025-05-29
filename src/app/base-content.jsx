@@ -1,10 +1,9 @@
 "use client";
 import { motion } from "motion/react";
 
-export default function StarAni() {
+export default function HomePage() {
   return (
     <>
-      <div className="canvas-box"></div>
       <motion.div
         className="avatar_container"
         initial={{ opacity: 0, scale: 0.3, y: -30 }}
