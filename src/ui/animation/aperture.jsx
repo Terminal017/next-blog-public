@@ -1,51 +1,65 @@
-"use client";
+"use client"
 
-import "@/styles/ani/aperture.css";
-import { motion } from "motion/react";
-import { useState } from "react";
-import { AnimatePresence } from "motion/react";
+import "@/styles/ani/aperture.css"
+import { motion } from "motion/react"
+import { useState, useEffect, useRef } from "react"
+import { AnimatePresence } from "motion/react"
 
 export default function ApertureAni() {
-  const [apertures, setApertures] = useState([]);
-  const [presstime, setPressTime] = useState(0);
+  const [apertures, setApertures] = useState([])
+  const [presstime, setPressTime] = useState(0)
+  const timeRef = useRef([])
 
   const handleMouseUp = () => {
-    setPressTime(Date.now());
-  };
+    setPressTime(Date.now())
+  }
+
+  useEffect(() => {
+    return () => {
+      timeRef.current.forEach((timeId) => {
+        clearTimeout(timeId)
+      })
+      timeRef.current = []
+    }
+  }, [])
 
   const handleMouseDown = (e) => {
-    const new_r = (Date.now() - presstime) / 3;
+    //限制电波数量
+    if (apertures.length >= 50) {
+      return
+    }
+    const new_r = (Date.now() - presstime) / 3
 
-    let count_aperture = 1; //电波数量
-    let delay_aperture = 0; //电波间隔
-    let duration_aperture = 1; //电波动画时间
-    let width_aperture = 3; //电波宽度
+    let count_aperture = 1 //电波数量
+    let delay_aperture = 0 //电波间隔
+    let duration_aperture = 1 //电波动画时间
+    let width_aperture = 3 //电波宽度
 
     if (new_r < 125) {
-      count_aperture = 1;
-      delay_aperture = 0;
-      duration_aperture = 0.6;
-    } else if (125 <= new_r && new_r < 250) {
-      count_aperture = 3;
-      delay_aperture = 0.2;
-      duration_aperture = 1;
-    } else if (250 <= new_r && new_r <= 350) {
-      count_aperture = 5;
-      delay_aperture = 0.3;
-      duration_aperture = 1.5;
+      count_aperture = 1
+      delay_aperture = 0
+      duration_aperture = 0.6
+    } else if (125 <= new_r && new_r < 225) {
+      count_aperture = 3
+      delay_aperture = 0.2
+      duration_aperture = 1
+    } else if (225 <= new_r && new_r <= 325) {
+      count_aperture = 5
+      delay_aperture = 0.3
+      duration_aperture = 1.5
     } else {
-      count_aperture = 5 + Math.round((new_r - 350) / 75);
-      delay_aperture = Math.min(3, 0.3 + (new_r - 350) / 500); //1700时最大，为3s
-      duration_aperture = 3;
-      width_aperture = Math.min(3 + (new_r - 350) * 0.03, 25); //1120时最大，为25px
+      count_aperture = Math.min(5 + Math.round((new_r - 325) / 75), 12) //325时为5个，850最大为12个
+      delay_aperture = Math.min(4, 1.2 + (new_r - 325) / 250) //1025时最大，为3s
+      duration_aperture = 3
+      width_aperture = Math.min(3 + (new_r - 325) * 0.05, 30) //865时最大，为25px
     }
 
     const aperture_item = {
       x: e.clientX,
       y: e.clientY,
       r: new_r > 40 ? new_r : 40,
-    };
-    const newItems = [];
+    }
+    const newItems = []
 
     for (let i = 0; i < count_aperture; i++) {
       const newItem = {
@@ -54,26 +68,27 @@ export default function ApertureAni() {
         delay: i * delay_aperture,
         duration: duration_aperture,
         width: width_aperture,
-      };
-      newItems.push(newItem);
+      }
+      newItems.push(newItem)
 
       //设定定时器清楚结束动画的电波
-      setTimeout(
+      const timeId = setTimeout(
         () =>
           setApertures((prev) =>
             prev.filter((item) => item.key != newItem.key)
           ),
-        new_r <= 350 //控制时间统一
-          ? 10000 + duration_aperture * 1000 + i * delay_aperture * 1000
-          : 8500 +
+        new_r <= 125 //控制时间统一
+          ? 6000 + duration_aperture * 1000 + i * delay_aperture * 1000
+          : 3500 +
               duration_aperture * 1000 +
               delay_aperture * count_aperture * 1000 +
               i * 300
-      );
+      )
+      timeRef.current.push(timeId)
     }
 
-    setApertures([...apertures, ...newItems]);
-  };
+    setApertures([...apertures, ...newItems])
+  }
 
   return (
     <div
@@ -95,9 +110,25 @@ export default function ApertureAni() {
                 height: aperture.r * 2,
                 borderRadius: aperture.r * 2,
               }}
-              initial={{ scale: 0, opacity: 0.2, borderWidth: aperture.width }}
-              animate={{ scale: 1, opacity: 1, borderWidth: 3 }}
-              exit={{ scale: 1, opacity: 0, borderWidth: 3 }}
+              initial={{
+                scale: 0,
+                opacity: 0,
+                borderWidth: aperture.width,
+              }}
+              animate={{
+                scale: 1,
+                opacity: 1,
+                borderWidth: 3,
+              }}
+              exit={{
+                scale: 1,
+                opacity: 0,
+                borderWidth: 3,
+                transition: {
+                  duration: Math.max(1, aperture.duration),
+                  ease: "easeOut",
+                },
+              }}
               transition={{
                 scale: {
                   duration: aperture.duration,
@@ -116,9 +147,9 @@ export default function ApertureAni() {
                 },
               }}
             ></motion.div>
-          );
+          )
         })}
       </AnimatePresence>
     </div>
-  );
+  )
 }
