@@ -14,13 +14,27 @@ export async function generateStaticParams() {
 //导出的dynamicParams定义方法不在路由表中的行为，为false时表示访问不存在的会自动进入404页面
 export const dynamicParams = false
 
-//这只meta
+//设置metadata
 export async function generateMetadata({ params }) {
   const { slug } = await params
-  const article = article_map[slug]
+  const article = article_map[slug] || {}
   return {
     title: article.title,
     description: article.desc,
+    authors: [{ name: "Star Trial" }],
+    openGraph: {
+      title: article.title,
+      description: article.desc,
+      url: `https://startrails.site/article/${slug}`,
+      type: "article",
+      publishedTime: article.date,
+      authors: ["Star Trial"],
+      tags: article.tags,
+    },
+    twitter: {
+      title: article.title,
+      description: article.desc,
+    },
   }
 }
 
