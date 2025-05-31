@@ -12,7 +12,7 @@ article_data.push({
 
 const article_map = {}
 article_data.forEach((item) => {
-  article_map[item.slug] = item;
+  article_map[item.slug] = item
 });
 
 export {article_data, article_map}
