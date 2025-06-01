@@ -1,11 +1,10 @@
 "use client"
 
 import "@/styles/ani/aperture.css"
-import { motion } from "motion/react"
+import { motion, AnimatePresence } from "motion/react"
 import { useState, useEffect, useRef } from "react"
-import { AnimatePresence } from "motion/react"
 
-export default function ApertureAni() {
+export default function ApertureDark() {
   const [apertures, setApertures] = useState([])
   const [presstime, setPressTime] = useState(0)
   const timeRef = useRef([])
@@ -91,10 +90,12 @@ export default function ApertureAni() {
   }
 
   return (
-    <div
+    <motion.div
       className="canvas-box"
       onMouseDown={handleMouseUp}
       onMouseUp={handleMouseDown}
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0, transition: { duration: 0.8 } }}
     >
       <AnimatePresence>
         {apertures.map((aperture) => {
@@ -150,6 +151,6 @@ export default function ApertureAni() {
           )
         })}
       </AnimatePresence>
-    </div>
+    </motion.div>
   )
 }
