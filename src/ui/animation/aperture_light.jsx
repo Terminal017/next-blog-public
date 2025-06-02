@@ -2,10 +2,20 @@
 
 import "@/styles/ani/aperture.css"
 import { motion, AnimatePresence } from "motion/react"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 
 export default function ApertureLight() {
   const [apertures, setApertures] = useState([])
+  const timeRef = useRef([])
+
+  useEffect(() => {
+    return () => {
+      timeRef.current.forEach((timeId) => {
+        clearTimeout(timeId)
+      })
+      timeRef.current = []
+    }
+  }, [])
 
   const border_list = ["6%", "50%"]
   const handleClick = (e) => {
@@ -17,7 +27,16 @@ export default function ApertureLight() {
       radius: border_list[Math.floor(Math.random() * border_list.length)],
     }
 
-    setApertures([...apertures, aperture_item])
+    setApertures((prev) => [...prev, aperture_item])
+
+    const timeId = setTimeout(() => {
+      setApertures((prev) =>
+        prev.filter((item) => item.key !== aperture_item.key)
+      )
+      timeRef.current = timeRef.current.filter((id) => id !== timeId)
+    }, 2000)
+
+    timeRef.current.push(timeId)
   }
 
   return (

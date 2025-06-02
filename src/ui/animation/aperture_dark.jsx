@@ -73,9 +73,10 @@ export default function ApertureDark() {
       //设定定时器清楚结束动画的电波
       const timeId = setTimeout(
         () =>
-          setApertures((prev) =>
+          setApertures((prev) => {
             prev.filter((item) => item.key != newItem.key)
-          ),
+            timeRef.current = timeRef.current.filter((id) => id !== timeId)
+          }),
         new_r <= 125 //控制时间统一
           ? 6000 + duration_aperture * 1000 + i * delay_aperture * 1000
           : 3500 +
@@ -86,7 +87,7 @@ export default function ApertureDark() {
       timeRef.current.push(timeId)
     }
 
-    setApertures([...apertures, ...newItems])
+    setApertures((prev) => [...prev, ...newItems])
   }
 
   return (

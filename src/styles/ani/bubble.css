@@ -1,7 +1,7 @@
 .bubble-box {
   position: relative;
   overflow: hidden;
-  width: 90%;
+  max-width: 90%;
   height: 6rem;
   margin: 5.5rem 0 1rem 0;
   border-radius: 0.5rem;
@@ -33,4 +33,10 @@
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.7); 
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 1024px) {
+  .bubble-box {
+    max-width: 85%;
+  }
 }

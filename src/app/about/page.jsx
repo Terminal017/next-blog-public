@@ -1,7 +1,7 @@
-"use client";
-import "@/styles/about.css";
-import BubbleHeader from "@/ui/bubble_header";
-import { motion } from "motion/react";
+"use client"
+import "@/styles/about.css"
+import BubbleHeader from "@/ui/bubble_header"
+import { motion } from "motion/react"
 
 export default function About() {
   return (
@@ -12,7 +12,7 @@ export default function About() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
-      <BubbleHeader content="About" maxwidth={54} />
+      <BubbleHeader content="About" width={45} />
       <article className="about-container text-on-surface">
         <h2>关于本站</h2>
         <p>这里是星轨的前哨基地，基地已开放所有探索的权限。</p>
@@ -22,7 +22,7 @@ export default function About() {
         <ContactLink />
       </article>
     </motion.main>
-  );
+  )
 }
 
 function TableAbout() {
@@ -63,7 +63,7 @@ function TableAbout() {
         </tbody>
       </table>
     </div>
-  );
+  )
 }
 
 function ContactLink() {
@@ -124,5 +124,5 @@ function ContactLink() {
       </a>
       <p></p>
     </div>
-  );
+  )
 }

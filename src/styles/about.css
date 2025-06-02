@@ -5,33 +5,14 @@
   width: 100%;
 }
 
-/*备选设计方案
- .about-header {
-  display: flex;
-  justify-content: start;
-  width: 90%;
-  max-width: 54rem;
-  margin-top: 1.5rem;
-  border-radius: 1rem;
-  background-color: aliceblue;
-}
-
-.about-header h1 {
-  font-weight: 700;
-  font-size: 2rem;
-  letter-spacing: 1px;
-  padding: 0.5rem 1.5rem;
-  margin: 0;
-} */
-
 .about-container {
   display: flex;
   flex-direction: column;
-  width: 90%;
-  max-width: 54rem;
+  width: 45rem;
+  max-width: 85%;
 }
 
-.about-container > h2{
+.about-container > h2 {
   position: relative;
   font-weight: 700;
   font-size: 1.75rem;
@@ -58,9 +39,11 @@
 }
 
 .table-infor {
+  width: 100%;
   border: solid 1px var(--md-sys-color-secondary-container);
   border-radius: 0.5rem;
-  overflow: hidden;
+  white-space: nowrap;
+  overflow: auto;
   font-size: 0.875rem;
 }
 
@@ -69,11 +52,11 @@
 }
 
 .table-infor td {
-  padding: 1rem 1.25rem 1rem 0.75rem;
+  padding: 1rem 0.75rem 1rem 0.75rem;
 }
 
 .table-infor th {
-  padding: 1rem 1.25rem 1rem 0.75rem;
+  padding: 1rem 0.75rem 1rem 0.75rem;
   text-align: left;
 }
 
@@ -85,8 +68,8 @@
 }
 
 .contact-list > a {
-  width: 50%;
-  max-width: 20rem;
+  width: 20rem;
+  max-width: 80%;
   height: 4rem;
   border-radius: 0.25rem;
   transition: all 0.2s ease;
@@ -121,4 +104,8 @@
   padding: 0 1.5rem;
 }
 
-
+@media (max-width: 767px) {
+  .about-container > h2 {
+    margin-top: 0;
+  }
+}

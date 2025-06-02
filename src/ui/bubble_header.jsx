@@ -1,34 +1,34 @@
-"use client";
+"use client"
 
-import "@/styles/ani/bubble.css";
-import { motion } from "motion/react";
-import { useEffect, useState, useCallback, useRef } from "react";
+import "@/styles/ani/bubble.css"
+import { motion } from "motion/react"
+import { useEffect, useState, useCallback, useRef } from "react"
 
-export default function BubbleHeader({ content, maxwidth }) {
-  const [bubbles, setBubbles] = useState([]);
-  const [isHoveringbox, setIsHoveringBox] = useState(false);
-  const hoverTimerRef = useRef(null); //设置定时器，控制动画切换延迟
+export default function BubbleHeader({ content, width }) {
+  const [bubbles, setBubbles] = useState([])
+  const [isHoveringbox, setIsHoveringBox] = useState(false)
+  const hoverTimerRef = useRef(null) //设置定时器，控制动画切换延迟
 
   //解决动画闭包调用问题
-  const isHoveringRef = useRef(isHoveringbox);
+  const isHoveringRef = useRef(isHoveringbox)
   useEffect(() => {
-    isHoveringRef.current = isHoveringbox;
-  }, [isHoveringbox]);
+    isHoveringRef.current = isHoveringbox
+  }, [isHoveringbox])
 
-  const hoverDelay = 1000;
-  const mincount = 0; // 默认气泡数量，这里预设没有，后续上线时可以优化
-  const maxcount = maxwidth * 1.5;
+  const hoverDelay = 1000
+  const mincount = 0 // 默认气泡数量，这里预设没有，后续上线时可以优化
+  const maxcount = width * 1.5
 
   const handleHoverChange = useCallback((isHovering) => {
     // 清除之前的定时器，防止多次触发
     if (hoverTimerRef.current) {
-      clearTimeout(hoverTimerRef.current);
+      clearTimeout(hoverTimerRef.current)
     }
 
     hoverTimerRef.current = setTimeout(() => {
-      setIsHoveringBox(isHovering);
-    }, hoverDelay);
-  }, []);
+      setIsHoveringBox(isHovering)
+    }, hoverDelay)
+  }, [])
 
   // 创建重置气泡函数，使用useCallback以保证函数引用相同（稳定）
   const resetBubble = useCallback(
@@ -37,7 +37,7 @@ export default function BubbleHeader({ content, maxwidth }) {
         current.map((bubble) => {
           if (bubble.id === id) {
             if (!bubble.isActive) {
-              return bubble;
+              return bubble
             }
             return {
               id: bubble.id,
@@ -57,18 +57,18 @@ export default function BubbleHeader({ content, maxwidth }) {
               yTarget: -130,
               reset: !bubble.reset, //控制reset状态
               isActive: bubble.isActive,
-            };
+            }
           }
-          return bubble;
+          return bubble
         })
-      );
+      )
     },
     [isHoveringbox]
-  );
+  )
 
   // 初始化气泡
   useEffect(() => {
-    const newBubbles = [];
+    const newBubbles = []
 
     for (let i = 0; i < maxcount; i++) {
       //页面初始化时会挂载一次
@@ -82,16 +82,16 @@ export default function BubbleHeader({ content, maxwidth }) {
         yTarget: i < mincount ? -130 : 0,
         reset: false, // 用于跟踪重置状态
         isActive: i < mincount, // 控制是否展示
-      });
+      })
     }
 
-    setBubbles(newBubbles);
+    setBubbles(newBubbles)
     return () => {
       if (hoverTimerRef.current) {
-        clearTimeout(hoverTimerRef.current);
+        clearTimeout(hoverTimerRef.current)
       }
-    };
-  }, []);
+    }
+  }, [])
 
   useEffect(() => {
     setBubbles((current) => {
@@ -99,29 +99,22 @@ export default function BubbleHeader({ content, maxwidth }) {
         return {
           ...bubble,
           isActive: isHoveringbox || bubble.id < mincount,
-        };
-      });
+        }
+      })
       updated.forEach((bubble, index) => {
         if (bubble.isActive && !current[index].isActive) {
-          resetBubble(bubble.id, (bubble.id % 10) * 1);
+          resetBubble(bubble.id, (bubble.id % 10) * 1)
         }
-      });
+      })
 
-      return updated;
-    });
-  }, [isHoveringbox, mincount]);
+      return updated
+    })
+  }, [isHoveringbox, mincount])
 
   return (
     <div
       className="bubble-box bg-primary-container"
-      style={{ maxWidth: `${maxwidth}rem` }} // 设置最大宽度
-      // onClick={() => {
-      //   if (!isHoveringbox) {
-      //     handleHoverChange(true); // 点击效果
-      //   } else {
-      //     handleHoverChange(false);
-      //   }
-      // }}
+      style={{ width: `${width}rem` }} // 设置最大宽度
       onMouseEnter={() => handleHoverChange(true)} // 鼠标进入时设置状态为true
       onMouseLeave={() => handleHoverChange(false)} // 鼠标离开时设置状态为false
     >
@@ -157,12 +150,12 @@ export default function BubbleHeader({ content, maxwidth }) {
             }}
             onAnimationComplete={(isHoveringbox) => {
               if (bubble.isActive) {
-                resetBubble(bubble.id);
+                resetBubble(bubble.id)
               }
             }}
           />
         ))}
       </div>
     </div>
-  );
+  )
 }

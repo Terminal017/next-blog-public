@@ -13,7 +13,7 @@ export default function BlogList({ article_data }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
-      <BubbleHeader content="Article" maxwidth={45} />
+      <BubbleHeader content="Article" width={45} />
       <div className="blog-list">
         <ul className="blog-list-ul">
           {article_data.map((data) => {

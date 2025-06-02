@@ -1,40 +1,40 @@
-"use client";
+"use client"
 
-import "@/styles/nav.css";
-import "@/styles/globals.css";
-import { roboto } from "@/ui/fonts/font";
-import { useState, useEffect } from "react";
-import { motion } from "motion/react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import "@/styles/nav.css"
+import "@/styles/globals.css"
+import { roboto } from "@/ui/fonts/font"
+import { useState, useEffect } from "react"
+import { motion } from "motion/react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 export default function Header() {
-  const [mode, setMode] = useState("light"); //定义深浅模式的state
-  const pathname = usePathname();
+  const [mode, setMode] = useState("light") //定义深浅模式的state
+  const pathname = usePathname()
 
   useEffect(() => {
-    const match = document.cookie.match(/theme=(dark|light)/);
-    let theme = match ? match[1] : null;
+    const match = document.cookie.match(/theme=(dark|light)/)
+    let theme = match ? match[1] : null
 
     //如果没有 cookie，则检测系统偏好
     if (!theme) {
       const prefersDark = window.matchMedia(
         "(prefers-color-scheme: dark)"
-      ).matches;
-      theme = prefersDark ? "dark" : "light";
-      document.cookie = `theme=${theme}; path=/; max-age=${60 * 60 * 24 * 365}`;
+      ).matches
+      theme = prefersDark ? "dark" : "light"
+      document.cookie = `theme=${theme}; path=/; max-age=${60 * 60 * 24 * 365}`
     }
 
-    setMode(theme);
-    document.documentElement.className = theme;
-  }, []);
+    setMode(theme)
+    document.documentElement.className = theme
+  }, [])
 
   //切换深浅模式函数
   function changemode() {
-    const newmode = mode === "light" ? "dark" : "light";
-    setMode(newmode);
-    document.documentElement.classList = newmode;
-    document.cookie = `theme=${newmode}; path=/; max-age=${60 * 60 * 24 * 365}`;
+    const newmode = mode === "light" ? "dark" : "light"
+    setMode(newmode)
+    document.documentElement.classList = newmode
+    document.cookie = `theme=${newmode}; path=/; max-age=${60 * 60 * 24 * 365}`
   }
 
   const navlist = [
@@ -42,7 +42,7 @@ export default function Header() {
     { name: "文章", path: "/article" },
     // { name: "项目", path: "/project" },
     { name: "关于", path: "/about" },
-  ];
+  ]
 
   return (
     <motion.header
@@ -130,9 +130,28 @@ export default function Header() {
                 </motion.svg>
               </button>
             </div>
+            <div className="nav-menu">
+              <button>
+                <svg
+                  width="32px"
+                  height="32px"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M4 6H20M4 12H20M4 18H20"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </nav>
     </motion.header>
-  );
+  )
 }
