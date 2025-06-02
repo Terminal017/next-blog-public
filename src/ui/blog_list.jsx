@@ -1,8 +1,8 @@
-"use client";
-import "@/styles/blist.css";
-import BubbleHeader from "@/ui/bubble_header";
-import Link from "next/link";
-import { motion } from "motion/react";
+"use client"
+import "@/styles/blist.css"
+import BubbleHeader from "@/ui/bubble_header"
+import Link from "next/link"
+import { motion } from "motion/react"
 
 export default function BlogList({ article_data }) {
   return (
@@ -17,12 +17,12 @@ export default function BlogList({ article_data }) {
       <div className="blog-list">
         <ul className="blog-list-ul">
           {article_data.map((data) => {
-            return <ArticleLi key={data.slug} article_data={data} />;
+            return <ArticleLi key={data.slug} article_data={data} />
           })}
         </ul>
       </div>
     </motion.main>
-  );
+  )
 }
 
 function ArticleLi({ article_data }) {
@@ -31,7 +31,7 @@ function ArticleLi({ article_data }) {
       <div className="blog-list-box bg-surface-low hover:bg-surface-container">
         <Link href={`/article/${article_data.slug}`} className="blog-list-link">
           <div className="blog-list-img">
-            <img src="./images/A1.png" />
+            <img src={`./images/${article_data.img}`} />
           </div>
           <div className="blog-list-content">
             <h3 className="text-on-surface">{article_data.title}</h3>
@@ -48,12 +48,12 @@ function ArticleLi({ article_data }) {
                   >
                     {`#${tag}`}
                   </div>
-                );
+                )
               })}
             </div>
           </div>
         </Link>
       </div>
     </li>
-  );
+  )
 }

@@ -4,4 +4,4 @@ Allow: /
 Disallow: /_next/
 Disallow: /api/
 
-Sitemap: https://your-domain.com/sitemap.xml
+Sitemap: https://startrails.com/sitemap.xml
