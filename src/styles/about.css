@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;
   width: 45rem;
-  max-width: 85%;
+  max-width: 80%;
 }
 
 .about-container > h2 {
@@ -69,7 +69,7 @@
 
 .contact-list > a {
   width: 20rem;
-  max-width: 80%;
+  max-width: 90%;
   height: 4rem;
   border-radius: 0.25rem;
   transition: all 0.2s ease;
@@ -105,6 +105,9 @@
 }
 
 @media (max-width: 767px) {
+  .about-container {
+    max-width: 90%;
+  }
   .about-container > h2 {
     margin-top: 0;
   }

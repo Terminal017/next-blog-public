@@ -1,5 +1,5 @@
 import BlogList from "@/ui/blog_list"
-import { article_data } from "../../lib/data.js"
+import { article_data } from "@/lib/data.js"
 
 export default function Home() {
   return (

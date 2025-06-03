@@ -17,16 +17,25 @@ body:has(> .article-details-page) > .header {
     0 15px 25px rgba(0, 0, 0, 0.03);
 }
 
+@media (max-width: 767px) {
+  .article-container {
+    width: auto;
+    margin: 1rem 1rem;
+    padding: 2rem 1.5rem;
+  }
+}
+
 .article-toc-container {
   position: absolute;
   top: 0;
   left: calc(50% + 53rem/2 + 1.25rem);
-  width: 18rem;
+  width: 15.5rem;
   height: 100%;
-  padding-right: 2rem;
+  padding-right: 0.5rem;
 }
 
-@media (max-width:1400px) {
+/* 小屏幕隐藏目录 */
+@media (max-width:1384px) {
   .article-toc-container {
     display: none;
   }

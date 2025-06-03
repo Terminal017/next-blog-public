@@ -7,9 +7,16 @@
 
 .blog-list {
   display: flex;
-  width: 90%;
+  width: 80%;
   max-width: 45rem;
   margin: 3rem 1rem 0 1rem;
+}
+
+@media (max-width: 767px) {
+  .blog-list {
+    width: 90%;
+    margin: 2rem 0;
+  }
 }
 
 .blog-list-ul {
@@ -46,7 +53,8 @@
 
 .blog-list-link {
   display: flex;
-  justify-content: start;
+  flex-direction: row;
+  /* justify-content: start; */
   gap: 1.125rem;
   position: relative;
 }
@@ -61,6 +69,20 @@
   align-items: center;
 }
 
+@media (max-width: 767px) {
+  /* 微调padding */
+  .blog-list-box {
+    padding: 20px 16px;
+  }
+  /* 移动端竖向排列 */
+  .blog-list-link {
+    flex-direction: column;
+  }
+  .blog-list-img {
+    width: 100%;
+    height: auto;
+  }
+}
 
 .blog-list-img > img {
   width: 100%;
