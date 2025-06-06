@@ -28,7 +28,7 @@ export default function Home() {
     <div className="base">
       <HomePage />
       {/* 切换动画 */}
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {theme ? <ApertureDark key="dark" /> : <ApertureLight key="light" />}
       </AnimatePresence>
     </div>

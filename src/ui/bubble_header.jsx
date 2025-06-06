@@ -6,86 +6,68 @@ import { useEffect, useState, useCallback, useRef } from "react"
 
 export default function BubbleHeader({ content, width }) {
   const [bubbles, setBubbles] = useState([])
-  const [isHoveringbox, setIsHoveringBox] = useState(false)
+  const [isHoveringbox, setIsHoveringbox] = useState(false)
   const hoverTimerRef = useRef(null) //设置定时器，控制动画切换延迟
 
-  //解决动画闭包调用问题
-  const isHoveringRef = useRef(isHoveringbox)
-  useEffect(() => {
-    isHoveringRef.current = isHoveringbox
-  }, [isHoveringbox])
-
   const hoverDelay = 1000
-  const mincount = 0 // 默认气泡数量，这里预设没有，后续上线时可以优化
-  const maxcount = width * 1.5
+  const maxcount = width
 
-  const handleHoverChange = useCallback((isHovering) => {
-    // 清除之前的定时器，防止多次触发
-    if (hoverTimerRef.current) {
-      clearTimeout(hoverTimerRef.current)
-    }
+  const handleHoverChange = useCallback(
+    (isHovering) => {
+      // 清除之前的定时器，防止多次触发
+      if (hoverTimerRef.current) {
+        clearTimeout(hoverTimerRef.current)
+      }
 
-    hoverTimerRef.current = setTimeout(() => {
-      setIsHoveringBox(isHovering)
-    }, hoverDelay)
-  }, [])
+      hoverTimerRef.current = setTimeout(() => {
+        setIsHoveringbox(isHovering)
+      }, hoverDelay)
+    },
+    [hoverDelay]
+  )
 
   // 创建重置气泡函数，使用useCallback以保证函数引用相同（稳定）
-  const resetBubble = useCallback(
-    (id, add = 0) => {
-      setBubbles((current) =>
-        current.map((bubble) => {
-          if (bubble.id === id) {
-            if (!bubble.isActive) {
-              return bubble
-            }
-            return {
-              id: bubble.id,
-              size: hoverTimerRef.current
-                ? Math.random() * 12 + 10
-                : Math.random() * 10 + 200,
-              left: Math.random() * 100,
-              delay: hoverTimerRef.current
-                ? Math.random() * 0.5 + add
-                : Math.random() * 0.5,
-              duration: hoverTimerRef.current
-                ? Math.random() * 0.5 + 0.2
-                : Math.random() * 3 + 3,
-              xTarget: hoverTimerRef.current
-                ? Math.random() * 60 - 30
-                : Math.random() * 40 - 20,
-              yTarget: -130,
-              reset: !bubble.reset, //控制reset状态
-              isActive: bubble.isActive,
-            }
+  const resetBubble = useCallback((id, add = 0) => {
+    setBubbles((current) =>
+      current.map((bubble) => {
+        if (bubble.id === id) {
+          return {
+            ...bubble,
+            id: bubble.id,
+            size: Math.random() * 12 + 10,
+            left: Math.random() * 100,
+            delay: Math.random() * 0.25 + add, //add控制首次气泡进入的速度，使其逐段增加
+            duration: Math.random() * 0.5 + 0.2,
+            xTarget: Math.random() * 60 - 30,
+            yTarget: -130,
+            reset: !bubble.reset, //调整reset状态
           }
-          return bubble
-        })
-      )
-    },
-    [isHoveringbox]
-  )
+        }
+        return bubble
+      })
+    )
+  }, [])
 
   // 初始化气泡
   useEffect(() => {
     const newBubbles = []
 
+    //页面初始化时会挂载一次
     for (let i = 0; i < maxcount; i++) {
-      //页面初始化时会挂载一次
       newBubbles.push({
         id: i,
         size: Math.random() * 12 + 10,
         left: Math.random() * 100,
         delay: Math.random() * 0.1, // 初始气泡有随机延迟
-        duration: Math.random() * 0.1,
-        xTarget: (Math.random() * 40 - 20) * 3,
-        yTarget: i < mincount ? -130 : 0,
-        reset: false, // 用于跟踪重置状态
-        isActive: i < mincount, // 控制是否展示
+        duration: Math.random() * 0.5 + 0.2,
+        xTarget: Math.random() * 120 - 60,
+        yTarget: 0,
+        reset: false, //reset状态，用于与原气泡组件区分
       })
     }
 
     setBubbles(newBubbles)
+    //卸载时清理防抖定时器
     return () => {
       if (hoverTimerRef.current) {
         clearTimeout(hoverTimerRef.current)
@@ -94,22 +76,23 @@ export default function BubbleHeader({ content, width }) {
   }, [])
 
   useEffect(() => {
-    setBubbles((current) => {
-      const updated = current.map((bubble) => {
-        return {
-          ...bubble,
-          isActive: isHoveringbox || bubble.id < mincount,
+    // 当isHoveringbox状态变化时，为下一次动画设置逐段delay
+    setBubbles((current) =>
+      current.map((bubble, index) => {
+        if (isHoveringbox) {
+          return {
+            ...bubble,
+            yTarget: 130,
+            delay: Math.random() * 0.5 + (index % 10) * 0.75, // 逐段增加动画延迟
+          }
+        } else {
+          return {
+            ...bubble,
+          }
         }
       })
-      updated.forEach((bubble, index) => {
-        if (bubble.isActive && !current[index].isActive) {
-          resetBubble(bubble.id, (bubble.id % 10) * 1)
-        }
-      })
-
-      return updated
-    })
-  }, [isHoveringbox, mincount])
+    )
+  }, [isHoveringbox])
 
   return (
     <div
@@ -148,8 +131,9 @@ export default function BubbleHeader({ content, width }) {
               delay: bubble.delay,
               ease: "easeInOut",
             }}
-            onAnimationComplete={(isHoveringbox) => {
-              if (bubble.isActive) {
+            // 动画完成后，如果在isHoveringbox状态下，就重设动画
+            onAnimationComplete={() => {
+              if (isHoveringbox) {
                 resetBubble(bubble.id)
               }
             }}
