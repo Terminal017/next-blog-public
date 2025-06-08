@@ -1,6 +1,5 @@
 import fs from "fs/promises";
 import path from "path";
-import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import remarkSlug from "remark-slug";
 import rehypePrismPlus from "rehype-prism-plus";
@@ -44,7 +43,6 @@ export function get_mdx_options(headings) {
   return {
     mdxOptions: {
       remarkPlugins: [
-        // remarkFrontmatter,
         remarkGfm,
         remarkSlug,
         remarkExtractHeadings(headings),

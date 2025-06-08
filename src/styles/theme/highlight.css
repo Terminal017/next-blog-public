@@ -13,7 +13,7 @@ html.light .token.namespace {
   opacity: 0.7;
 }
 
-html.light .token.tag
+html.light .token.tag,
 html.light .token.property,
 html.light .token.constant,
 html.light .token.symbol,
@@ -23,7 +23,8 @@ html.light .token.deleted {
 
 html.light .token.boolean,
 html.light .token.number,
-html.light .token.class {
+html.light .token.class, 
+html.light .token.unit{
   color: #005cc5;
 }
 
@@ -81,7 +82,8 @@ html.dark .token.punctuation {
 
 html.dark .token.tag,
 html.dark .token.namespace,
-html.dark .token.deleted {
+html.dark .token.deleted, 
+html.dark .token.class-name{
   color: #e2777a;
 }
 
@@ -94,7 +96,8 @@ html.dark .token.function-name {
 }
 
 html.dark .token.boolean,
-html.dark .token.number {
+html.dark .token.number, 
+html.dark .token.unit {
   color: #f08d49;
 }
 
@@ -103,7 +106,6 @@ html.dark .token.function {
 }
 
 html.dark .token.property,
-html.dark .token.class-name,
 html.dark .token.constant,
 html.dark .token.symbol {
   color: #f8c555;

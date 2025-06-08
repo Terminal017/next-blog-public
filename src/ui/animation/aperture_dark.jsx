@@ -9,10 +9,6 @@ export default function ApertureDark() {
   const [presstime, setPressTime] = useState(0)
   const timeRef = useRef([])
 
-  const handleMouseUp = () => {
-    setPressTime(Date.now())
-  }
-
   useEffect(() => {
     return () => {
       timeRef.current.forEach((timeId) => {
@@ -21,6 +17,11 @@ export default function ApertureDark() {
       timeRef.current = []
     }
   }, [])
+
+  // 记录鼠标按下的时间
+  const handleMouseUp = () => {
+    setPressTime(Date.now())
+  }
 
   const handleMouseDown = (e) => {
     //限制电波数量
@@ -97,6 +98,7 @@ export default function ApertureDark() {
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: 0.8 } }}
     >
+      {/* AnimatePresence能让组件被移除后不会被立刻卸载,而是执行exit动画后卸载 */}
       <AnimatePresence>
         {apertures.map((aperture) => {
           return (

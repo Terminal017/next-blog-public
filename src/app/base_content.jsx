@@ -1,5 +1,6 @@
-"use client";
-import { motion } from "motion/react";
+"use client"
+import { motion } from "motion/react"
+import Image from "next/image"
 
 export default function HomePage() {
   return (
@@ -17,7 +18,13 @@ export default function HomePage() {
           delay: 0.2,
         }}
       >
-        <img src="images/avatar.webp" />
+        <Image
+          src="/images/avatar.webp"
+          alt="星轨的头像"
+          width={200}
+          height={200}
+          priority
+        />
       </motion.div>
       <motion.div
         className="base-text"
@@ -39,5 +46,5 @@ export default function HomePage() {
         </span>
       </motion.div>
     </>
-  );
+  )
 }

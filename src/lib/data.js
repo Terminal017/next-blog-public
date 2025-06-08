@@ -5,9 +5,19 @@ article_data.push({
   title: "Next.js中Tailwind v4的深浅模式切换",
   img: "A1.webp",
   date: "2025-05-07",
-  desc: "演示如何在Next.js v15中使用Tailwind v4新版本实现深浅色模式切换。",
+  desc: "展示如何在Next.js v15中使用Tailwind v4新版本实现深浅色模式切换。",
   tags: ["Next.js", "Tailwind", "dark-mode"],
 })
+
+article_data.push({
+  slug: "devlog-1-0",
+  title: "基地开发日志1.0",
+  img: "A2.webp",
+  date: "2025-06-07",
+  desc: "详细记录基地第一阶段开发的过程，包括技术选型、页面设计和功能实现",
+  tags: ["开发日志", "Next.js"],
+})
+
 
 
 

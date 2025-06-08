@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react"
 
 export default function ArticleTOC({ headings }) {
-  const [activeId, setActiveId] = useState("");
-  const clickedRef = useRef(false);
-  const timeoutRef = useRef(null);
+  const [activeId, setActiveId] = useState("")
+  const clickedRef = useRef(false)
+  const timeoutRef = useRef(null)
 
   useEffect(() => {
     // 创建一个 Intersection Observer 实例（会一直观测直到组件卸载），检测标题位置
@@ -13,74 +13,74 @@ export default function ArticleTOC({ headings }) {
     const observer = new IntersectionObserver(
       (entries) => {
         if (clickedRef.current) {
-          return; // 如果是点击滚动，则跳过观察
+          return // 如果是点击滚动，则跳过观察
         }
         entries.forEach((entry) => {
           // 如果元素正在进入视口
           if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
+            setActiveId(entry.target.id)
           }
-        });
+        })
       },
       // Observer 的配置选项
       {
         rootMargin: "-20px 0px -75% 0px", // 设置观察区域
         threshold: 0.1, // 定义了元素多少比例，当10%的元素可见时触发
       }
-    );
+    )
 
     const headingElements = document.querySelectorAll(
       "article.article-container h3"
-    );
+    )
 
     //观察所有元素
     headingElements.forEach((element) => {
-      observer.observe(element);
-    });
+      observer.observe(element)
+    })
 
     // 清理函数，组件卸载时停止观察
     return () => {
       if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+        clearTimeout(timeoutRef.current)
       }
 
       headingElements.forEach((element) => {
-        observer.unobserve(element);
-      });
-    };
-  }, []); // 仅在组件挂载时运行一次
+        observer.unobserve(element)
+      })
+    }
+  }, []) // 仅在组件挂载时运行一次
 
   //设置跳转目录方法
   const handleTocItemClick = (e, id) => {
-    const headingElement = document.getElementById(id);
+    const headingElement = document.getElementById(id)
 
-    clickedRef.current = true;
+    clickedRef.current = true
 
-    setActiveId(id); //立即高亮再跳转
+    setActiveId(id) //立即高亮再跳转
 
     if (headingElement) {
       headingElement.scrollIntoView({
         behavior: "smooth",
         block: "start", // 滚动到元素顶部对齐视口顶部
-      });
+      })
     }
 
     // 清理原本的定时器，避免高频点击时计时器冲突
     if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
+      clearTimeout(timeoutRef.current)
     }
 
     timeoutRef.current = setTimeout(() => {
-      clickedRef.current = false;
-    }, 1000);
-  };
+      clickedRef.current = false
+    }, 1000)
+  }
 
   return (
     <div className="article-toc-container">
       <div className="article-toc">
         <h6>目录</h6>
         <ul>
-          {headings.map((heading) => {
+          {headings.map((heading, index) => {
             return (
               <li key={heading.id}>
                 <span
@@ -89,13 +89,13 @@ export default function ArticleTOC({ headings }) {
                   }`}
                   onClick={(e) => handleTocItemClick(e, heading.id)}
                 >
-                  {heading.text}
+                  {`${index + 1}. ${heading.text}`}
                 </span>
               </li>
-            );
+            )
           })}
         </ul>
       </div>
     </div>
-  );
+  )
 }

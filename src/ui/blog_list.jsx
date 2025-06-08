@@ -3,6 +3,7 @@ import "@/styles/blist.css"
 import BubbleHeader from "@/ui/bubble_header"
 import Link from "next/link"
 import { motion } from "motion/react"
+import Image from "next/image"
 
 export default function BlogList({ article_data }) {
   return (
@@ -31,7 +32,12 @@ function ArticleLi({ article_data }) {
       <div className="blog-list-box bg-surface-low hover:bg-surface-container">
         <Link href={`/article/${article_data.slug}`} className="blog-list-link">
           <div className="blog-list-img">
-            <img src={`./images/${article_data.img}`} />
+            <Image
+              src={`/images/${article_data.img}`}
+              alt={article_data.title || "文章图片"}
+              width={228}
+              height={132}
+            />
           </div>
           <div className="blog-list-content">
             <h3 className="text-on-surface">{article_data.title}</h3>
