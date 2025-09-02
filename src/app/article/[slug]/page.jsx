@@ -56,8 +56,8 @@ export default async function Page({ params }) {
   const { frontmatter } = getFrontmatter(content)
 
   const title = frontmatter.title || "unknown title"
-  const datatime = frontmatter.data
-    ? new Date(frontmatter.data).toLocaleDateString("zh-CN", {
+  const dateTime = frontmatter.datetime
+    ? new Date(frontmatter.datetime).toLocaleDateString("zh-CN", {
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -68,7 +68,7 @@ export default async function Page({ params }) {
     <>
       <article className="article-container">
         <h1>{title}</h1>
-        <time>{datatime}</time>
+        <time>{dateTime}</time>
         <MDXRemote
           source={content}
           options={mdx_options}

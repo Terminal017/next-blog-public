@@ -5,5 +5,5 @@ export default function NotFound() {
       <div className="w-px h-10 bg-outline-v/80"></div>
       <p className="text-xl text-on-background">你来到了未知之地</p>
     </div>
-  );
+  )
 }

@@ -1,14 +1,37 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { FlatCompat } from '@eslint/eslintrc'
+import js from '@eslint/js'
 
 const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+  baseDirectory: import.meta.dirname,
+  recommendedConfig: js.configs.recommended,
+})
 
-const eslintConfig = [...compat.extends("next/core-web-vitals")];
+const eslintConfig = [
+  // ESLint 推荐规则
+  js.configs.recommended,
 
-export default eslintConfig;
+  // Next.js 推荐配置
+  ...compat.extends('next/core-web-vitals'),
+  ...compat.extends('next/typescript'),
+  ...compat.extends('prettier'),
+
+  // 添加其他规则
+  {
+    files: ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx'],
+    rules: {
+      // ========== 现代 JavaScript 增强 ==========
+      'prefer-const': 'error', // 使用 const 替代 let
+      'no-var': 'error', // 禁止使用 var
+      'prefer-template': 'error', // 使用模板字符串
+      'prefer-arrow-callback': 'warn', // 使用箭头函数作为回调
+
+      // ========== 代码质量增强 ==========
+      eqeqeq: ['error', 'always'], // 强制使用 === 和 !==
+      curly: ['error', 'all'], // 强制大括号
+      'dot-notation': 'error', // 使用点符号访问对象属性
+      'no-console': 'error', // 禁止使用 console.log
+    },
+  },
+]
+
+export default eslintConfig
