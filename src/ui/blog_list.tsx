@@ -5,7 +5,16 @@ import Link from "next/link"
 import { motion } from "motion/react"
 import Image from "next/image"
 
-export default function BlogList({ article_data }) {
+interface ArticleDataType {
+  slug: string
+  title: string
+  img: string
+  date: string
+  desc: string
+  tags: string[]
+}
+
+export default function BlogList({ article_data }: { article_data: ArticleDataType[] }) {
   return (
     <motion.main
       className="blog-list-page"
@@ -26,7 +35,7 @@ export default function BlogList({ article_data }) {
   )
 }
 
-function ArticleLi({ article_data }) {
+function ArticleLi({ article_data }: { article_data: ArticleDataType }) {
   return (
     <li>
       <div className="blog-list-box bg-surface-low hover:bg-surface-container">

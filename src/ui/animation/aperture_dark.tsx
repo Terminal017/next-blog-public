@@ -2,12 +2,22 @@
 
 import "@/styles/ani/aperture.css"
 import { motion, AnimatePresence } from "motion/react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, MouseEvent } from "react"
+
+interface ApertureType {
+  x: number
+  y: number
+  r: number
+  key: string
+  delay: number
+  duration: number
+  width: number
+}
 
 export default function ApertureDark() {
-  const [apertures, setApertures] = useState([])
+  const [apertures, setApertures] = useState <ApertureType[]>([])
   const [presstime, setPressTime] = useState(0)
-  const timeRef = useRef([])
+  const timeRef = useRef <NodeJS.Timeout[]> ([])
 
   useEffect(() => {
     return () => {
@@ -19,11 +29,11 @@ export default function ApertureDark() {
   }, [])
 
   // 记录鼠标按下的时间
-  const handleMouseUp = () => {
+  const handleMouseDown = () => {
     setPressTime(Date.now())
   }
 
-  const handleMouseDown = (e) => {
+  const handleMouseUp = (e: MouseEvent<HTMLDivElement>) => {
     //限制电波数量
     if (apertures.length >= 50) {
       return
@@ -59,7 +69,7 @@ export default function ApertureDark() {
       y: e.clientY,
       r: new_r > 40 ? new_r : 40,
     }
-    const newItems = []
+    const newItems: ApertureType[] = []
 
     for (let i = 0; i < count_aperture; i++) {
       const newItem = {
@@ -93,8 +103,8 @@ export default function ApertureDark() {
   return (
     <motion.div
       className="canvas-box"
-      onMouseDown={handleMouseUp}
-      onMouseUp={handleMouseDown}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: 0.8 } }}
     >

@@ -57,7 +57,6 @@ export default function Header() {
           <div className="nav-container bg-transparent">
             <Link href="/" className="nav-left text-on-surface">
               <svg
-                alt="logo"
                 className="logo-svg"
                 width="40"
                 height="40"

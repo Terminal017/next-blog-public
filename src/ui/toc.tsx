@@ -2,10 +2,15 @@
 
 import { useEffect, useState, useRef } from "react"
 
-export default function ArticleTOC({ headings }) {
+interface HeadingType {
+  text: string
+  id: string
+}
+
+export default function ArticleTOC({ headings }: {headings: HeadingType[]}) {
   const [activeId, setActiveId] = useState("")
   const clickedRef = useRef(false)
-  const timeoutRef = useRef(null)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     // 创建一个 Intersection Observer 实例（会一直观测直到组件卸载），检测标题位置
@@ -51,7 +56,10 @@ export default function ArticleTOC({ headings }) {
   }, []) // 仅在组件挂载时运行一次
 
   //设置跳转目录方法
-  const handleTocItemClick = (e, id) => {
+  const handleTocItemClick = (
+    e: React.MouseEvent<HTMLSpanElement>,
+    id: string,
+  ) => {
     const headingElement = document.getElementById(id)
 
     clickedRef.current = true
@@ -60,8 +68,8 @@ export default function ArticleTOC({ headings }) {
 
     if (headingElement) {
       headingElement.scrollIntoView({
-        behavior: "smooth",
-        block: "start", // 滚动到元素顶部对齐视口顶部
+        behavior: 'smooth',
+        block: 'start', // 滚动到元素顶部对齐视口顶部
       })
     }
 

@@ -1,4 +1,5 @@
 "use client"
+
 import "@/styles/about.css"
 import BubbleHeader from "@/ui/bubble_header"
 import { motion } from "motion/react"
@@ -46,7 +47,7 @@ function TableAbout() {
           </tr>
           <tr className="bg-second-container/50">
             <td>从事</td>
-            <td>计算机科班大二学牲</td>
+            <td>成大三的老东西啦...</td>
           </tr>
           <tr>
             <td>爱好</td>
@@ -80,7 +81,6 @@ function ContactLink() {
           <svg
             height="512px"
             id="Layer_1"
-            style={{ enableBackground: "new 0 0 512 512" }}
             version="1.1"
             viewBox="0 0 512 512"
             width="512px"

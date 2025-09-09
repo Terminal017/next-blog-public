@@ -4,7 +4,9 @@ import { MDXRemote } from "next-mdx-remote-client/rsc"
 import { getFrontmatter } from "next-mdx-remote-client/utils"
 import { read_mdx_file, get_mdx_options, mdx_components } from "./mdx-process"
 import { generateStaticPath } from "@/app/article/[slug]/slug_control"
-import ArticleTOC from "@/ui/toc.jsx"
+import ArticleTOC from "@/ui/toc"
+
+import type { Metadata } from 'next'
 
 // gene用于生成动态路由的所有可用路由，返回值应该当是一个对象数组：{ id: string }[]。在构建时会自动调用
 export async function generateStaticParams() {
@@ -15,20 +17,24 @@ export async function generateStaticParams() {
 export const dynamicParams = false
 
 //设置metadata
-export async function generateMetadata({ params }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
   const { slug } = await params
   const article = article_map[slug] || {}
   return {
     title: article.title,
     description: article.desc,
-    authors: [{ name: "Star Trial" }],
+    authors: [{ name: 'Star Trial' }],
     openGraph: {
       title: article.title,
       description: article.desc,
       url: `https://startrails.site/article/${slug}`,
-      type: "article",
+      type: 'article',
       publishedTime: article.date,
-      authors: ["Star Trial"],
+      authors: ['Star Trial'],
       tags: article.tags,
     },
     twitter: {
@@ -38,7 +44,12 @@ export async function generateMetadata({ params }) {
   }
 }
 
-export default async function Page({ params }) {
+interface HeadingType {
+  text: string;
+  id: string;
+}
+
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   let content = ""
 
@@ -49,11 +60,13 @@ export default async function Page({ params }) {
     notFound()
   }
 
-  const headings = []
+  const headings: HeadingType[] = []
   const mdx_options = get_mdx_options(headings)
 
   //提取元标签
-  const { frontmatter } = getFrontmatter(content)
+  const { frontmatter } = getFrontmatter(content) as {
+    frontmatter: Record<string, string>
+  }
 
   const title = frontmatter.title || "unknown title"
   const dateTime = frontmatter.datetime
@@ -71,7 +84,7 @@ export default async function Page({ params }) {
         <time>{dateTime}</time>
         <MDXRemote
           source={content}
-          options={mdx_options}
+          options={mdx_options as any}
           components={mdx_components}
         />
       </article>

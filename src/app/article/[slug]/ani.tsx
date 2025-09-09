@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 
-export default function ArticleLayoutWrapper({ children }) {
+export default function ArticleLayoutWrapper({ children }: {children : React.ReactNode}) {
   return (
     <motion.main
       className="article-details-page relative"

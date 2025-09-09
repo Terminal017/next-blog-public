@@ -2,11 +2,19 @@
 
 import "@/styles/ani/aperture.css"
 import { motion, AnimatePresence } from "motion/react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, MouseEvent } from 'react'
+
+interface ApertureLightType {
+  x: number
+  y: number
+  r: number
+  key: string
+  radius: string
+}
 
 export default function ApertureLight() {
-  const [apertures, setApertures] = useState([])
-  const timeRef = useRef([])
+  const [apertures, setApertures] = useState<ApertureLightType[]>([])
+  const timeRef = useRef<NodeJS.Timeout[]>([])
 
   useEffect(() => {
     return () => {
@@ -18,7 +26,7 @@ export default function ApertureLight() {
   }, [])
 
   const border_list = ["6%", "50%"]
-  const handleClick = (e) => {
+  const handleClick = (e: MouseEvent<HTMLDivElement>) => {
     const aperture_item = {
       x: e.clientX,
       y: e.clientY,
@@ -31,7 +39,7 @@ export default function ApertureLight() {
 
     const timeId = setTimeout(() => {
       setApertures((prev) =>
-        prev.filter((item) => item.key !== aperture_item.key)
+        prev.filter((item) => item.key !== aperture_item.key),
       )
       timeRef.current = timeRef.current.filter((id) => id !== timeId)
     }, 2000)

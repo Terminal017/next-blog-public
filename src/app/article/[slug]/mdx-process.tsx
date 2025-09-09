@@ -4,14 +4,15 @@ import remarkGfm from "remark-gfm";
 import remarkSlug from "remark-slug";
 import rehypePrismPlus from "rehype-prism-plus";
 import { visit } from "unist-util-visit";
-import CodeBlock from "./code_copy.jsx";
+import CodeBlock from './code_copy'
 
+import { Root as RootType, Heading } from 'mdast'
 /**
  * 读取MDX文件内容
  * @param {string} slug - 文章的slug
  * @returns {Promise<string>} 文件内容
  */
-export async function read_mdx_file(slug) {
+export async function read_mdx_file(slug: string): Promise<string> {
   const filePath = path.join(
       process.cwd(),
       "content",
@@ -22,24 +23,30 @@ export async function read_mdx_file(slug) {
   return fs.readFile(filePath, "utf8");
 }
 
-function remarkExtractHeadings(headings) {
-  return () => (tree) => {
-    visit(tree, "heading", (node) => {
+interface HeadingType {
+  text: string
+  id: string
+}
+
+// 提取标题信息放入headings
+function remarkExtractHeadings(headings: HeadingType[]) {
+  return () => (tree: RootType) => {
+    visit(tree, 'heading', (node: Heading & { data?: { id?: string } }) => {
       if (node.depth === 3) {
-        const textNode = node.children.find((child) => child.type === "text");
+        const textNode = node.children.find((child) => child.type === 'text')
         if (textNode) {
-          const text = textNode.value;
-          const id = node.data?.id;
+          const text = textNode.value
+          const id = node.data?.id
           if (id) {
-            headings.push({ text, id });
+            headings.push({ text, id })
           }
         }
       }
-    });
-  };
+    })
+  }
 }
 
-export function get_mdx_options(headings) {
+export function get_mdx_options(headings: HeadingType[]) {
   return {
     mdxOptions: {
       remarkPlugins: [
@@ -62,8 +69,9 @@ export function get_mdx_options(headings) {
   };
 }
 
+// 定义MDX组成配置：代码块组件部分
 export const mdx_components = {
-  pre: (props) => {
+  pre: (props: {[key: string]: string}) => {
     const codeClass = props.className;
 
     // 检查是否有 className 并且是否包含语言标识

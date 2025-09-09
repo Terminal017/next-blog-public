@@ -2,7 +2,7 @@ import BubbleHeader from "@/ui/bubble_header"
 import "@/styles/plist.css"
 
 export default function ProjectsList() {
-  let data_list = []
+  let data_list: any[] = []
   data_list.push({
     link: "https://react.dev/",
     img: "./images/A1.png",
@@ -27,7 +27,7 @@ export default function ProjectsList() {
   )
 }
 
-export function ProjectBox({ data }) {
+export function ProjectBox({ data }: { data: any}) {
   return (
     <div className="plist-box">
       <a href={data.link} target="_blank" className="plist-box-link">
@@ -38,7 +38,7 @@ export function ProjectBox({ data }) {
           <h2>{data.title}</h2>
           <p>{data.desc}</p>
           <div>
-            {data.tags.map((tag) => {
+            {data.tags.map((tag: string) => {
               return <div key={tag}>{tag}</div>
             })}
           </div>

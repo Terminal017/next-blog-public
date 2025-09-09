@@ -1,4 +1,4 @@
-import { article_data, article_map } from '@/lib/data'
+import { article_data } from '@/lib/data'
 
 export default async function sitemap() {
   const sitemap_static = [

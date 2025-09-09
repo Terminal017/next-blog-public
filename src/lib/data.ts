@@ -1,4 +1,13 @@
-let article_data = []
+interface ArticleDataType {
+  slug: string
+  title: string
+  img: string
+  date: string
+  desc: string
+  tags: string[]
+}
+
+let article_data: ArticleDataType[]= []
 
 article_data.push({
   slug: "devlog-1-0",
@@ -20,7 +29,7 @@ article_data.push({
 
 
 
-const article_map = {}
+const article_map: { [key: string]: ArticleDataType } = {}
 article_data.forEach((item) => {
   article_map[item.slug] = item
 })

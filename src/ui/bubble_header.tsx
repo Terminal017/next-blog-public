@@ -4,16 +4,27 @@ import "@/styles/ani/bubble.css"
 import { motion } from "motion/react"
 import { useEffect, useState, useCallback, useRef } from "react"
 
-export default function BubbleHeader({ content, width }) {
-  const [bubbles, setBubbles] = useState([])
+interface BubbleType {
+  id: number
+  size: number
+  left: number
+  delay: number
+  duration: number
+  xTarget: number
+  yTarget: number
+  reset: boolean 
+}
+
+export default function BubbleHeader({ content, width }: { content: string; width: number }) {
+  const [bubbles, setBubbles] = useState<BubbleType[]>([])
   const [isHoveringbox, setIsHoveringbox] = useState(false)
-  const hoverTimerRef = useRef(null) //设置定时器，控制动画切换延迟
+  const hoverTimerRef = useRef<NodeJS.Timeout | null>(null) //设置定时器，控制动画切换延迟
 
   const hoverDelay = 1000
   const maxcount = width
 
   const handleHoverChange = useCallback(
-    (isHovering) => {
+    (isHovering: boolean) => {
       // 清除之前的定时器，防止多次触发
       if (hoverTimerRef.current) {
         clearTimeout(hoverTimerRef.current)
@@ -27,7 +38,7 @@ export default function BubbleHeader({ content, width }) {
   )
 
   // 创建重置气泡函数，使用useCallback以保证函数引用相同（稳定）
-  const resetBubble = useCallback((id, add = 0) => {
+  const resetBubble = useCallback((id: number, add = 0) => {
     setBubbles((current) =>
       current.map((bubble) => {
         if (bubble.id === id) {

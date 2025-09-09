@@ -3,8 +3,10 @@ import Header from "@/ui/head_nav"
 import { roboto, misans } from "@/ui/fonts/font"
 import { cookies } from "next/headers"
 import { Analytics } from "@vercel/analytics/next"
+//类型导入
+import { Metadata, Viewport } from "next"
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "星轨前哨基地",
   description: "Orbital Command Center is online",
   keywords: ["Next.js", "React", "blog", "frontend", "Star Trails"],
@@ -35,12 +37,12 @@ export const metadata = {
 }
 
 //静态导出视口设置
-export const viewport = {
+export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
 }
 
-export default async function RootLayout({ children }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
   const theme = cookieStore.get("theme")?.value || "light"
   return (

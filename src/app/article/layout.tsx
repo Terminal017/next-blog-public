@@ -1,12 +1,17 @@
+import { Metadata } from "next"
+
 export const metadata = {
-  title: "关于星轨",
-  description: "The information station of the Orbital Command Center",
+  title: {
+    default: "文档 - 星轨",
+    template: "%s - 星轨", // 文章标题模版
+  },
+  description: "The basic information about Star Trails",
   keywords: ["Next.js", "React", "blog", "frontend", "Star Trails"],
 
   openGraph: {
-    title: "Star Trails Articles",
+    title: "Star Trails",
     description: "Well, hello world!",
-    url: "https://startrails.site/article",
+    url: "https://startrails.site/about",
     type: "website",
     images: [
       {
@@ -20,12 +25,12 @@ export const metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "Star Trails Articles",
+    title: "Star Trails",
     description: "Well, hello world!",
     images: ["https://startrails.site/favicon.svg"],
   },
 }
 
-export default function AboutLayout({ children }) {
+export default function AboutLayout({ children }: { children: React.ReactNode }) {
   return children
 }
