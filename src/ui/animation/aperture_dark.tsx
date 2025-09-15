@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import "@/styles/ani/aperture.css"
-import { motion, AnimatePresence } from "motion/react"
-import { useState, useEffect, useRef, MouseEvent } from "react"
+import '@/styles/ani/aperture.css'
+import { motion, AnimatePresence } from 'motion/react'
+import { useState, useEffect, useRef, MouseEvent } from 'react'
 
 interface ApertureType {
   x: number
@@ -15,9 +15,9 @@ interface ApertureType {
 }
 
 export default function ApertureDark() {
-  const [apertures, setApertures] = useState <ApertureType[]>([])
+  const [apertures, setApertures] = useState<ApertureType[]>([])
   const [presstime, setPressTime] = useState(0)
-  const timeRef = useRef <NodeJS.Timeout[]> ([])
+  const timeRef = useRef<NodeJS.Timeout[]>([])
 
   useEffect(() => {
     return () => {
@@ -92,7 +92,7 @@ export default function ApertureDark() {
           : 3500 +
               duration_aperture * 1000 +
               delay_aperture * count_aperture * 1000 +
-              i * 300
+              i * 300,
       )
       timeRef.current.push(timeId)
     }
@@ -116,7 +116,7 @@ export default function ApertureDark() {
               className="aperture-item"
               key={aperture.key}
               style={{
-                position: "absolute",
+                position: 'absolute',
                 top: aperture.y - aperture.r,
                 left: aperture.x - aperture.r,
                 width: aperture.r * 2,
@@ -139,19 +139,19 @@ export default function ApertureDark() {
                 borderWidth: 3,
                 transition: {
                   duration: Math.max(1, aperture.duration),
-                  ease: "easeOut",
+                  ease: 'easeOut',
                 },
               }}
               transition={{
                 scale: {
                   duration: aperture.duration,
                   delay: aperture.delay,
-                  ease: aperture.r <= 350 ? "easeInOut" : "easeOut", //控制不同电波的动画曲线
+                  ease: aperture.r <= 350 ? 'easeInOut' : 'easeOut', //控制不同电波的动画曲线
                 },
                 opacity: {
                   duration: aperture.duration * 0.6,
                   delay: aperture.delay,
-                  ease: "easeInOut",
+                  ease: 'easeInOut',
                 },
                 borderWidth: {
                   duration: aperture.duration * 0.8,

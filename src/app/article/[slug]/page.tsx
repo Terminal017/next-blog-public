@@ -49,6 +49,7 @@ interface HeadingType {
   id: string;
 }
 
+//设置动态路由，其实params是返回后续URL值的期约
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   let content = ""
