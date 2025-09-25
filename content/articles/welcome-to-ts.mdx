@@ -1,0 +1,67 @@
+---
+title: 加入TypeScript
+datetime: 2025.9.10
+---
+
+
+### 加入TS
+记得我刚开始写JS时，总觉得这个语言的代码检查规则非常奇怪。它太宽松了！在调用对象属性时，即使我把color拼成colour，也不会有任何错误提示。作为一个弱类型语言，它好像尽可能不因错误中断程序，但这样的代码既不安全也不好维护，还会影响开发效率（很难想象因为一个对象方法的拼写错误，我重新完整看了两遍整个文件才排出错误）。
+
+然而，幸运的是，我们有TypeScript。在应用TypeScript的类型检查后，开发体验比纯JS开发好多了。
+
+### TS重构
+加入TS大家庭后，第一件要做的事就是用TS重构这个网站。重构的过程很顺利，主要内容也是为一些变量添加类型声明和类型断言。
+下面是我重构的过程：
+（1）更新配置
+```sh
+# 安装typescript依赖
+npm install --save-dev typescript @types/react @types/node
+
+# 添加tsconfig.json配置文件，迁移原本jsconfig.json的内容至tsconfig.json
+```
+
+（2）重构代码文件：从根目录开始，逐步迁移所有`js,jsx`至`ts,tsx`。
+
+（3）为函数行参添加类型：
+```tsx
+export default function AboutLayout({ children }: { children: React.ReactNode }) {...}
+```
+
+（4）为对象添加接口类型：
+```tsx
+interface ArticleDataType {
+  slug: string
+  title: string
+  img: string
+  date: string
+  desc: string
+  tags: string[]
+}
+
+let article_data: ArticleDataType[]= []
+```
+
+（5）为Next的接口添加Next内置类型：
+```tsx
+import { Metadata } from "next"
+
+export const metadata: Metadata = {...}
+```
+
+（6）为无法自动推断类型的变量与state等添加类型声明：
+```tsx
+ const [apertures, setApertures] = useState <ApertureType[]>([])
+ const timeRef = useRef <NodeJS.Timeout[]> ([])
+```
+
+（7）添加事件类型：
+```tsx
+const handleMouseUp = (e: MouseEvent<HTMLDivElement>) => {...}
+```
+
+（8）为部分特殊的变量添加类型断言：
+```tsx
+const { frontmatter } = getFrontmatter(content) as {
+    frontmatter: Record<string, string>
+}
+```

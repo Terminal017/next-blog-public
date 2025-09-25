@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import "@/styles/about.css"
-import BubbleHeader from "@/ui/bubble_header"
-import { motion } from "motion/react"
+import '@/styles/about.css'
+import BubbleHeader from '@/ui/bubble_header'
+import { motion } from 'motion/react'
 
 export default function About() {
   return (
@@ -11,7 +11,7 @@ export default function About() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
     >
       <BubbleHeader content="About" width={45} />
       <article className="about-container text-on-surface">
@@ -47,7 +47,7 @@ function TableAbout() {
           </tr>
           <tr className="bg-second-container/50">
             <td>从事</td>
-            <td>成大三的老东西啦...</td>
+            <td>大三啦！</td>
           </tr>
           <tr>
             <td>爱好</td>
@@ -77,7 +77,7 @@ function ContactLink() {
         className="contact-item1 bg-[rgb(24,23,23)] dark:bg-[rgb(33,37,41)]"
       >
         <div className="contact-box">
-          <span className="font-bold text-lg text-white">Github</span>
+          <span className="text-lg font-bold text-white">Github</span>
           <svg
             height="512px"
             id="Layer_1"
@@ -109,7 +109,7 @@ function ContactLink() {
         className="contact-item2 bg-[rgb(25,118,210)] dark:bg-[rgb(25,118,210)]"
       >
         <div className="contact-box">
-          <span className={"font-bold text-lg text-white"}>Email</span>
+          <span className={'text-lg font-bold text-white'}>Email</span>
           <svg
             role="img"
             viewBox="0 0 24 24"
