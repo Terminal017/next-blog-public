@@ -23,8 +23,8 @@ html.light .token.deleted {
 
 html.light .token.boolean,
 html.light .token.number,
-html.light .token.class, 
-html.light .token.unit{
+html.light .token.class,
+html.light .token.unit {
   color: #005cc5;
 }
 
@@ -57,9 +57,13 @@ html.light .token.attr-value {
   color: #8a4f00;
 }
 
-html.light .token.function,
-html.light .token.class-name {
+html.light .token.function {
   color: #0f69b4;
+}
+
+html.light .token.class-name,
+html.light .token.maybe-class-name {
+  color: #e67e22;
 }
 
 html.light .token.regex,
@@ -82,8 +86,9 @@ html.dark .token.punctuation {
 
 html.dark .token.tag,
 html.dark .token.namespace,
-html.dark .token.deleted, 
-html.dark .token.class-name{
+html.dark .token.deleted,
+html.dark .token.class-name,
+html.dark .token.maybe-class-name {
   color: #e2777a;
 }
 
@@ -96,7 +101,7 @@ html.dark .token.function-name {
 }
 
 html.dark .token.boolean,
-html.dark .token.number, 
+html.dark .token.number,
 html.dark .token.unit {
   color: #f08d49;
 }
@@ -148,21 +153,21 @@ html.dark .token.url {
 }
 
 /* 添加代码滚动条样式 */
-html.light pre[class*="language-"] {
+html.light pre[class*='language-'] {
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.2) rgba(0, 0, 0, 0.05);
 }
 
-html.dark pre[class*="language-"] {
+html.dark pre[class*='language-'] {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
 }
 
 /* 添加主题特定样式 */
-html.light .article-container pre[class*="language-"] {
-  background-color: rgb(220,228,233);
+html.light .article-container pre[class*='language-'] {
+  background-color: rgb(220, 228, 233);
 }
 
-html.dark .article-container pre[class*="language-"] {
-  background-color: rgb(38,43,46);
+html.dark .article-container pre[class*='language-'] {
+  background-color: rgb(38, 43, 46);
 }

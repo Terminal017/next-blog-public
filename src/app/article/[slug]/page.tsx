@@ -1,12 +1,13 @@
-import { notFound } from "next/navigation"
-import { article_map } from "../../../lib/data"
-import { MDXRemote } from "next-mdx-remote-client/rsc"
-import { getFrontmatter } from "next-mdx-remote-client/utils"
-import { read_mdx_file, get_mdx_options, mdx_components } from "./mdx-process"
-import { generateStaticPath } from "@/app/article/[slug]/slug_control"
-import ArticleTOC from "@/ui/toc"
+import { notFound } from 'next/navigation'
+import { article_map } from '../../../lib/data'
+import { MDXRemote } from 'next-mdx-remote-client/rsc'
+import { getFrontmatter } from 'next-mdx-remote-client/utils'
+import { read_mdx_file, get_mdx_options, mdx_components } from './mdx-process'
+import { generateStaticPath } from '@/app/article/[slug]/slug_control'
+import ArticleTOC from '@/ui/toc'
 
 import type { Metadata } from 'next'
+import type { MDXRemoteProps } from 'next-mdx-remote-client/rsc'
 
 // gene用于生成动态路由的所有可用路由，返回值应该当是一个对象数组：{ id: string }[]。在构建时会自动调用
 export async function generateStaticParams() {
@@ -45,19 +46,22 @@ export async function generateMetadata({
 }
 
 interface HeadingType {
-  text: string;
-  id: string;
+  text: string
+  id: string
 }
 
 //设置动态路由，其实params是返回后续URL值的期约
-export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
   const { slug } = await params
-  let content = ""
+  let content = ''
 
   try {
     content = await read_mdx_file(slug)
-  } catch (e) {
-    console.error("Error! List Wrong!")
+  } catch {
     notFound()
   }
 
@@ -69,14 +73,14 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     frontmatter: Record<string, string>
   }
 
-  const title = frontmatter.title || "unknown title"
+  const title = frontmatter.title || 'unknown title'
   const dateTime = frontmatter.datetime
-    ? new Date(frontmatter.datetime).toLocaleDateString("zh-CN", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
+    ? new Date(frontmatter.datetime).toLocaleDateString('zh-CN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
       })
-    : "unknown time"
+    : 'unknown time'
 
   return (
     <>
@@ -85,7 +89,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <time>{dateTime}</time>
         <MDXRemote
           source={content}
-          options={mdx_options as any}
+          options={mdx_options as MDXRemoteProps['options']}
           components={mdx_components}
         />
       </article>

@@ -4,24 +4,30 @@ datetime: 2025.9.19
 ---
 
 ### 格式化工具Prettier
+
 我个人很喜欢在写代码时应用格式化工具，它能让代码更整齐，方便阅读和管理。之前我一直用VSC的插件Prettier进行格式化JS等语言，设置一个全局配置，应用于我的全部前端项目。不过最近Tailwind CSS写的很多，许多类名挤在一起不方便阅读，自己一个一个调又很麻烦，我就考虑能否让Prettier能自动格式化Tailwind，让它自动编排实用类的顺序。
 
 ### Prettier格式化Tailwind
+
 Prettier默认是不支持格式化Tailwind的。社区里有一个开源项目[prettier-plugin-tailwindcss](https://github.com/tailwindlabs/prettier-plugin-tailwindcss)可以实现。在项目目录里安装它：
+
 ```sh
 npm install -D prettier prettier-plugin-tailwindcss
 ```
 
 然后新建一个`.prettierrc`文件（这是Prettier的配置文件），然后添加一下配置：
-```sh
+
+```json
 {
   "plugins": ["prettier-plugin-tailwindcss"],
-  "tailwindPreserveWhitespace": true,
+  "tailwindPreserveWhitespace": true
 }
 ```
+
 其中第二行表示会保留多余的空格和换行符，这样你可以在一行内类名过长时进行换行，如果不希望换行可以设置为false（项目的作者偏向于不换行，而我更偏向于过长时换行）。
 
 由于这个配置文件会覆盖VSC对于Prettier插件的全局配置，后续应该再添加Prettier插件的其他配置。这是我个人偏向的配置：
+
 ```json
 {
   "plugins": ["prettier-plugin-tailwindcss"],

@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import "@/styles/ani/bubble.css"
-import { motion } from "motion/react"
-import { useEffect, useState, useCallback, useRef } from "react"
+import '@/styles/ani/bubble.css'
+import { motion } from 'motion/react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 
 interface BubbleType {
   id: number
@@ -12,10 +12,16 @@ interface BubbleType {
   duration: number
   xTarget: number
   yTarget: number
-  reset: boolean 
+  reset: boolean
 }
 
-export default function BubbleHeader({ content, width }: { content: string; width: number }) {
+export default function BubbleHeader({
+  content,
+  width,
+}: {
+  content: string
+  width: number
+}) {
   const [bubbles, setBubbles] = useState<BubbleType[]>([])
   const [isHoveringbox, setIsHoveringbox] = useState(false)
   const hoverTimerRef = useRef<NodeJS.Timeout | null>(null) //设置定时器，控制动画切换延迟
@@ -34,7 +40,7 @@ export default function BubbleHeader({ content, width }: { content: string; widt
         setIsHoveringbox(isHovering)
       }, hoverDelay)
     },
-    [hoverDelay]
+    [hoverDelay],
   )
 
   // 创建重置气泡函数，使用useCallback以保证函数引用相同（稳定）
@@ -55,7 +61,7 @@ export default function BubbleHeader({ content, width }: { content: string; widt
           }
         }
         return bubble
-      })
+      }),
     )
   }, [])
 
@@ -84,7 +90,7 @@ export default function BubbleHeader({ content, width }: { content: string; widt
         clearTimeout(hoverTimerRef.current)
       }
     }
-  }, [])
+  }, [maxcount])
 
   useEffect(() => {
     // 当isHoveringbox状态变化时，为下一次动画设置逐段delay
@@ -101,7 +107,7 @@ export default function BubbleHeader({ content, width }: { content: string; widt
             ...bubble,
           }
         }
-      })
+      }),
     )
   }, [isHoveringbox])
 
@@ -140,7 +146,7 @@ export default function BubbleHeader({ content, width }: { content: string; widt
             transition={{
               duration: bubble.duration,
               delay: bubble.delay,
-              ease: "easeInOut",
+              ease: 'easeInOut',
             }}
             // 动画完成后，如果在isHoveringbox状态下，就重设动画
             onAnimationComplete={() => {

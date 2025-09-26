@@ -7,7 +7,7 @@ interface ArticleDataType {
   tags: string[]
 }
 
-let article_data: ArticleDataType[] = []
+const article_data: ArticleDataType[] = []
 
 article_data.push({
   slug: 'prettier-format',

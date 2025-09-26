@@ -26,7 +26,7 @@ export default async function sitemap() {
 
   const sitemap_article = article_data.map((item) => {
     return {
-      url: 'https://startrails.site/article/' + item.slug,
+      url: `https://startrails.site/article/${item.slug}`,
       lastModified: new Date(item.date),
       priority: 0.5,
     }

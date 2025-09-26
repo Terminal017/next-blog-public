@@ -84,7 +84,9 @@ export default function ApertureDark() {
       //设定定时器清楚结束动画的电波
       const timeId = setTimeout(
         () => {
-          setApertures((prev) => prev.filter((item) => item.key != newItem.key))
+          setApertures((prev) =>
+            prev.filter((item) => item.key !== newItem.key),
+          )
           timeRef.current = timeRef.current.filter((id) => id !== timeId)
         },
         new_r <= 125 //控制时间统一
