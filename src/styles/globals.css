@@ -37,6 +37,9 @@
   --color-third-container: var(--md-sys-color-tertiary-container);
   --color-on-third-container: var(--md-sys-color-on-tertiary-container);
 
+  --color-third-fixed-dim: var(--md-sys-color-tertiary-fixed-dim); /* 第三色固定色调 */
+  --color-third-fixed: var(--md-sys-color-tertiary-fixed); /* 第三色固定背景色 */
+
   --color-outline: var(--md-sys-color-outline);
   --color-outline-v: var(--md-sys-color-outline-variant);
   --color-shadow: var(--md-sys-color-shadow);

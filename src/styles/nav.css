@@ -1,6 +1,6 @@
 .header {
   position: fixed;
-  width: 100%;
+  width: 100vw;
   z-index: 100;
   background-color: var(--md-sys-color-background);
 }
@@ -24,7 +24,7 @@
   justify-content: center;
   gap: 0.5rem;
   height: 100%;
-  margin-left: 1.5rem;
+  margin-left: 2rem;
   text-decoration: none;
 }
 
@@ -39,7 +39,7 @@
 }
 
 .blog-title > span {
-  padding: 0 0 0.25rem 0;
+  padding: 0 0 0.125rem 0;
   position: relative;             /*设置伪元素的绝对定位参照*/
 }
 
@@ -47,10 +47,11 @@
   content:"";
   display: block;
   position: absolute;             /*与父元素绝对定位，调整下划线位置*/
+  bottom: 0.125rem;
   width: 0;
   height: 3px;
   background-color: var(--md-sys-color-on-background);
-  transition: 1s;
+  transition: 0.75s;
 }
 
 .blog-title > span:hover::after {

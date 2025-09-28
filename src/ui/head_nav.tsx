@@ -87,7 +87,7 @@ export default function Header() {
                   className={roboto.className}
                   style={{ fontWeight: '700 ', fontSize: '1.5rem' }}
                 >
-                  Terminal.ntc
+                  StarTrail
                 </span>
               </div>
             </Link>
