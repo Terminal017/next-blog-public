@@ -482,7 +482,7 @@ export const metadata = {
 
 动态路由可以通过`generateMetadata`函数导出页面的`metadata`信息：
 ```jsx
-export async function generateMetadata({ params }) {Add commentMore actions
+export async function generateMetadata({ params }) {
   const { slug } = await params
   const article = article_map[slug] || {}
   return {

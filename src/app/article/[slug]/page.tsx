@@ -5,6 +5,7 @@ import { getFrontmatter } from 'next-mdx-remote-client/utils'
 import { read_mdx_file, get_mdx_options, mdx_components } from './mdx-process'
 import { generateStaticPath } from '@/app/article/[slug]/slug_control'
 import ArticleTOC from '@/ui/toc'
+import SignInButton from './login'
 
 import type { Metadata } from 'next'
 import type { MDXRemoteProps } from 'next-mdx-remote-client/rsc'
@@ -94,6 +95,7 @@ export default async function Page({
         />
       </article>
       <ArticleTOC headings={headings} />
+      <SignInButton />
     </>
   )
 }
