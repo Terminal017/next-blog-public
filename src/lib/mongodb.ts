@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'development') {
   clientPromise = client.connect()
 }
 
-export async function getDB(dbName = 'star_database') {
+export default async function getDB(dbName = 'star_database') {
   const client = await clientPromise
   return client.db(dbName)
 }

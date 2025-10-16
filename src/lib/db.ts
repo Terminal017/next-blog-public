@@ -1,4 +1,4 @@
-// This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
+// 这里处理Auth与Mongodb的连接，代码来源于官方文档
 import { MongoClient, ServerApiVersion } from 'mongodb'
 
 if (!process.env.MONGODB_URI) {

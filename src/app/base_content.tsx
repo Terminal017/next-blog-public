@@ -24,6 +24,7 @@ export default function HomePage() {
           alt="星轨的头像"
           width={200}
           height={200}
+          unoptimized
           priority
         />
       </motion.div>

@@ -1,9 +1,7 @@
-import fs from "fs/promises";
-import path from "path";
-import remarkGfm from "remark-gfm";
-import remarkSlug from "remark-slug";
-import rehypePrismPlus from "rehype-prism-plus";
-import { visit } from "unist-util-visit";
+import remarkGfm from 'remark-gfm'
+import remarkSlug from 'remark-slug'
+import rehypePrismPlus from 'rehype-prism-plus'
+import { visit } from 'unist-util-visit'
 import CodeBlock from './code_copy'
 
 import { Root as RootType, Heading } from 'mdast'
@@ -12,16 +10,6 @@ import { Root as RootType, Heading } from 'mdast'
  * @param {string} slug - 文章的slug
  * @returns {Promise<string>} 文件内容
  */
-export async function read_mdx_file(slug: string): Promise<string> {
-  const filePath = path.join(
-      process.cwd(),
-      "content",
-      "articles",
-      `${slug}.mdx`
-    );
-  
-  return fs.readFile(filePath, "utf8");
-}
 
 interface HeadingType {
   text: string
@@ -49,40 +37,36 @@ function remarkExtractHeadings(headings: HeadingType[]) {
 export function get_mdx_options(headings: HeadingType[]) {
   return {
     mdxOptions: {
-      remarkPlugins: [
-        remarkGfm,
-        remarkSlug,
-        remarkExtractHeadings(headings),
-      ],
+      remarkPlugins: [remarkGfm, remarkSlug, remarkExtractHeadings(headings)],
       rehypePlugins: [
         [
           rehypePrismPlus,
           {
-            showLineNumbers: false,       // 不显示行号
-            ignoreMissing: true,          // 忽略缺失的语言定义
-            defaultLanguage: "plaintext", // 默认语言
+            showLineNumbers: false, // 不显示行号
+            ignoreMissing: true, // 忽略缺失的语言定义
+            defaultLanguage: 'plaintext', // 默认语言
           },
         ],
       ],
     },
     parseFrontmatter: true, // 解析 frontmatter
-  };
+  }
 }
 
 // 定义MDX组成配置：代码块组件部分
 export const mdx_components = {
-  pre: (props: {[key: string]: string}) => {
-    const codeClass = props.className;
+  pre: (props: { [key: string]: string }) => {
+    const codeClass = props.className
 
     // 检查是否有 className 并且是否包含语言标识
-    if (codeClass.startsWith("language-")) {
-      const language = codeClass.replace(/language-/, "");
+    if (codeClass.startsWith('language-')) {
+      const language = codeClass.replace(/language-/, '')
 
-      const preElement = <pre {...props} />;
-      return <CodeBlock pre={preElement} language={language} />;
+      const preElement = <pre {...props} />
+      return <CodeBlock pre={preElement} language={language} />
     }
 
     // 如果不是代码块，返回原始的pre
-    return <pre {...props} />;
+    return <pre {...props} />
   },
-};
+}

@@ -1,6 +1,6 @@
 import BlogList from '@/ui/blog_list'
-import { article_data } from '@/lib/data'
 import { notFound } from 'next/navigation'
+import { getArticleList } from '@/lib/articles_post'
 
 export default async function AritclePage({
   params,
@@ -13,13 +13,19 @@ export default async function AritclePage({
     notFound()
   }
 
-  if (params_num < 1 || params_num > Math.ceil(article_data.length / 5)) {
+  const [articles_sum, article_list] = await getArticleList(params_num)
+
+  if (params_num < 1 || params_num > Math.ceil(articles_sum / 5)) {
     notFound()
   }
 
   return (
     <div className="flex flex-col">
-      <BlogList page_number={params_num} />
+      <BlogList
+        page_number={params_num}
+        article_sum={articles_sum}
+        article_list={article_list}
+      />
     </div>
   )
 }

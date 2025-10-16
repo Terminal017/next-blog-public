@@ -14,10 +14,16 @@
 
 # env files
 .env*
-setup-proxy.mjs
 
 # vercel
 .vercel
 
 # typescript
 next-env.d.ts
+
+#development
+setup-proxy.mjs
+connect_db.mjs
+
+#other
+/public/img_storage

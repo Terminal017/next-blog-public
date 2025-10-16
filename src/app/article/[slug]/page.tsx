@@ -2,18 +2,13 @@ import { notFound } from 'next/navigation'
 import { article_map } from '../../../lib/data'
 import { MDXRemote } from 'next-mdx-remote-client/rsc'
 import { getFrontmatter } from 'next-mdx-remote-client/utils'
-import { read_mdx_file, get_mdx_options, mdx_components } from './mdx-process'
-import { generateStaticPath } from '@/app/article/[slug]/slug_control'
+import { get_mdx_options, mdx_components } from './mdx-process'
+import { getArticleContent } from '@/lib/articles_post'
 import ArticleTOC from '@/ui/toc'
 import SignInButton from './login'
 
 import type { Metadata } from 'next'
 import type { MDXRemoteProps } from 'next-mdx-remote-client/rsc'
-
-// gene用于生成动态路由的所有可用路由，返回值应该当是一个对象数组：{ id: string }[]。在构建时会自动调用
-export async function generateStaticParams() {
-  return await generateStaticPath()
-}
 
 //导出的dynamicParams定义方法不在路由表中的行为，为false时表示访问不存在的会自动进入404页面
 export const dynamicParams = false
@@ -61,7 +56,7 @@ export default async function Page({
   let content = ''
 
   try {
-    content = await read_mdx_file(slug)
+    content = await getArticleContent(slug)
   } catch {
     notFound()
   }

@@ -4,10 +4,9 @@ import BubbleHeader from '@/ui/bubble_header'
 import Link from 'next/link'
 import { motion } from 'motion/react'
 import Image from 'next/image'
-import { article_data } from '@/lib/data'
 import { useRouter } from 'next/navigation'
 
-interface ArticleDataType {
+interface ArticleListType {
   slug: string
   title: string
   img: string
@@ -16,12 +15,17 @@ interface ArticleDataType {
   tags: string[]
 }
 
-export default function BlogList({ page_number }: { page_number: number }) {
+export default function BlogList({
+  page_number,
+  article_sum,
+  article_list,
+}: {
+  page_number: number
+  article_sum: number
+  article_list: ArticleListType[]
+}) {
+  //控制网页跳转，useRouter可以指定跳转的网页
   const router = useRouter()
-  const page_data = article_data.slice(
-    (page_number - 1) * 5,
-    Math.min(page_number * 5, article_data.length),
-  )
 
   return (
     <motion.main
@@ -34,7 +38,7 @@ export default function BlogList({ page_number }: { page_number: number }) {
       <BubbleHeader content="Article" width={45} />
       <div className="blog-list">
         <ul className="blog-list-ul">
-          {page_data.map((data) => {
+          {article_list.map((data) => {
             return <ArticleLi key={data.slug} article_data={data} />
           })}
         </ul>
@@ -60,31 +64,29 @@ export default function BlogList({ page_number }: { page_number: number }) {
             <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
           </svg>
         </button>
-        {Array.from({ length: Math.ceil(article_data.length / 5) }).map(
-          (_, index) => {
-            return (
-              <button
-                key={index}
-                className={`bg-surface-low hover:bg-third-container ${
-                  page_number === index + 1 ? 'bg-third-container' : ''
-                }`}
-                onClick={() => {
-                  router.push(`/article/page/${index + 1}`)
-                }}
-              >
-                <p className="pointer-events-none">{index + 1}</p>
-              </button>
-            )
-          },
-        )}
+        {Array.from({ length: Math.ceil(article_sum / 5) }).map((_, index) => {
+          return (
+            <button
+              key={index}
+              className={`bg-surface-low hover:bg-third-container ${
+                page_number === index + 1 ? 'bg-third-container' : ''
+              }`}
+              onClick={() => {
+                router.push(`/article/page/${index + 1}`)
+              }}
+            >
+              <p className="pointer-events-none">{index + 1}</p>
+            </button>
+          )
+        })}
         <button
           className={`bg-surface-low ${
-            page_number === Math.ceil(article_data.length / 5)
+            page_number === Math.ceil(article_sum / 5)
               ? ''
               : 'hover:bg-third-container'
           }`}
           onClick={() => {
-            if (page_number < Math.ceil(article_data.length / 5)) {
+            if (page_number < Math.ceil(article_sum / 5)) {
               router.push(`/article/page/${page_number + 1}`)
             }
           }}
@@ -104,14 +106,14 @@ export default function BlogList({ page_number }: { page_number: number }) {
   )
 }
 
-function ArticleLi({ article_data }: { article_data: ArticleDataType }) {
+function ArticleLi({ article_data }: { article_data: ArticleListType }) {
   return (
     <li>
       <div className="blog-list-box bg-surface-low hover:bg-surface-container">
         <Link href={`/article/${article_data.slug}`} className="blog-list-link">
           <div className="blog-list-img">
             <Image
-              src={`/images/${article_data.img}`}
+              src={`${article_data.img}`}
               alt={article_data.title || '文章图片'}
               width={228}
               height={132}
