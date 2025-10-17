@@ -19,8 +19,7 @@ export async function getArticleList(
   const db = await getDB()
   const collection = db.collection<ArticleListType>('articles')
 
-  const articles_sum = await collection.countDocuments().catch((e) => {
-    console.error('查询文章文档出错')
+  const articles_sum = await collection.countDocuments().catch(() => {
     return 0
   })
 
@@ -31,8 +30,7 @@ export async function getArticleList(
     .limit(5)
     .skip((index - 1) * 5)
     .toArray()
-    .catch((e) => {
-      console.error('查询文章列表出错', e)
+    .catch(() => {
       return []
     })) as ArticleListType[]
 

@@ -1,7 +1,9 @@
 import { MongoClient } from 'mongodb'
 
 const uri = process.env.MONGODB_URI as string
-if (!uri) throw new Error('MONGODB_URI错误')
+if (!uri) {
+  throw new Error('MONGODB_URI错误')
+}
 
 const options = {}
 let client: MongoClient

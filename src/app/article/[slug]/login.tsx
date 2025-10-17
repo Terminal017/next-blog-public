@@ -2,13 +2,20 @@ import { signIn } from '../../../../auth'
 
 export default function SignInButton() {
   return (
-    <form
-      action={async () => {
-        'use server'
-        await signIn('google')
-      }}
-    >
-      <button type="submit">Signin with Google</button>
-    </form>
+    <div className="mb-8 flex h-6 w-full items-center justify-center">
+      <form
+        action={async () => {
+          'use server'
+          await signIn('google')
+        }}
+      >
+        <button
+          type="submit"
+          className="rounded-sm bg-sky-300 px-3 py-2 text-xl"
+        >
+          Signin with Google
+        </button>
+      </form>
+    </div>
   )
 }
