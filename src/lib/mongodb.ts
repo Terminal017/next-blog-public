@@ -1,27 +1,55 @@
-import { MongoClient } from 'mongodb'
+import { MongoClient, Db } from 'mongodb'
 
 const uri = process.env.MONGODB_URI as string
+
 if (!uri) {
   throw new Error('MONGODB_URI错误')
 }
 
-const options = {}
-let client: MongoClient
-let clientPromise: Promise<MongoClient>
+// 使用 Symbol.for 在全局符号表中注册键，减少与其他库命名冲突
+const MONGO_GLOBAL_KEY = Symbol.for('next.mongo.client')
 
-// 为了防止开发环境热重载时多次连接数据库，使用全局缓存 client
-if (process.env.NODE_ENV === 'development') {
-  if (!(global as any)._mongoClientPromise) {
-    client = new MongoClient(uri, options)
-    ;(global as any)._mongoClientPromise = client.connect()
-  }
-  clientPromise = (global as any)._mongoClientPromise
-} else {
-  client = new MongoClient(uri, options)
-  clientPromise = client.connect()
+type Cache = {
+  client: MongoClient | null
+  promise: Promise<{ client: MongoClient; db: Db }> | null
 }
 
-export default async function getDB(dbName = 'star_database') {
-  const client = await clientPromise
-  return client.db(dbName)
+const globalRef = globalThis as any
+
+function getCache(): Cache {
+  // 优先使用 Symbol.for 存储
+  if (!globalRef[MONGO_GLOBAL_KEY]) {
+    globalRef[MONGO_GLOBAL_KEY] = { client: null, promise: null } as Cache
+  }
+
+  return globalRef[MONGO_GLOBAL_KEY] as Cache
+}
+
+export async function connectToDatabase(
+  dbName: string = 'star_database',
+): Promise<{ client: MongoClient; db: Db }> {
+  const cache = getCache()
+
+  if (cache.client) {
+    console.log('使用缓存的MongoDB客户端')
+    return { client: cache.client, db: cache.client.db(dbName) }
+  }
+
+  if (!cache.promise) {
+    console.log('创建新的MongoDB客户端连接')
+    const options = {}
+    const client = new MongoClient(uri, options)
+    cache.promise = client.connect().then((connectedClient) => {
+      cache.client = connectedClient
+      return { client: connectedClient, db: connectedClient.db(dbName) }
+    })
+  }
+
+  return cache.promise
+}
+
+//连接数据库
+export default async function getDB(dbName?: string): Promise<Db> {
+  const { db } = await connectToDatabase(dbName)
+  return db
 }

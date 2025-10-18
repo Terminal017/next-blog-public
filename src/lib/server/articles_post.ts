@@ -1,4 +1,4 @@
-import getDB from './mongodb'
+import getDB from '../mongodb'
 
 interface ArticleListType {
   slug: string
