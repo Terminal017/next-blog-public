@@ -28,10 +28,15 @@ function getCache(): Cache {
 export async function connectToDatabase(
   dbName: string = 'star_database',
 ): Promise<{ client: MongoClient; db: Db }> {
+  //检测进程ID
+  // const pid =
+  //   typeof process !== 'undefined' && process.pid ? process.pid : 'no-process'
+  // console.log(`running pid=${pid}`)
+
   const cache = getCache()
 
   if (cache.client) {
-    console.log('使用缓存的MongoDB客户端')
+    // console.log('使用缓存的MongoDB客户端')
     return { client: cache.client, db: cache.client.db(dbName) }
   }
 

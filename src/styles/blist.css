@@ -28,6 +28,7 @@
 }
 
 .blog-list-box {
+  display: block;
   position: relative;
   overflow: hidden;  /* 阻止渐变效果溢出 */
   min-height: 11.375rem;
@@ -52,7 +53,7 @@
   color: var(--md-sys-color-primary)
 }
 
-.blog-list-link {
+.blog-list-innerbox {
   display: flex;
   flex-direction: row;
   /* justify-content: start; */

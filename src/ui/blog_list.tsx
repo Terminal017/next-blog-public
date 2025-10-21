@@ -109,8 +109,11 @@ export default function BlogList({
 function ArticleLi({ article_data }: { article_data: ArticleListType }) {
   return (
     <li>
-      <div className="blog-list-box bg-surface-low hover:bg-surface-container">
-        <Link href={`/article/${article_data.slug}`} className="blog-list-link">
+      <Link
+        href={`/article/${article_data.slug}`}
+        className="blog-list-box bg-surface-low hover:bg-surface-container"
+      >
+        <div className="blog-list-innerbox">
           <div className="blog-list-img">
             <Image
               src={`${article_data.img}`}
@@ -138,8 +141,8 @@ function ArticleLi({ article_data }: { article_data: ArticleListType }) {
               })}
             </div>
           </div>
-        </Link>
-      </div>
+        </div>
+      </Link>
     </li>
   )
 }

@@ -43,6 +43,7 @@ export default function Header() {
     { name: '文章', path: '/article' },
     // { name: "项目", path: "/project" },
     { name: '关于', path: '/about' },
+    { name: '友链', path: '/friendlink' },
   ]
 
   return (
