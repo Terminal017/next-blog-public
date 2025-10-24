@@ -2,7 +2,7 @@
 
 import BubbleHeader from '@/ui/bubble_header'
 import { useState } from 'react'
-import { motion } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 
 interface friendlinkType {
   title: string
@@ -70,5 +70,130 @@ export default function FriendLinkList({
 export function FriendLinkForm() {
   const [toggles, setToggles] = useState(0)
 
-  return <div className="h-10 w-full bg-amber-300"></div>
+  const friendlink_form = [
+    { text: '站点名称', f_name: 'name', placeholder: 'your_site_name' },
+    { text: '站点地址', f_name: 'site', placeholder: 'https://example.com' },
+    {
+      text: '站点头像',
+      f_name: 'avatar',
+      placeholder: 'https://img.example.com/img',
+    },
+    {
+      text: '站点描述',
+      f_name: 'description',
+      placeholder: 'your_site_description',
+    },
+    { text: '邮箱地址', f_name: 'email', placeholder: 'example@gmail' },
+  ]
+
+  return (
+    <div className="text-on-surface mt-12 flex w-[45rem] max-w-4/5 flex-col gap-2">
+      <div
+        className=" border-outline/80 bg-surface-low flex flex-col 
+        rounded-md border-[2px] border-solid text-base"
+      >
+        <button
+          className={`flex flex-row items-center justify-between border-b-2 
+            border-solid p-3 transition-all
+            ${toggles === 1 ? 'border-outline/80' : 'border-transparent'}`}
+          onClick={() => setToggles((prev) => (prev === 0 ? 1 : 0))}
+        >
+          <span className="font-medium">星轨基地信息</span>
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 -960 960 960"
+              width="24px"
+              fill="currentColor"
+              className={`${toggles === 1 ? '-rotate-90' : 'rotate-0'} 
+              duration-300 ease-in-out`}
+            >
+              <path d="M559-246 325-480l234-234 52 53-181 181 181 181-52 53Z" />
+            </svg>
+          </div>
+        </button>
+        <AnimatePresence>
+          {toggles === 1 && (
+            <motion.div
+              initial={{ height: 0 }}
+              animate={{ height: 'auto' }}
+              exit={{ height: 0 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="bg-background overflow-hidden"
+            >
+              <div className="relative px-3 py-4 leading-[1.7]">
+                <p>名称： StarTrail</p>
+                <p>网址： https://startrails.site</p>
+                <p>头像： https://startrails.site/favicon.svg</p>
+                <p>描述： 星轨的基地</p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+      <div
+        className="border-outline/80 bg-surface-low flex flex-col 
+        rounded-md border-[2px] border-solid text-base"
+      >
+        <button
+          className={`flex flex-row items-center justify-between 
+            border-b-2 border-solid p-3 transition-all
+            ${toggles === 2 ? 'border-outline/80' : 'border-transparent'}`}
+          onClick={() => setToggles((prev) => (prev === 0 ? 2 : 0))}
+        >
+          <span className="font-medium">申请友链</span>
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 -960 960 960"
+              width="24px"
+              fill="currentColor"
+              className={`${toggles === 2 ? '-rotate-90' : 'rotate-0'} 
+              duration-300 ease-in-out`}
+            >
+              <path d="M559-246 325-480l234-234 52 53-181 181 181 181-52 53Z" />
+            </svg>
+          </div>
+        </button>
+        <AnimatePresence>
+          {toggles === 2 && (
+            <motion.div
+              initial={{ height: 0 }}
+              animate={{ height: 'auto' }}
+              exit={{ height: 0 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="bg-background overflow-hidden"
+            >
+              <form className="flex flex-col gap-4 px-3 py-4">
+                {friendlink_form.map((items, index) => {
+                  return (
+                    <div className="flex w-full items-center" key={index}>
+                      <label>{`${items.text}：`} </label>
+                      <input
+                        type="text"
+                        name={items.f_name}
+                        placeholder={items.placeholder}
+                        className="border-outline/80 ml-1 flex-1 rounded 
+                        border px-2 py-0.5"
+                      />
+                    </div>
+                  )
+                })}
+                <div className="mt-4 flex flex-row justify-around text-lg">
+                  <button className="w-28 rounded-sm bg-amber-200 px-2 py-0.5">
+                    清空
+                  </button>
+                  <button className="w-28 rounded-sm bg-amber-200 px-2 py-0.5">
+                    提交信息
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  )
 }

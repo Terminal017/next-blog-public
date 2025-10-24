@@ -78,7 +78,7 @@
     padding: 20px 16px;
   }
   /* 移动端竖向排列 */
-  .blog-list-link {
+  .blog-list-innerbox {
     flex-direction: column;
   }
   .blog-list-img {
