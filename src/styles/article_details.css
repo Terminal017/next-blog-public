@@ -1,5 +1,6 @@
 /* 调整导航栏布局，使其不固定 */
 body:has(> .article-details-page) > .header {
+  width: 100%;
   position: static;
 }
 

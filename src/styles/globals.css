@@ -45,12 +45,25 @@
   --color-shadow: var(--md-sys-color-shadow);
 }
 
-* {
-  box-sizing: border-box;
-}
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
 
-:root {
-  --width-header: 70rem;
+  /*控制浏览器滚动条与深浅模式适配*/
+  html {
+    color-scheme: light;
+    scrollbar-width: thin;
+    scrollbar-gutter: stable;   /*预留滚动条*/
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  :root {
+    --width-header: 70rem;
+  }
 }
 
 body {

@@ -175,6 +175,7 @@ export function FriendLinkForm() {
                         type="text"
                         name={items.f_name}
                         placeholder={items.placeholder}
+                        required
                         className="border-outline/80 ml-1 flex-1 rounded 
                         border px-2 py-0.5"
                       />
