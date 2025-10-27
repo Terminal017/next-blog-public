@@ -27,7 +27,7 @@ const eslintConfig = [
       eqeqeq: ['error', 'always'], // 强制使用 === 和 !==
       curly: ['error', 'all'], // 强制大括号
       'dot-notation': 'error', // 使用点符号访问对象属性
-      'no-console': 'warning', // 禁止使用 console.log
+      'no-console': 'warn', // 禁止使用 console.log
       '@typescript-eslint/no-explicit-any': 'off', // 允许使用 显示any类型
     },
   },

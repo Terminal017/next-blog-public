@@ -41,7 +41,6 @@ export async function connectToDatabase(
   }
 
   if (!cache.promise) {
-    console.log('创建新的MongoDB客户端连接')
     const options = {}
     const client = new MongoClient(uri, options)
     cache.promise = client.connect().then((connectedClient) => {

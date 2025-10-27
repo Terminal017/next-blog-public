@@ -22,7 +22,7 @@ export default function FriendLinkList({
   return (
     <main className="flex w-full flex-col items-center">
       <BubbleHeader content="Friend Links" width={45}></BubbleHeader>
-      <div className="w-[45rem] max-w-4/5">
+      <div className="w-[45rem] max-w-4/5 max-md:max-w-9/10">
         <h2
           className="before:bg-inverse-primary relative mt-8 px-4 py-8 text-[1.75rem]
         leading-none font-semibold before:absolute before:top-8 before:left-0
@@ -33,7 +33,7 @@ export default function FriendLinkList({
       </div>
       <div
         className="mt-4 grid w-[45rem] max-w-4/5 grid-cols-2
-      gap-8 max-md:max-w-9/10"
+      gap-8 max-md:max-w-9/10 max-md:grid-cols-1"
       >
         {friendlink_data.map((item, index) => {
           return (
@@ -72,7 +72,7 @@ export default function FriendLinkList({
           )
         })}
       </div>
-      <div className="w-[45rem] max-w-4/5">
+      <div className="w-[45rem] max-w-4/5 max-md:max-w-9/10">
         <h2
           className="before:bg-inverse-primary relative mt-20 px-4 py-8 text-[1.75rem]
         leading-none font-semibold before:absolute before:top-8 before:left-0
@@ -105,6 +105,9 @@ export function FriendLinkForm() {
   useEffect(() => {
     if (form_state.message) {
       setPrompt(form_state)
+      setTimeout(() => {
+        setPrompt({ ok: false, message: form_state.message })
+      }, 4000)
     }
   }, [form_state])
 
@@ -143,21 +146,23 @@ export function FriendLinkForm() {
 
   return (
     <>
-      <div
-        className={`bg-third-container fixed top-9/20 left-1/2 z-40 
-      -translate-1/2 flex-col items-center gap-4 rounded-md
-      px-16 py-5 shadow-xl ${prompt.ok ? 'flex' : 'hidden'}`}
+      <motion.div
+        className={`bg-third-container fixed top-14 left-1/2 z-200
+        flex -translate-x-1/2 flex-col items-center
+        gap-4 rounded-md px-12 py-4 shadow-xl`}
+        initial={{ opacity: 0, y: -64 }}
+        animate={{ opacity: prompt.ok ? 1 : 0, y: prompt.ok ? 0 : -64 }}
+        transition={{ duration: 0.3, ease: prompt.ok ? 'easeOut' : 'easeIn' }}
+        onClick={() => setPrompt({ ok: false, message: form_state.message })}
       >
-        <p className="text-2xl">{prompt.message}</p>
-        <button
-          onClick={() => setPrompt({ ok: false, message: '' })}
-          className="hover:bg-surface-highest border-third/40 bg-surface-high
-          rounded-sm border px-6 py-1 text-xl transition-colors duration-200"
-        >
-          确认
-        </button>
-      </div>
-      <div className="text-on-surface flex h-[30rem] w-[45rem] max-w-4/5 flex-col gap-2">
+        <p className="cursor-default text-xl whitespace-nowrap">
+          {prompt.message}
+        </p>
+      </motion.div>
+      <div
+        className="text-on-surface flex h-[30rem] w-[45rem] max-w-4/5 
+      flex-col gap-2 max-md:max-w-9/10"
+      >
         <div
           className=" border-outline/80 bg-surface-low flex 
         flex-col rounded-md border-[2px] border-solid text-base"
