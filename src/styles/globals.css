@@ -43,6 +43,9 @@
   --color-outline: var(--md-sys-color-outline);
   --color-outline-v: var(--md-sys-color-outline-variant);
   --color-shadow: var(--md-sys-color-shadow);
+
+  /* 反转主色 */
+  --color-inverse-primary: var(--md-sys-color-inverse-primary);
 }
 
 @layer base {
