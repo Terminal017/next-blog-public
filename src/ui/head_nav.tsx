@@ -2,7 +2,6 @@
 
 import '@/styles/nav.css'
 import '@/styles/globals.css'
-import { roboto } from '@/ui/fonts/font'
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import Link from 'next/link'
@@ -84,12 +83,7 @@ export default function Header() {
                 />
               </svg>
               <div className="blog-title">
-                <span
-                  className={roboto.className}
-                  style={{ fontWeight: '700 ', fontSize: '1.5rem' }}
-                >
-                  StarTrail
-                </span>
+                <span className="text-2xl font-bold">StarTrail</span>
               </div>
             </Link>
             <div className="nav-right">

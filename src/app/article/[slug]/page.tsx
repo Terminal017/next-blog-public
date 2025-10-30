@@ -4,6 +4,7 @@ import { MDXRemote } from 'next-mdx-remote-client/rsc'
 import { getFrontmatter } from 'next-mdx-remote-client/utils'
 import { get_mdx_options, mdx_components } from './mdx-process'
 import { getArticleContent } from '@/lib/server/articles_post'
+import CommentList from './comment_list'
 import ArticleTOC from '@/ui/toc'
 import SignInButton from './login'
 
@@ -91,6 +92,7 @@ export default async function Page({
       </article>
       <ArticleTOC headings={headings} />
       <SignInButton />
+      <CommentList page={slug} />
     </>
   )
 }
