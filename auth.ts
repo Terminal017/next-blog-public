@@ -3,24 +3,60 @@ import Google from 'next-auth/providers/google'
 import { MongoDBAdapter } from '@auth/mongodb-adapter'
 import client from '@/lib/db'
 import getDB from '@/lib/mongodb'
+import { uploadImageToR2 } from '@/lib/server/r2'
+import crypto from 'crypto'
 
 import type { User } from '@auth/core/types'
 import { ObjectId } from 'mongodb'
 
 //将数据写入user_profile集合
 async function add_user_image(user: User) {
-  const client = await getDB()
-  const collection = client.collection('user_profile')
-  const updateDoc = {
-    $set: { name: user.name, email: user.email, image_back: user.image },
+  //如果它是空的说明SignIn被取消了，让它报错停止登陆
+  if (!user) {
+    return false
   }
-  const result = await collection.updateOne(
-    { _id: new ObjectId(user.id) },
-    updateDoc,
-    { upsert: true },
-  )
-  console.log('数据库已写入：', result)
+
+  try {
+    const res = await fetch(user.image as string)
+    const arrayBuffer = await res.arrayBuffer()
+
+    const buffer = Buffer.from(arrayBuffer)
+
+    // 用哈希简单加密图片路径（加密不可逆）
+    const fileName = crypto
+      .createHash('sha256')
+      .update(user.id as string)
+      .digest('hex')
+      .slice(0, 16)
+
+    // 上传至R2
+    const storpath = await uploadImageToR2(buffer, fileName)
+    console.log('头像已上传至 R2')
+
+    //上传用户信息到数据库
+    const client = await getDB()
+    const collection = client.collection('user_profile')
+    const updateDoc = {
+      $set: {
+        user_id: user.id,
+        name: user.name,
+        email: user.email,
+        image: storpath, //R2存储地址
+      },
+    }
+    //更新用户信息，如果不存在则插入新文档
+    await collection.updateOne({ _id: new ObjectId(user.id) }, updateDoc, {
+      upsert: true,
+    })
+
+    return true
+  } catch (err) {
+    console.error('上传发生错误', err)
+    //发生错误阻止登陆
+    return false
+  }
 }
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: MongoDBAdapter(client),
   providers: [Google],
@@ -29,8 +65,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     //登陆后将用户基本信息拷贝进新的数据库，上传图片到存储桶
     async signIn({ user }) {
       console.log('登陆信息输入', user)
-      add_user_image(user)
-      return true
+      return await add_user_image(user)
     },
   },
 })

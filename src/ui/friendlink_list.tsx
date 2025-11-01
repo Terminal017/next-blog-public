@@ -4,6 +4,7 @@ import BubbleHeader from '@/ui/bubble_header'
 import { useState, useEffect, useActionState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { add_new_friend } from '@/lib/server/handle_friendlink'
+import { MessageRemind } from '@/ui/mini_component'
 
 interface friendlinkType {
   title: string
@@ -107,7 +108,7 @@ export function FriendLinkForm() {
       setPrompt(form_state)
       setTimeout(() => {
         setPrompt({ ok: false, message: form_state.message })
-      }, 4000)
+      }, 3000)
     }
   }, [form_state])
 
@@ -146,19 +147,7 @@ export function FriendLinkForm() {
 
   return (
     <>
-      <motion.div
-        className={`bg-third-container fixed top-14 left-1/2 z-200
-        flex -translate-x-1/2 flex-col items-center
-        gap-4 rounded-md px-12 py-4 shadow-xl`}
-        initial={{ opacity: 0, y: -64 }}
-        animate={{ opacity: prompt.ok ? 1 : 0, y: prompt.ok ? 0 : -64 }}
-        transition={{ duration: 0.3, ease: prompt.ok ? 'easeOut' : 'easeIn' }}
-        onClick={() => setPrompt({ ok: false, message: form_state.message })}
-      >
-        <p className="cursor-default text-xl whitespace-nowrap">
-          {prompt.message}
-        </p>
-      </motion.div>
+      <MessageRemind state={prompt} setState={setPrompt} />
       <div
         className="text-on-surface flex h-[30rem] w-[45rem] max-w-4/5 
       flex-col gap-2 max-md:max-w-9/10"

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.11.0",
+    "@aws-sdk/client-s3": "^3.920.0",
     "@vercel/analytics": "^1.5.0",
     "gray-matter": "^4.0.3",
     "marked": "^15.0.11",
