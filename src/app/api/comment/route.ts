@@ -2,15 +2,20 @@ import type { NextRequest } from 'next/server'
 import { auth } from '../../../../auth'
 
 import getDB from '@/lib/mongodb'
+import { MongoClient, ObjectId } from 'mongodb'
 
 interface CommentType {
-  _id?: string
+  _id?: ObjectId
   comment: string
   datetime: Date
   user: { name: string; image: string }
+  //state语言：1表示active, 0表示deleted
+  state: number
 }
 
+//处理请求评论
 export async function GET(request: NextRequest) {
+  console.log('发生GET请求')
   try {
     const { searchParams } = new URL(request.url)
     const slug = searchParams.get('slug')
@@ -20,7 +25,7 @@ export async function GET(request: NextRequest) {
       .collection('comments')
       .aggregate([
         //聚合操作：根据id查找users中的名称与头像
-        { $match: { slug: slug } },
+        { $match: { slug: slug, state: 1 } },
         {
           $lookup: {
             from: 'user_profile', // 连接的下一个集合
@@ -34,7 +39,7 @@ export async function GET(request: NextRequest) {
         },
         {
           $project: {
-            _id: 0,
+            _id: 1,
             comment: 1,
             datetime: 1,
             'user.name': 1,
@@ -44,13 +49,22 @@ export async function GET(request: NextRequest) {
       ])
       .toArray()) as CommentType[]
 
-    return Response.json(data)
-  } catch {
+    const response_data = data.map((item) => {
+      return {
+        ...item,
+        _id: item._id?.toString(),
+        datetime: item.datetime.toISOString().split('T')[0],
+      }
+    })
+    return Response.json(response_data)
+  } catch (error) {
     //错误处理，发生错误时返回500
+    console.log(error)
     return Response.json([], { status: 500 })
   }
 }
 
+//处理发布评论请求
 export async function POST(request: NextRequest) {
   try {
     //获取表单数据
@@ -68,22 +82,66 @@ export async function POST(request: NextRequest) {
       !session?.user?.id
     ) {
       //ok仅表示发布过程完成，不表示请求是否成功
-      return Response.json({ ok: true, message: '数据格式错误' })
+      return Response.json({ ok: true, message: '数据格式错误', data: {} })
     }
 
     const client = await getDB()
     const collection = client.collection('comments')
+    const insert_date = new Date()
     const insert_doc = {
       slug: slug,
       user_id: session.user.id,
       comment: comment,
-      datetime: new Date(),
+      datetime: insert_date,
+      state: 1,
     }
-    await collection.insertOne(insert_doc)
+    const result = await collection.insertOne(insert_doc)
 
-    return Response.json({ ok: true, message: '评论已发布(＾▽＾)' })
+    //返回成功上传到的评论数据，用于乐观更新
+    return Response.json({
+      ok: true,
+      message: '评论已发布(＾▽＾)',
+      data: {
+        _id: result.insertedId,
+        comment: comment,
+        datetime: insert_date.toISOString().split('T')[0],
+        user: {
+          name: session.user.name,
+          image: session.user.image,
+        },
+      },
+    })
   } catch {
     console.error('评论发布发生错误')
-    return Response.json({ ok: true, message: '评论上传失败' })
+    return Response.json({ ok: true, message: '评论上传失败', data: {} })
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const request_data = await request.json()
+    if (!request_data._id) {
+      return Response.json({ ok: true, message: '', success: false })
+    }
+
+    const database = await getDB()
+    const collection = database.collection('comments')
+
+    const result = await collection.deleteOne({
+      _id: new ObjectId(request_data._id as string),
+    })
+
+    if (result.deletedCount === 0) {
+      return Response.json({
+        ok: true,
+        message: '评论删除失败',
+        success: false,
+      })
+    } else {
+      return Response.json({ ok: true, message: '评论已删除', success: true })
+    }
+  } catch {
+    console.error('删除错误')
+    return Response.json({ ok: true, message: '评论删除失败', success: false })
   }
 }

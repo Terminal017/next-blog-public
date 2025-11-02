@@ -1,4 +1,5 @@
 import { motion } from 'motion/react'
+import { useState } from 'react'
 
 export function MessageRemind({
   state,
@@ -29,3 +30,5 @@ export function MessageRemind({
     </motion.div>
   )
 }
+
+//激活提示的自定义Hook

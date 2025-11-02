@@ -1,4 +1,4 @@
-import { signIn, signOut } from '../../../../auth'
+import { signIn } from '../../../../auth'
 
 export default function SignInButton() {
   return (
