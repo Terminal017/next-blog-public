@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
 import useSWR from 'swr'
-import { MessageRemind } from '@/ui/mini_component'
+import { MessageRemind, useMessage } from '@/ui/mini_component'
 import type { KeyedMutator } from 'swr'
 
+//评论数据类型
 interface CommentType {
   _id: string
   comment: string
@@ -12,8 +12,8 @@ interface CommentType {
   user: { name: string; image: string }
 }
 
+//提交评论返回数据类型
 interface PostResType {
-  ok: boolean
   message: string
   data: {
     _id: string
@@ -42,22 +42,8 @@ export function CommentList({ page }: { page: string }) {
     revalidateOnReconnect: false,
   })
 
-  //设置处理提示
-  function change_postcom(post_comment: { ok: boolean; message: string }) {
-    setPostCom(post_comment)
-    setTimeout(
-      () =>
-        setPostCom((prev) => {
-          return { ok: false, message: prev.message }
-        }),
-      3000,
-    )
-  }
-  const [postCom, setPostCom] = useState<{ ok: boolean; message: string }>({
-    ok: false,
-    message: '',
-  })
-
+  //管理消息提醒
+  const { message, setMessage, sendMessage } = useMessage()
   //删除评论
   async function del_comment(id: string) {
     try {
@@ -81,12 +67,12 @@ export function CommentList({ page }: { page: string }) {
           )
         }
         //设置提醒
-        change_postcom({ ok: res_data.ok, message: res_data.message })
+        sendMessage(res_data.message)
       } else {
-        change_postcom({ ok: true, message: '评论删除失败' })
+        sendMessage('评论删除失败')
       }
     } catch {
-      change_postcom({ ok: true, message: '网络错误' })
+      sendMessage('网络错误')
     }
   }
 
@@ -95,7 +81,7 @@ export function CommentList({ page }: { page: string }) {
       className="mx-auto flex w-9/10 max-w-[53rem] flex-col 
     max-md:mx-[0.75rem]"
     >
-      <MessageRemind state={postCom} setState={setPostCom} />
+      <MessageRemind state={message} setState={setMessage} />
       {!isLoading &&
         (data.length === 0 ? (
           <div>
@@ -125,7 +111,7 @@ export function CommentList({ page }: { page: string }) {
             )
           })
         ))}
-      <CommentPust page={page} mutate={mutate} />
+      <CommentPust page={page} mutate={mutate} sendMessage={sendMessage} />
     </div>
   )
 }
@@ -134,25 +120,12 @@ export function CommentList({ page }: { page: string }) {
 export function CommentPust({
   page,
   mutate,
+  sendMessage,
 }: {
   page: string
   mutate: KeyedMutator<CommentType[]>
+  sendMessage: (message: string) => void
 }) {
-  //设置处理提示
-  function change_postcom(post_comment: { ok: boolean; message: string }) {
-    setPostCom(post_comment)
-    setTimeout(
-      () =>
-        setPostCom((prev) => {
-          return { ok: false, message: prev.message }
-        }),
-      3000,
-    )
-  }
-  const [postCom, setPostCom] = useState<{ ok: boolean; message: string }>({
-    ok: false,
-    message: '',
-  })
   async function post_commit(formdata: FormData) {
     formdata.append('slug', page)
     try {
@@ -175,22 +148,20 @@ export function CommentPust({
             { revalidate: false },
           )
         }
-
-        change_postcom({ ok: res_data.ok, message: res_data.message })
+        sendMessage(res_data.message)
       } else {
-        change_postcom({ ok: true, message: '评论上传失败' })
+        sendMessage('评论上传失败')
       }
     } catch {
-      change_postcom({ ok: true, message: '网络错误' })
+      sendMessage('网络错误')
     }
   }
 
   return (
     <>
-      <MessageRemind state={postCom} setState={setPostCom} />
       <form action={post_commit}>
         <label>评论</label>
-        <input className="border" name="comment"></input>
+        <input className="border" name="comment" required></input>
         <button type="submit">提交</button>
       </form>
     </>

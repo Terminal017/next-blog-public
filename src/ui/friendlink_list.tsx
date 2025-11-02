@@ -4,7 +4,7 @@ import BubbleHeader from '@/ui/bubble_header'
 import { useState, useEffect, useActionState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { add_new_friend } from '@/lib/server/handle_friendlink'
-import { MessageRemind } from '@/ui/mini_component'
+import { MessageRemind, useMessage } from '@/ui/mini_component'
 
 interface friendlinkType {
   title: string
@@ -92,23 +92,16 @@ export function FriendLinkForm() {
   const [toggles, setToggles] = useState(0)
   //获取表单信息状态
   const [form_state, form_action, ispeding] = useActionState(add_new_friend, {
-    ok: false,
     message: '',
   })
 
   //获取提示组件状态，控制提示组件生成
-  const [prompt, setPrompt] = useState({
-    ok: false,
-    message: '',
-  })
+  const { message, setMessage, sendMessage } = useMessage()
 
   //异步返回结果后同步状态
   useEffect(() => {
     if (form_state.message) {
-      setPrompt(form_state)
-      setTimeout(() => {
-        setPrompt({ ok: false, message: form_state.message })
-      }, 3000)
+      sendMessage(form_state.message)
     }
   }, [form_state])
 
@@ -147,7 +140,7 @@ export function FriendLinkForm() {
 
   return (
     <>
-      <MessageRemind state={prompt} setState={setPrompt} />
+      <MessageRemind state={message} setState={setMessage} />
       <div
         className="text-on-surface flex h-[30rem] w-[45rem] max-w-4/5 
       flex-col gap-2 max-md:max-w-9/10"

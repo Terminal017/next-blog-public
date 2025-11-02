@@ -81,8 +81,7 @@ export async function POST(request: NextRequest) {
       !session?.user?.id ||
       !session?.user?.id
     ) {
-      //ok仅表示发布过程完成，不表示请求是否成功
-      return Response.json({ ok: true, message: '数据格式错误', data: {} })
+      return Response.json({ message: '数据格式错误', data: {} })
     }
 
     const client = await getDB()
@@ -99,7 +98,6 @@ export async function POST(request: NextRequest) {
 
     //返回成功上传到的评论数据，用于乐观更新
     return Response.json({
-      ok: true,
       message: '评论已发布(＾▽＾)',
       data: {
         _id: result.insertedId,
@@ -112,8 +110,7 @@ export async function POST(request: NextRequest) {
       },
     })
   } catch {
-    console.error('评论发布发生错误')
-    return Response.json({ ok: true, message: '评论上传失败', data: {} })
+    return Response.json({ message: '评论上传失败', data: {} })
   }
 }
 
@@ -121,7 +118,7 @@ export async function DELETE(request: NextRequest) {
   try {
     const request_data = await request.json()
     if (!request_data._id) {
-      return Response.json({ ok: true, message: '', success: false })
+      return Response.json({ message: '', success: false })
     }
 
     const database = await getDB()
@@ -133,15 +130,13 @@ export async function DELETE(request: NextRequest) {
 
     if (result.deletedCount === 0) {
       return Response.json({
-        ok: true,
-        message: '评论删除失败',
+        message: '评论不存在',
         success: false,
       })
     } else {
-      return Response.json({ ok: true, message: '评论已删除', success: true })
+      return Response.json({ message: '评论已删除', success: true })
     }
   } catch {
-    console.error('删除错误')
-    return Response.json({ ok: true, message: '评论删除失败', success: false })
+    return Response.json({ message: '评论删除失败', success: false })
   }
 }

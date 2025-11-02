@@ -7,7 +7,7 @@ export async function add_new_friend(_: any, newfriend_data: FormData) {
 
   for (const i of Object.keys(data)) {
     if (!check_data.includes(i)) {
-      return { ok: true, message: '数据被修改' }
+      return { message: '数据被修改' }
     }
   }
 
@@ -15,8 +15,8 @@ export async function add_new_friend(_: any, newfriend_data: FormData) {
     const database = await getDB()
     const collection = database.collection('friendlinks_check')
     await collection.insertOne({ ...data, datetime: new Date() })
-    return { ok: true, message: '友链信息已发送！' }
+    return { message: '友链信息已发送！' }
   } catch {
-    return { ok: true, message: '友链信息发送失败，请重试' }
+    return { message: '友链信息发送失败，请重试' }
   }
 }
