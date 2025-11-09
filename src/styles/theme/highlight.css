@@ -155,12 +155,12 @@ html.dark .token.url {
 /* 添加代码滚动条样式 */
 html.light pre[class*='language-'] {
   scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.2) rgba(0, 0, 0, 0.05);
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }
 
 html.dark pre[class*='language-'] {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
 /* 添加主题特定样式 */

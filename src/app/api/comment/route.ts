@@ -13,6 +13,7 @@ interface CommentType {
   state: number
   parentID: string
   rootID: string
+  parent_user?: string
 }
 
 interface CommentData {
@@ -34,11 +35,20 @@ function buildResponse(data: CommentType[]) {
       _id: item._id.toString(),
       datetime: item.datetime.toISOString().split('T')[0],
       children: [] as any[],
+      parent_user: '',
+    }
+
+    commentMap.set(processedItem._id, processedItem)
+
+    if (item.parentID) {
+      const parentComment = commentMap.get(item.parentID)
+      if (parentComment) {
+        processedItem.parent_user = parentComment.user.name
+      }
     }
 
     if (item.rootID === '') {
       result.push(processedItem)
-      commentMap.set(processedItem._id, processedItem)
     } else {
       const root_com = commentMap.get(item.rootID)
       if (!root_com) {

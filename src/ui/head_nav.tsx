@@ -72,10 +72,10 @@ export default function Header() {
                   fill="none"
                 />
                 <rect
-                  x="68"
-                  y="68"
-                  width="64"
-                  height="64"
+                  x="71"
+                  y="71"
+                  width="58"
+                  height="58"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="15"

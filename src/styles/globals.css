@@ -56,8 +56,9 @@
   /*控制浏览器滚动条与深浅模式适配*/
   html {
     color-scheme: light;
-    scrollbar-width: thin;
-    scrollbar-gutter: stable;   /*预留滚动条*/
+    scrollbar-width: thin; 
+    scrollbar-gutter: stable;    /* 预留滚动条 */
+    scrollbar-color: var(--color-outline-v) transparent; /* 滑块颜色 背景颜色 */
   }
 
   html.dark {

@@ -6,7 +6,7 @@ import { get_mdx_options, mdx_components } from './mdx-process'
 import { getArticleContent } from '@/lib/server/articles_post'
 import { CommentList } from './comment_list'
 import ArticleTOC from '@/ui/toc'
-import SignInButton from './login'
+import { auth } from '../../../../auth'
 
 import type { Metadata } from 'next'
 import type { MDXRemoteProps } from 'next-mdx-remote-client/rsc'
@@ -79,6 +79,9 @@ export default async function Page({
       })
     : 'unknown time'
 
+  //获取用户登陆信息
+  const session = await auth()
+
   return (
     <>
       <article className="article-container">
@@ -91,8 +94,7 @@ export default async function Page({
         />
       </article>
       <ArticleTOC headings={headings} />
-      <SignInButton />
-      <CommentList page={slug} />
+      <CommentList page={slug} session={session} />
     </>
   )
 }
