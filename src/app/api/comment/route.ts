@@ -11,6 +11,7 @@ interface CommentType {
   user: { name: string; image: string }
   //state语言：1表示active, 0表示deleted
   state: number
+  own_check: boolean //表示是否为作者
   parentID: string
   rootID: string
   like: number
@@ -58,9 +59,6 @@ function buildResponse(data: CommentType[]) {
       result.push(processedItem)
     } else {
       const root_com = commentMap.get(item.rootID)
-      if (!root_com) {
-        console.log('数据异常，无法找到根节点，请检查可能的bug')
-      }
       root_com?.children.push(processedItem)
     }
   })
@@ -71,7 +69,6 @@ function buildResponse(data: CommentType[]) {
 export async function GET(request: NextRequest) {
   const session = await auth()
   const userId = session?.user?.id || null
-  console.log('userId', userId)
 
   try {
     const { searchParams } = new URL(request.url)
@@ -118,6 +115,12 @@ export async function GET(request: NextRequest) {
             liked: { $in: [userId, '$likesArray'] },
           },
         },
+        //检查是否为拥有者
+        {
+          $addFields: {
+            own_check: { $eq: ['$user_id', userId] },
+          },
+        },
         {
           $project: {
             _id: 1,
@@ -125,6 +128,7 @@ export async function GET(request: NextRequest) {
             datetime: 1,
             'user.name': 1,
             'user.image': 1,
+            own_check: 1,
             parentID: 1,
             rootID: 1,
             like: 1,
@@ -134,12 +138,9 @@ export async function GET(request: NextRequest) {
       ])
       .toArray()) as CommentType[]
 
-    console.log('数据输出：', buildResponse(data))
-
     return Response.json(buildResponse(data))
-  } catch (error) {
+  } catch {
     //错误处理，发生错误时返回500
-    console.log(error)
     return Response.json([], { status: 500 })
   }
 }
@@ -170,7 +171,7 @@ export async function POST(request: NextRequest) {
       if (!formdata.has(key)) {
         return Response.json({ message: '数据格式错误', data: {} })
       } else {
-        let value = formdata.get(key) as string
+        const value = formdata.get(key) as string
         datalist[key] = value
       }
     }
@@ -229,7 +230,7 @@ export async function DELETE(request: NextRequest) {
 
     //验证用户登陆
     if (!session || !session.user) {
-      return Response.json({ message: '未登录', success: false })
+      return Response.json({ message: '无权限删除', success: false })
     }
 
     //验证数据结构
@@ -240,8 +241,23 @@ export async function DELETE(request: NextRequest) {
     const database = await getDB()
     const collection = database.collection('comments')
 
+    const comment_check = await collection.findOne({
+      _id: new ObjectId(request_data._id as string),
+    })
+
+    if (!comment_check || !comment_check.user_id) {
+      return Response.json({
+        message: '评论不存在',
+        success: false,
+      })
+    }
+
+    if (comment_check.user_id !== session.user.id) {
+      return Response.json({ message: '无权限删除', success: false })
+    }
+
     //逻辑删除：修改state
-    const result = await collection.updateMany(
+    await collection.updateMany(
       {
         $or: [
           { _id: new ObjectId(request_data._id as string) },
@@ -251,14 +267,7 @@ export async function DELETE(request: NextRequest) {
       { $set: { state: 0 } },
     )
 
-    if (result.modifiedCount === 0) {
-      return Response.json({
-        message: '评论不存在',
-        success: false,
-      })
-    } else {
-      return Response.json({ message: '评论已删除', success: true })
-    }
+    return Response.json({ message: '评论已删除', success: true })
   } catch {
     return Response.json({ message: '评论删除失败', success: false })
   }
@@ -266,15 +275,16 @@ export async function DELETE(request: NextRequest) {
 
 //控制评论点赞
 export async function PATCH(request: NextRequest) {
-  const like_data: LikeData = await request.json()
-
-  if (!like_data.comment_id || like_data.liked === undefined) {
-    return Response.json({ message: '数据错误', success: false })
-  }
-
   try {
-    const session = await auth()
+    const like_data: LikeData = await request.json()
 
+    //检验数据
+    if (!like_data.comment_id || like_data.liked === undefined) {
+      return Response.json({ message: '数据错误', success: false })
+    }
+
+    //检验用户登录状态
+    const session = await auth()
     if (!session || !session.user) {
       return Response.json(
         { message: '未登录', success: false },

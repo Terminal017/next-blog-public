@@ -3,10 +3,10 @@
 import useSWR from 'swr'
 import { MessageRemind, useMessage } from '@/ui/mini_component'
 import type { KeyedMutator } from 'swr'
-import { useState } from 'react'
-import React from 'react'
+import React, { useState } from 'react'
 import { sign_in_google } from './login'
 import { Session } from 'next-auth'
+import Image from 'next/image'
 
 //评论数据类型
 interface CommentType {
@@ -14,6 +14,7 @@ interface CommentType {
   comment: string
   datetime: string
   user: { name: string; image: string }
+  own_check: boolean
   parentID: string
   rootID: string
   like: number
@@ -57,6 +58,7 @@ export function CommentList({
   } = useSWR<CommentType[]>(`/api/comment?slug=${page}`, fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    revalidateOnMount: true,
   })
 
   const { message, setMessage, sendMessage } = useMessage() //管理消息提醒
@@ -77,28 +79,36 @@ export function CommentList({
       if (res.ok) {
         const res_data = await res.json()
         if (res_data.success) {
-          console.log('点赞操作成功，乐观更新数据')
-          mutate((current_data) => {
-            if (!current_data) return []
-
-            return current_data.map((item) => {
-              if (item._id === comment_id) {
-                return { ...item, like: item.like + (liked ? 1 : -1), liked }
+          mutate(
+            (current_data) => {
+              if (!current_data) {
+                return []
               }
 
-              if (item._id === rootID && item.children) {
-                return {
-                  ...item,
-                  children: item.children.map((child) =>
-                    child._id === comment_id
-                      ? { ...child, like: child.like + (liked ? 1 : -1), liked }
-                      : child,
-                  ),
+              return current_data.map((item) => {
+                if (item._id === comment_id) {
+                  return { ...item, like: item.like + (liked ? 1 : -1), liked }
                 }
-              }
-              return item
-            })
-          })
+
+                if (item._id === rootID && item.children) {
+                  return {
+                    ...item,
+                    children: item.children.map((child) =>
+                      child._id === comment_id
+                        ? {
+                            ...child,
+                            like: child.like + (liked ? 1 : -1),
+                            liked,
+                          }
+                        : child,
+                    ),
+                  }
+                }
+                return item
+              })
+            },
+            { revalidate: false },
+          )
         } else {
           sendMessage(res_data.message)
         }
@@ -197,7 +207,7 @@ export function CommentList({
                 setReplyid={setReplyid}
                 mutate={mutate}
                 sendMessage={sendMessage}
-                children={item.children || []}
+                childItems={item.children || []}
                 session={session}
               />
             )
@@ -216,7 +226,7 @@ function CommentItem({
   setReplyid,
   mutate,
   sendMessage,
-  children,
+  childItems,
   session,
 }: {
   page: string
@@ -231,7 +241,7 @@ function CommentItem({
   setReplyid: (id: string | null) => void
   mutate: KeyedMutator<CommentType[]>
   sendMessage: (message: string) => void
-  children: CommentType[]
+  childItems: CommentType[]
   session: Session | null
 }) {
   return (
@@ -240,11 +250,13 @@ function CommentItem({
       shadow-[0_0_12px_rgba(2,6,23,0.06)] ring-1 ring-gray-200 dark:ring-gray-700"
     >
       <div className="flex flex-row gap-4">
-        <img
+        <Image
           className="h-12 w-12 rounded-full"
           src={item.user.image}
           alt="用户头像"
-        ></img>
+          width={48}
+          height={48}
+        />
         <div className="flex flex-col">
           <div className="flex flex-row items-end gap-3">
             <p className="text-primary text-base font-medium">
@@ -290,17 +302,23 @@ function CommentItem({
             <button
               className="hover:bg-surface-highest rounded-4xl px-4 py-2"
               onClick={() => {
-                replyid === item._id ? setReplyid(null) : setReplyid(item._id)
+                if (replyid === item._id) {
+                  setReplyid(null)
+                } else {
+                  setReplyid(item._id)
+                }
               }}
             >
               {replyid === item._id ? '取消回复' : '回复'}
             </button>
-            <button
-              className="hover:bg-surface-highest rounded-4xl px-4 py-2"
-              onClick={() => del_comment(item._id, item.rootID)}
-            >
-              删除
-            </button>
+            {item.own_check && (
+              <button
+                className="hover:bg-surface-highest rounded-4xl px-4 py-2"
+                onClick={() => del_comment(item._id, item.rootID)}
+              >
+                删除
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -315,15 +333,17 @@ function CommentItem({
           session={session}
         />
       )}
-      {children.map((child_item, index) => {
+      {childItems.map((child_item, index) => {
         return (
           <React.Fragment key={index}>
             <div className="ml-14 flex flex-row gap-4">
-              <img
+              <Image
                 className="h-9 w-9 rounded-full"
                 src={child_item.user.image}
                 alt="用户头像"
-              ></img>
+                width={36}
+                height={36}
+              />
               <div className="flex flex-col">
                 <div className="flex flex-row items-end gap-3">
                   <p className="text-primary text-base font-medium">
@@ -385,9 +405,11 @@ function CommentItem({
                   <button
                     className="hover:bg-surface-highest rounded-4xl px-4 py-2"
                     onClick={() => {
-                      replyid === child_item._id
-                        ? setReplyid(null)
-                        : setReplyid(child_item._id)
+                      if (replyid === item._id) {
+                        setReplyid(null)
+                      } else {
+                        setReplyid(item._id)
+                      }
                     }}
                   >
                     {replyid === child_item._id ? '取消回复' : '回复'}
@@ -457,7 +479,12 @@ export function CommentPost({
         if (res_data.data) {
           mutate(
             (current_data) => {
-              const new_item = { ...res_data.data, like: 0, liked: false }
+              const new_item = {
+                ...res_data.data,
+                like: 0,
+                liked: false,
+                own_check: true,
+              } //新增评论数据
               if (!current_data) {
                 return [new_item]
               } else {
@@ -490,17 +517,19 @@ export function CommentPost({
 
   return (
     <div
-      className="my-2 w-full rounded-xl px-5 py-4 
-      shadow-[0_0_12px_rgba(2,6,23,0.06)] ring-1 ring-gray-200 dark:ring-gray-700"
+      className="my-2 w-full rounded-xl px-5 py-4 shadow-[0_0_12px_rgba(2,6,23,0.06)]
+      ring-1 ring-gray-200 max-md:px-3 max-md:py-3 dark:ring-gray-700"
     >
-      <form action={post_commit} className="flex flex-col gap-2">
+      <form action={post_commit} className="flex flex-col gap-2 max-md:gap-1">
         <div className="flex min-h-4 flex-row items-center gap-4">
           {session?.user && (
             <>
-              <img
+              <Image
                 src={session.user.image || ''}
                 alt="用户头像"
                 className="h-12 w-12 rounded-full"
+                width={48}
+                height={48}
               />
               <p className="text-xl font-medium">{session.user.name}</p>
             </>
@@ -508,15 +537,15 @@ export function CommentPost({
         </div>
         <div className="w-full">
           <textarea
-            className="border-outline/80 focus:border-primary/90
-            min-h-16 w-full resize-none overflow-hidden rounded-sm
-            border-[1.5px] border-solid px-2 py-1 leading-[1.5] focus:outline-none"
+            className="border-outline/80 focus:border-primary/90 min-h-16
+            w-full resize-none overflow-hidden rounded-sm border-[1.5px] border-solid
+            px-2 py-1 leading-[1.5] focus:outline-none max-md:h-5"
             name="comment"
             onInput={(e) => {
               // 自动调整高度,上面resize-none取消用户调整高度
               const t = e.currentTarget as HTMLTextAreaElement
               t.style.height = 'auto'
-              t.style.height = t.scrollHeight + 'px'
+              t.style.height = `${t.scrollHeight}px`
             }}
             required
           ></textarea>

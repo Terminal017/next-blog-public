@@ -103,7 +103,7 @@ export function FriendLinkForm() {
     if (form_state.message) {
       sendMessage(form_state.message)
     }
-  }, [form_state])
+  }, [form_state, sendMessage])
 
   const friendlink_form = [
     {

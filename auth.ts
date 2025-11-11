@@ -31,7 +31,6 @@ async function add_user_image(user: User) {
 
     // 上传至R2
     const storpath = await uploadImageToR2(buffer, fileName)
-    console.log('头像已上传至 R2')
 
     //上传用户信息到数据库
     const client = await getDB()
@@ -51,7 +50,6 @@ async function add_user_image(user: User) {
 
     return true
   } catch (err) {
-    console.error('上传发生错误', err)
     //发生错误阻止登陆
     return false
   }
@@ -64,7 +62,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     //登陆后将用户基本信息拷贝进新的数据库，上传图片到存储桶
     async signIn({ user }) {
-      console.log('登陆信息输入', user)
       return await add_user_image(user)
     },
   },
