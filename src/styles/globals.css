@@ -53,6 +53,10 @@
     box-sizing: border-box;
   }
 
+  button {
+    cursor: pointer;
+  }
+
   /*控制浏览器滚动条与深浅模式适配*/
   html {
     color-scheme: light;

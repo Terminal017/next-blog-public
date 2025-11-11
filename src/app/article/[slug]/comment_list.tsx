@@ -16,6 +16,8 @@ interface CommentType {
   user: { name: string; image: string }
   parentID: string
   rootID: string
+  like: number
+  liked: boolean
   children?: CommentType[]
 }
 
@@ -59,6 +61,54 @@ export function CommentList({
 
   const { message, setMessage, sendMessage } = useMessage() //管理消息提醒
   const [replyid, setReplyid] = useState<string | null>(null) //管理回复栏状态，确认位置
+
+  //点赞评论
+  async function handle_like(
+    comment_id: string,
+    liked: boolean,
+    rootID: string,
+  ) {
+    try {
+      const res = await fetch('/api/comment', {
+        method: 'PATCH',
+        body: JSON.stringify({ comment_id: comment_id, liked: liked }),
+      })
+
+      if (res.ok) {
+        const res_data = await res.json()
+        if (res_data.success) {
+          console.log('点赞操作成功，乐观更新数据')
+          mutate((current_data) => {
+            if (!current_data) return []
+
+            return current_data.map((item) => {
+              if (item._id === comment_id) {
+                return { ...item, like: item.like + (liked ? 1 : -1), liked }
+              }
+
+              if (item._id === rootID && item.children) {
+                return {
+                  ...item,
+                  children: item.children.map((child) =>
+                    child._id === comment_id
+                      ? { ...child, like: child.like + (liked ? 1 : -1), liked }
+                      : child,
+                  ),
+                }
+              }
+              return item
+            })
+          })
+        } else {
+          sendMessage(res_data.message)
+        }
+      } else {
+        sendMessage('操作失败')
+      }
+    } catch {
+      sendMessage('网络错误')
+    }
+  }
 
   //删除评论
   async function del_comment(id: string, rootID: string) {
@@ -108,7 +158,7 @@ export function CommentList({
 
   return (
     <div
-      className="mx-auto my-8 flex w-9/10 max-w-[53rem] flex-col 
+      className="mx-auto mt-16 mb-8 flex w-9/10 max-w-[53rem] flex-col 
     gap-4 max-md:mx-[0.75rem]"
     >
       <MessageRemind state={message} setState={setMessage} />
@@ -142,6 +192,7 @@ export function CommentList({
                 page={page}
                 item={item}
                 del_comment={del_comment}
+                handle_like={handle_like}
                 replyid={replyid}
                 setReplyid={setReplyid}
                 mutate={mutate}
@@ -160,6 +211,7 @@ function CommentItem({
   page,
   item,
   del_comment,
+  handle_like,
   replyid,
   setReplyid,
   mutate,
@@ -170,6 +222,11 @@ function CommentItem({
   page: string
   item: CommentType
   del_comment: (id: string, rootID: string) => Promise<void>
+  handle_like: (
+    comment_id: string,
+    liked: boolean,
+    rootID: string,
+  ) => Promise<void>
   replyid: string | null
   setReplyid: (id: string | null) => void
   mutate: KeyedMutator<CommentType[]>
@@ -179,7 +236,7 @@ function CommentItem({
 }) {
   return (
     <div
-      className="text-on-background flex-col rounded-xl px-4 py-4 
+      className="text-on-background cursor-default flex-col rounded-xl px-4 py-4
       shadow-[0_0_12px_rgba(2,6,23,0.06)] ring-1 ring-gray-200 dark:ring-gray-700"
     >
       <div className="flex flex-row gap-4">
@@ -210,9 +267,13 @@ function CommentItem({
           dark:text-gray-200"
           >
             <button
-              className="mr-3 flex items-center fill-gray-800
-            hover:fill-red-500 hover:text-red-500 dark:fill-gray-200
-            dark:hover:fill-red-400 dark:hover:text-red-400"
+              className={`${
+                item.liked
+                  ? 'fill-red-500 text-red-500 dark:fill-red-400 dark:text-red-400'
+                  : `fill-gray-800 hover:fill-red-500 hover:text-red-500 dark:fill-gray-200 
+                    dark:hover:fill-red-400 dark:hover:text-red-400`
+              } mr-3 flex items-center `}
+              onClick={() => handle_like(item._id, !item.liked, item.rootID)}
             >
               <svg
                 className="relative bottom-0.25 h-4 w-4"
@@ -224,7 +285,7 @@ function CommentItem({
                 <path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z" />
               </svg>
 
-              <span className="ml-1">0</span>
+              <span className="ml-1">{item.like}</span>
             </button>
             <button
               className="hover:bg-surface-highest rounded-4xl px-4 py-2"
@@ -296,9 +357,19 @@ function CommentItem({
             dark:text-gray-200"
                 >
                   <button
-                    className="mr-3 flex items-center fill-gray-800
-              hover:fill-red-500 hover:text-red-500 dark:fill-gray-200
-              dark:hover:fill-red-400 dark:hover:text-red-400"
+                    className={`${
+                      child_item.liked
+                        ? 'fill-red-500 text-red-500 dark:fill-red-400 dark:text-red-400'
+                        : `fill-gray-800 hover:fill-red-500 hover:text-red-500 dark:fill-gray-200 
+                          dark:hover:fill-red-400 dark:hover:text-red-400`
+                    } mr-3 flex items-center `}
+                    onClick={() =>
+                      handle_like(
+                        child_item._id,
+                        !child_item.liked,
+                        child_item.rootID,
+                      )
+                    }
                   >
                     <svg
                       className="relative bottom-0.25 h-4 w-4"
@@ -309,7 +380,7 @@ function CommentItem({
                     >
                       <path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z" />
                     </svg>
-                    <span className="ml-1">0</span>
+                    <span className="ml-1">{child_item.like}</span>
                   </button>
                   <button
                     className="hover:bg-surface-highest rounded-4xl px-4 py-2"
@@ -386,7 +457,7 @@ export function CommentPost({
         if (res_data.data) {
           mutate(
             (current_data) => {
-              const new_item = res_data.data
+              const new_item = { ...res_data.data, like: 0, liked: false }
               if (!current_data) {
                 return [new_item]
               } else {

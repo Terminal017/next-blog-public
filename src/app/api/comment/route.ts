@@ -13,6 +13,8 @@ interface CommentType {
   state: number
   parentID: string
   rootID: string
+  like: number
+  liked: boolean
   parent_user?: string
 }
 
@@ -21,6 +23,11 @@ interface CommentData {
   comment: string
   parentID: string
   rootID: string
+}
+
+interface LikeData {
+  comment_id: string
+  liked: boolean
 }
 
 //构造评论嵌套结构
@@ -62,6 +69,10 @@ function buildResponse(data: CommentType[]) {
 }
 //处理请求评论
 export async function GET(request: NextRequest) {
+  const session = await auth()
+  const userId = session?.user?.id || null
+  console.log('userId', userId)
+
   try {
     const { searchParams } = new URL(request.url)
     const slug = searchParams.get('slug')
@@ -83,6 +94,30 @@ export async function GET(request: NextRequest) {
         {
           $unwind: '$user', // 打平数组为对象
         },
+        //获取like和liked
+        { $addFields: { id_str: { $toString: '$_id' } } },
+        {
+          $lookup: {
+            from: 'likes',
+            localField: 'id_str', // 评论的 id
+            foreignField: 'comment_id', // like 表对应字段
+            as: 'likes',
+          },
+        },
+        {
+          //如果无法匹配到则设为空数组
+          $addFields: {
+            likesArray: {
+              $ifNull: [{ $first: '$likes.likes' }, []],
+            },
+          },
+        },
+        {
+          $addFields: {
+            like: { $size: '$likesArray' },
+            liked: { $in: [userId, '$likesArray'] },
+          },
+        },
         {
           $project: {
             _id: 1,
@@ -92,10 +127,14 @@ export async function GET(request: NextRequest) {
             'user.image': 1,
             parentID: 1,
             rootID: 1,
+            like: 1,
+            liked: 1,
           },
         },
       ])
       .toArray()) as CommentType[]
+
+    console.log('数据输出：', buildResponse(data))
 
     return Response.json(buildResponse(data))
   } catch (error) {
@@ -160,6 +199,7 @@ export async function POST(request: NextRequest) {
         return Response.json({ message: '回复评论不存在(>_<)', data: {} })
       }
     }
+
     const result = await collection.insertOne(insert_doc)
 
     //返回成功上传到的评论数据，用于乐观更新
@@ -182,6 +222,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
+//处理删除评论请求
 export async function DELETE(request: NextRequest) {
   try {
     const session = await auth()
@@ -196,7 +237,6 @@ export async function DELETE(request: NextRequest) {
     if (!request_data._id) {
       return Response.json({ message: '评论删除失败', success: false })
     }
-
     const database = await getDB()
     const collection = database.collection('comments')
 
@@ -221,5 +261,40 @@ export async function DELETE(request: NextRequest) {
     }
   } catch {
     return Response.json({ message: '评论删除失败', success: false })
+  }
+}
+
+//控制评论点赞
+export async function PATCH(request: NextRequest) {
+  const like_data: LikeData = await request.json()
+
+  if (!like_data.comment_id || like_data.liked === undefined) {
+    return Response.json({ message: '数据错误', success: false })
+  }
+
+  try {
+    const session = await auth()
+
+    if (!session || !session.user) {
+      return Response.json(
+        { message: '未登录', success: false },
+        { status: 401 },
+      )
+    }
+
+    const database = await getDB()
+    const collection = database.collection('likes')
+    //更新点赞数据
+    await collection.updateOne(
+      { comment_id: like_data.comment_id },
+      like_data.liked
+        ? { $addToSet: { likes: session.user.id } }
+        : { $pull: { likes: session.user.id } as any },
+      { upsert: like_data.liked },
+    )
+
+    return Response.json({ message: '操作成功', success: true })
+  } catch {
+    return Response.json({ message: '操作失败', success: false })
   }
 }
