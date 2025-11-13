@@ -11,7 +11,7 @@ import { ObjectId } from 'mongodb'
 
 //将数据写入user_profile集合
 async function add_user_image(user: User) {
-  //如果它是空的说明SignIn被取消了，让它报错停止登陆
+  //如果它是空的说明SignIn被取消了，让它报错停止登录
   if (!user) {
     return false
   }
@@ -50,7 +50,7 @@ async function add_user_image(user: User) {
 
     return true
   } catch (err) {
-    //发生错误阻止登陆
+    //发生错误阻止登录
     return false
   }
 }
@@ -58,9 +58,9 @@ async function add_user_image(user: User) {
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: MongoDBAdapter(client),
   providers: [Google],
-  //回调函数，定义在登陆后调用的内容
+  //回调函数，定义在登录后调用的内容
   callbacks: {
-    //登陆后将用户基本信息拷贝进新的数据库，上传图片到存储桶
+    //登录后将用户基本信息拷贝进新的数据库，上传图片到存储桶
     async signIn({ user }) {
       return await add_user_image(user)
     },

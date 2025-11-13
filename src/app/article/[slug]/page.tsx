@@ -79,7 +79,7 @@ export default async function Page({
       })
     : 'unknown time'
 
-  //获取用户登陆信息
+  //获取用户登录信息
   const session = await auth()
 
   return (

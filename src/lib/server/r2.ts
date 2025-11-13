@@ -1,6 +1,6 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 
-//S3 API登陆，可以参考Cloud Flare S3的js文档
+//S3 API登录，可以参考Cloud Flare S3的js文档
 const client = new S3Client({
   region: 'auto',
   endpoint: process.env.AWS_ENDPOINT_URL,

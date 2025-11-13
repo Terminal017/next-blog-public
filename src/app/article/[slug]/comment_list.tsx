@@ -3,14 +3,17 @@
 import useSWR from 'swr'
 import { MessageRemind, useMessage } from '@/ui/mini_component'
 import type { KeyedMutator } from 'swr'
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { sign_in_google } from './login'
 import { Session } from 'next-auth'
 import Image from 'next/image'
+import { AnimatePresence, motion } from 'motion/react'
+import { LoadingAni } from '@/ui/animation/ani_icon'
 
 //评论数据类型
 interface CommentType {
   _id: string
+  tem_id?: string //临时ID用于乐观更新
   comment: string
   datetime: string
   user: { name: string; image: string }
@@ -25,17 +28,8 @@ interface CommentType {
 //提交评论返回数据类型
 interface PostResType {
   message: string
-  data: {
-    _id: string
-    comment: string
-    datetime: string
-    user: {
-      name: string
-      image: string
-    }
-    parentID: string
-    rootID: string
-  }
+  success: boolean
+  comment_id?: string
 }
 
 //评论列表
@@ -63,6 +57,7 @@ export function CommentList({
 
   const { message, setMessage, sendMessage } = useMessage() //管理消息提醒
   const [replyid, setReplyid] = useState<string | null>(null) //管理回复栏状态，确认位置
+  const commentRef = useRef<Map<string, CommentType>>(new Map()) //存储评论引用以同步ID
 
   //点赞评论
   async function handle_like(
@@ -70,6 +65,38 @@ export function CommentList({
     liked: boolean,
     rootID: string,
   ) {
+    //点赞乐观更新
+    mutate(
+      (current_data) => {
+        if (!current_data) {
+          return []
+        }
+
+        return current_data.map((item) => {
+          if (item._id === comment_id) {
+            return { ...item, like: item.like + (liked ? 1 : -1), liked }
+          }
+
+          if (item._id === rootID && item.children) {
+            return {
+              ...item,
+              children: item.children.map((child) =>
+                child._id === comment_id
+                  ? {
+                      ...child,
+                      like: child.like + (liked ? 1 : -1),
+                      liked,
+                    }
+                  : child,
+              ),
+            }
+          }
+          return item
+        })
+      },
+      { revalidate: false },
+    )
+
     try {
       const res = await fetch('/api/comment', {
         method: 'PATCH',
@@ -78,41 +105,12 @@ export function CommentList({
 
       if (res.ok) {
         const res_data = await res.json()
-        if (res_data.success) {
-          mutate(
-            (current_data) => {
-              if (!current_data) {
-                return []
-              }
-
-              return current_data.map((item) => {
-                if (item._id === comment_id) {
-                  return { ...item, like: item.like + (liked ? 1 : -1), liked }
-                }
-
-                if (item._id === rootID && item.children) {
-                  return {
-                    ...item,
-                    children: item.children.map((child) =>
-                      child._id === comment_id
-                        ? {
-                            ...child,
-                            like: child.like + (liked ? 1 : -1),
-                            liked,
-                          }
-                        : child,
-                    ),
-                  }
-                }
-                return item
-              })
-            },
-            { revalidate: false },
-          )
-        } else {
+        if (!res_data.success) {
           sendMessage(res_data.message)
+          mutate() //点赞失败则回滚更新
         }
       } else {
+        mutate()
         sendMessage('操作失败')
       }
     } catch {
@@ -122,6 +120,29 @@ export function CommentList({
 
   //删除评论
   async function del_comment(id: string, rootID: string) {
+    //进行删除的乐观更新
+    mutate(
+      (current_data) => {
+        if (!current_data) {
+          return current_data
+        } else {
+          if (!rootID) {
+            return current_data.filter((item) => item._id !== id)
+          } else {
+            return current_data.map((item) => {
+              if (item._id !== rootID) {
+                return item
+              }
+              return {
+                ...item,
+                children: item.children?.filter((child) => child._id !== id),
+              }
+            })
+          }
+        }
+      },
+      { revalidate: false },
+    )
     try {
       const res = await fetch('/api/comment', {
         method: 'DELETE',
@@ -129,36 +150,12 @@ export function CommentList({
       })
       if (res.ok) {
         const res_data = await res.json()
-        //如果删除成功，则乐观更新
-        if (res_data.success) {
-          mutate(
-            (current_data) => {
-              if (!current_data) {
-                return current_data
-              } else {
-                if (!rootID) {
-                  return current_data.filter((item) => item._id !== id)
-                } else {
-                  return current_data.map((item) => {
-                    if (item._id !== rootID) {
-                      return item
-                    }
-                    return {
-                      ...item,
-                      children: item.children?.filter(
-                        (child) => child._id !== id,
-                      ),
-                    }
-                  })
-                }
-              }
-            },
-            { revalidate: false },
-          )
-        }
-        //设置提醒
         sendMessage(res_data.message)
+        if (!res_data.success) {
+          mutate() //删除失败则回滚
+        }
       } else {
+        mutate()
         sendMessage('评论删除失败')
       }
     } catch {
@@ -169,7 +166,7 @@ export function CommentList({
   return (
     <div
       className="mx-auto mt-16 mb-8 flex w-9/10 max-w-[53rem] flex-col 
-    gap-4 max-md:mx-[0.75rem]"
+    gap-4 max-md:mx-auto"
     >
       <MessageRemind state={message} setState={setMessage} />
       <h2 className="text-3xl">{`评论`}</h2>
@@ -181,38 +178,50 @@ export function CommentList({
         rootID={null}
         setReplyid={setReplyid}
         session={session}
+        commentRef={commentRef.current}
       />
       <h2 className="text-2xl tracking-wide">{`${data.reduce((total, item) => {
         return total + 1 + (item.children?.length || 0)
       }, 0)} 条评论`}</h2>
-      {!isLoading &&
-        (data.length === 0 ? (
-          <div className="my-8 flex flex-row justify-center">
-            <p className="text-2xl font-medium">
-              {error
-                ? '发生错误，评论加载失败 ( >_< )'
-                : '没找到任何评论！( >_< )'}
-            </p>
-          </div>
-        ) : (
-          data.map((item, index) => {
-            return (
-              <CommentItem
-                key={index}
-                page={page}
-                item={item}
-                del_comment={del_comment}
-                handle_like={handle_like}
-                replyid={replyid}
-                setReplyid={setReplyid}
-                mutate={mutate}
-                sendMessage={sendMessage}
-                childItems={item.children || []}
-                session={session}
-              />
-            )
-          })
-        ))}
+
+      {isLoading ? (
+        <div className="mt-8 mb-12 flex flex-row items-center justify-center">
+          <p className="mr-3 text-2xl font-medium">评论加载中</p>
+          <LoadingAni width={30} />
+        </div>
+      ) : (
+        <AnimatePresence mode="popLayout">
+          {data.length === 0 ? (
+            <div className="mt-8 mb-12 flex flex-row justify-center">
+              <p className="text-2xl font-medium">
+                {error
+                  ? '发生错误，评论加载失败 ( >_< )'
+                  : '没找到任何评论！( >_< )'}
+              </p>
+            </div>
+          ) : (
+            data.map((item, index) => {
+              return (
+                <CommentItem
+                  key={item.tem_id || item._id}
+                  page={page}
+                  item={item}
+                  del_comment={del_comment}
+                  handle_like={handle_like}
+                  replyid={replyid}
+                  setReplyid={setReplyid}
+                  mutate={mutate}
+                  sendMessage={sendMessage}
+                  childItems={item.children || []}
+                  session={session}
+                  ani_delay={index * 0.15}
+                  commentRef={commentRef.current}
+                />
+              )
+            })
+          )}
+        </AnimatePresence>
+      )}
     </div>
   )
 }
@@ -228,6 +237,8 @@ function CommentItem({
   sendMessage,
   childItems,
   session,
+  ani_delay,
+  commentRef,
 }: {
   page: string
   item: CommentType
@@ -243,11 +254,17 @@ function CommentItem({
   sendMessage: (message: string) => void
   childItems: CommentType[]
   session: Session | null
+  ani_delay: number
+  commentRef: Map<string, CommentType>
 }) {
   return (
-    <div
+    <motion.div
       className="text-on-background cursor-default flex-col rounded-xl px-4 py-4
       shadow-[0_0_12px_rgba(2,6,23,0.06)] ring-1 ring-gray-200 dark:ring-gray-700"
+      initial={{ opacity: 0, x: -300 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 500 }}
+      transition={{ duration: 0.75, ease: 'easeInOut', delay: ani_delay }}
     >
       <div className="flex flex-row gap-4">
         <Image
@@ -331,6 +348,7 @@ function CommentItem({
           rootID={item._id}
           setReplyid={setReplyid}
           session={session}
+          commentRef={commentRef}
         />
       )}
       {childItems.map((child_item, index) => {
@@ -434,12 +452,13 @@ function CommentItem({
                 rootID={item._id}
                 setReplyid={setReplyid}
                 session={session}
+                commentRef={commentRef}
               />
             )}
           </React.Fragment>
         )
       })}
-    </div>
+    </motion.div>
   )
 }
 
@@ -452,6 +471,7 @@ export function CommentPost({
   rootID,
   setReplyid,
   session,
+  commentRef,
 }: {
   page: string
   mutate: KeyedMutator<CommentType[]>
@@ -460,10 +480,55 @@ export function CommentPost({
   rootID: string | null
   setReplyid: (id: string | null) => void
   session: Session | null
+  commentRef: Map<string, CommentType>
 }) {
-  //获取用户登陆状态
-
   async function post_commit(formdata: FormData) {
+    //新增评论数据
+    const tem_id = crypto.randomUUID()
+    const new_item: CommentType = {
+      _id: '',
+      tem_id: tem_id,
+      comment: formdata.get('comment') as string,
+      datetime: new Date().toLocaleString(),
+      user: {
+        name: session?.user?.name || '>-<',
+        image: session?.user?.image || '',
+      },
+      own_check: true,
+      parentID: parentID || '',
+      rootID: rootID || '',
+      like: 0,
+      liked: false,
+    }
+
+    commentRef.set(tem_id, new_item) //将临时评论存入引用以同步ID
+
+    //乐观更新
+    mutate(
+      (current_data) => {
+        if (!current_data) {
+          return [new_item]
+        } else {
+          if (!new_item.rootID) {
+            return [new_item, ...current_data]
+          }
+          return current_data.map((item) => {
+            if (item._id !== new_item.rootID) {
+              return item
+            } else {
+              return {
+                ...item,
+                children: [new_item, ...(item.children || [])],
+              }
+            }
+          })
+        }
+      },
+      { revalidate: false },
+    )
+    //关闭回复栏
+    setReplyid(null)
+
     formdata.append('slug', page)
     formdata.append('parentID', parentID || '')
     formdata.append('rootID', rootID || '')
@@ -473,42 +538,22 @@ export function CommentPost({
         body: formdata,
       })
       if (res.ok) {
-        setReplyid(null)
         const res_data: PostResType = await res.json()
-        //如果成功返回数据，则乐观更新
-        if (res_data.data) {
-          mutate(
-            (current_data) => {
-              const new_item = {
-                ...res_data.data,
-                like: 0,
-                liked: false,
-                own_check: true,
-              } //新增评论数据
-              if (!current_data) {
-                return [new_item]
-              } else {
-                if (!new_item.rootID) {
-                  return [...current_data, new_item]
-                }
-                return current_data.map((item) => {
-                  if (item._id !== new_item.rootID) {
-                    return item
-                  } else {
-                    return {
-                      ...item,
-                      children: [...(item.children || []), new_item],
-                    }
-                  }
-                })
-              }
-            },
-            { revalidate: false },
-          )
-        }
         sendMessage(res_data.message)
+        if (res_data.success) {
+          const comment = commentRef.get(tem_id)
+          if (comment && res_data.comment_id) {
+            //同步ID
+            comment._id = res_data.comment_id
+            commentRef.delete(tem_id)
+          }
+        } else {
+          //发生错误回滚更新
+          mutate()
+        }
       } else {
         sendMessage('评论上传失败')
+        mutate()
       }
     } catch {
       sendMessage('网络错误')
@@ -578,7 +623,7 @@ export function CommentPost({
               className="bg-primary-container rounded-sm px-4 py-1.25
           text-lg hover:brightness-95 dark:hover:brightness-125"
             >
-              Google登陆
+              Google登录
             </button>
           )}
         </div>

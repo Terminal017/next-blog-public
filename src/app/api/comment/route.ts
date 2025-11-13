@@ -63,7 +63,8 @@ function buildResponse(data: CommentType[]) {
     }
   })
 
-  return result
+  //翻转数组，此时时间新的在前
+  return result.reverse()
 }
 //处理请求评论
 export async function GET(request: NextRequest) {
@@ -135,6 +136,7 @@ export async function GET(request: NextRequest) {
             liked: 1,
           },
         },
+        { $sort: { datetime: 1 } }, //旧时间在前
       ])
       .toArray()) as CommentType[]
 
@@ -148,11 +150,11 @@ export async function GET(request: NextRequest) {
 //处理发布评论请求
 export async function POST(request: NextRequest) {
   try {
-    //获取用户信息并判断登陆
+    //获取用户信息并判断登录
     const session = await auth()
 
     if (!session || !session.user) {
-      return Response.json({ message: '未登录', data: {} }, { status: 401 })
+      return Response.json({ message: '未登录', success: false })
     }
 
     //获取表单数据
@@ -169,7 +171,7 @@ export async function POST(request: NextRequest) {
 
     for (const key of requireKeys) {
       if (!formdata.has(key)) {
-        return Response.json({ message: '数据格式错误', data: {} })
+        return Response.json({ message: '数据格式错误', success: false })
       } else {
         const value = formdata.get(key) as string
         datalist[key] = value
@@ -197,7 +199,7 @@ export async function POST(request: NextRequest) {
       })
 
       if (!parent_comment) {
-        return Response.json({ message: '回复评论不存在(>_<)', data: {} })
+        return Response.json({ message: '回复评论不存在(>_<)', success: false })
       }
     }
 
@@ -205,21 +207,12 @@ export async function POST(request: NextRequest) {
 
     //返回成功上传到的评论数据，用于乐观更新
     return Response.json({
+      success: true,
       message: '评论已发布(＾▽＾)',
-      data: {
-        _id: result.insertedId,
-        comment: datalist.comment,
-        datetime: insert_date.toISOString().split('T')[0],
-        user: {
-          name: session.user.name,
-          image: session.user.image,
-        },
-        parentID: datalist.parentID,
-        rootID: datalist.rootID,
-      },
+      comment_id: result.insertedId,
     })
   } catch {
-    return Response.json({ message: '评论上传失败', data: {} })
+    return Response.json({ message: '评论上传失败', success: false })
   }
 }
 
@@ -228,7 +221,7 @@ export async function DELETE(request: NextRequest) {
   try {
     const session = await auth()
 
-    //验证用户登陆
+    //验证用户登录
     if (!session || !session.user) {
       return Response.json({ message: '无权限删除', success: false })
     }
