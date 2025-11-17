@@ -298,9 +298,8 @@ function CommentItem({
             <button
               className={`${
                 item.liked
-                  ? 'fill-red-500 text-red-500 dark:fill-red-400 dark:text-red-400'
-                  : `fill-gray-800 hover:fill-red-500 hover:text-red-500 dark:fill-gray-200 
-                    dark:hover:fill-red-400 dark:hover:text-red-400`
+                  ? 'fill-primary text-primary'
+                  : `hover:fill-primary hover:text-primary fill-gray-800 dark:fill-gray-200`
               } mr-3 flex items-center `}
               onClick={() => handle_like(item._id, !item.liked, item.rootID)}
             >
@@ -363,7 +362,7 @@ function CommentItem({
                 height={36}
               />
               <div className="flex flex-col">
-                <div className="flex flex-row items-end gap-3">
+                <div className="flex flex-row flex-wrap items-end gap-x-3 whitespace-nowrap">
                   <p className="text-primary text-base font-medium">
                     {child_item.user.name}
                   </p>
@@ -371,15 +370,17 @@ function CommentItem({
                     //二级评论回复设计：这里的设计是基于评论而非基于user
                     //即回复二级评论时无论是否是一级评论的作者都会显示
                     child_item.parentID !== item._id && (
-                      <p>{`回复 ${
-                        item.children?.find(
-                          (obj) => obj._id === child_item.parentID,
-                        )?.user.name
-                      }`}</p>
+                      <p className="shrink-0 text-base max-md:order-1">
+                        {`回复 ${
+                          item.children?.find(
+                            (obj) => obj._id === child_item.parentID,
+                          )?.user.name
+                        }`}
+                      </p>
                     )
                   }
                   <p
-                    className="text-[15px] text-gray-600
+                    className="shrink-0 text-[15px] text-gray-600
               dark:text-gray-400"
                   >
                     {child_item.datetime}
@@ -397,9 +398,8 @@ function CommentItem({
                   <button
                     className={`${
                       child_item.liked
-                        ? 'fill-red-500 text-red-500 dark:fill-red-400 dark:text-red-400'
-                        : `fill-gray-800 hover:fill-red-500 hover:text-red-500 dark:fill-gray-200 
-                          dark:hover:fill-red-400 dark:hover:text-red-400`
+                        ? 'fill-primary text-primary'
+                        : `hover:fill-primary hover:text-primary fill-gray-800 dark:fill-gray-200`
                     } mr-3 flex items-center `}
                     onClick={() =>
                       handle_like(
@@ -423,10 +423,10 @@ function CommentItem({
                   <button
                     className="hover:bg-surface-highest rounded-4xl px-4 py-2"
                     onClick={() => {
-                      if (replyid === item._id) {
+                      if (replyid === child_item._id) {
                         setReplyid(null)
                       } else {
-                        setReplyid(item._id)
+                        setReplyid(child_item._id)
                       }
                     }}
                   >
@@ -489,7 +489,7 @@ export function CommentPost({
       _id: '',
       tem_id: tem_id,
       comment: formdata.get('comment') as string,
-      datetime: new Date().toLocaleString(),
+      datetime: new Date().toISOString().split('T')[0],
       user: {
         name: session?.user?.name || '>-<',
         image: session?.user?.image || '',
@@ -502,6 +502,9 @@ export function CommentPost({
     }
 
     commentRef.set(tem_id, new_item) //将临时评论存入引用以同步ID
+
+    //关闭回复栏
+    setReplyid(null)
 
     //乐观更新
     mutate(
@@ -526,8 +529,6 @@ export function CommentPost({
       },
       { revalidate: false },
     )
-    //关闭回复栏
-    setReplyid(null)
 
     formdata.append('slug', page)
     formdata.append('parentID', parentID || '')
@@ -562,10 +563,11 @@ export function CommentPost({
 
   return (
     <div
-      className="my-2 w-full rounded-xl px-5 py-4 shadow-[0_0_12px_rgba(2,6,23,0.06)]
-      ring-1 ring-gray-200 max-md:px-3 max-md:py-3 dark:ring-gray-700"
+      className={`my-2 w-auto rounded-xl px-5 py-4 shadow-[0_0_12px_rgba(2,6,23,0.06)]
+      ring-1 ring-gray-200 max-md:px-3 max-md:py-3 dark:ring-gray-700 
+      ${parentID ? 'ml-12' : ''}`}
     >
-      <form action={post_commit} className="flex flex-col gap-2 max-md:gap-1">
+      <form action={post_commit} className="flex flex-col gap-1.5 max-md:gap-1">
         <div className="flex min-h-4 flex-row items-center gap-4">
           {session?.user && (
             <>

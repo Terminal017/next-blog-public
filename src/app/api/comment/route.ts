@@ -59,7 +59,7 @@ function buildResponse(data: CommentType[]) {
       result.push(processedItem)
     } else {
       const root_com = commentMap.get(item.rootID)
-      root_com?.children.push(processedItem)
+      root_com?.children.unshift(processedItem)
     }
   })
 
