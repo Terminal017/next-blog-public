@@ -371,11 +371,12 @@ function CommentItem({
                     //即回复二级评论时无论是否是一级评论的作者都会显示
                     child_item.parentID !== item._id && (
                       <p className="shrink-0 text-base max-md:order-1">
-                        {`回复 ${
-                          item.children?.find(
+                        {(() => {
+                          const name = item.children?.find(
                             (obj) => obj._id === child_item.parentID,
-                          )?.user.name
-                        }`}
+                          )?.user?.name
+                          return name ? `回复 ${name}` : ''
+                        })()}
                       </p>
                     )
                   }
@@ -503,9 +504,6 @@ export function CommentPost({
 
     commentRef.set(tem_id, new_item) //将临时评论存入引用以同步ID
 
-    //关闭回复栏
-    setReplyid(null)
-
     //乐观更新
     mutate(
       (current_data) => {
@@ -567,7 +565,14 @@ export function CommentPost({
       ring-1 ring-gray-200 max-md:px-3 max-md:py-3 dark:ring-gray-700 
       ${parentID ? 'ml-12' : ''}`}
     >
-      <form action={post_commit} className="flex flex-col gap-1.5 max-md:gap-1">
+      <form
+        action={post_commit}
+        className="flex flex-col gap-1.5 max-md:gap-1"
+        onSubmit={() => {
+          //关闭回复栏
+          setReplyid(null)
+        }}
+      >
         <div className="flex min-h-4 flex-row items-center gap-4">
           {session?.user && (
             <>
