@@ -1,18 +1,9 @@
-'use client'
-
 import '@/styles/about.css'
 import BubbleHeader from '@/ui/bubble_header'
-import { motion } from 'motion/react'
 
 export default function About() {
   return (
-    <motion.main
-      className="about-main"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4, ease: 'easeOut' }}
-    >
+    <main className="about-main">
       <BubbleHeader content="About" width={45} />
       <article className="about-container text-on-surface">
         <h2>关于本站</h2>
@@ -22,7 +13,7 @@ export default function About() {
         <h2>连接星轨</h2>
         <ContactLink />
       </article>
-    </motion.main>
+    </main>
   )
 }
 

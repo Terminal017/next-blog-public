@@ -9,6 +9,7 @@ import { Session } from 'next-auth'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'motion/react'
 import { LoadingAni } from '@/ui/animation/ani_icon'
+import { animate } from 'motion'
 
 //评论数据类型
 interface CommentType {
@@ -262,9 +263,16 @@ function CommentItem({
       className="text-on-background cursor-default flex-col rounded-xl px-4 py-4
       shadow-[0_0_12px_rgba(2,6,23,0.06)] ring-1 ring-gray-200 dark:ring-gray-700"
       initial={{ opacity: 0, x: -300 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 500 }}
-      transition={{ duration: 0.75, ease: 'easeInOut', delay: ani_delay }}
+      animate={{
+        opacity: 1,
+        x: 0,
+        transition: { duration: 0.75, ease: 'easeInOut', delay: ani_delay },
+      }}
+      exit={{
+        opacity: 0,
+        x: 500,
+        transition: { duration: 0.75, ease: 'easeInOut' },
+      }}
     >
       <div className="flex flex-row gap-4">
         <Image

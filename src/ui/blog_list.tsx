@@ -2,7 +2,6 @@
 import '@/styles/blist.css'
 import BubbleHeader from '@/ui/bubble_header'
 import Link from 'next/link'
-import { motion } from 'motion/react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
@@ -28,13 +27,7 @@ export default function BlogList({
   const router = useRouter()
 
   return (
-    <motion.main
-      className="blog-list-page"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4, ease: 'easeOut' }}
-    >
+    <main className="blog-list-page">
       <BubbleHeader content="Article" width={45} />
       <div className="blog-list">
         <ul className="blog-list-ul">
@@ -102,7 +95,7 @@ export default function BlogList({
           </svg>
         </button>
       </div>
-    </motion.main>
+    </main>
   )
 }
 

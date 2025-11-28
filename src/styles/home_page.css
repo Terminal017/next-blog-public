@@ -2,6 +2,10 @@ body:has(> div.base) > .header {
   background-color: transparent;           /*让导航栏透明*/
 }
 
+html:has(body > div.base) {
+  scrollbar-gutter: auto; /* 主页取消预留滚动条 */
+}
+
 .base {
   width: 100%;
   height: 100vh;

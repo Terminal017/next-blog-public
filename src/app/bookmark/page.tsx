@@ -1,4 +1,4 @@
-import Bookmark from '@/ui/bookmarks'
+import Bookmark from '@/app/bookmark/bookmarks'
 
 export default function BookmarkPage() {
   return <Bookmark></Bookmark>
