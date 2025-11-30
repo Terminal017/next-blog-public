@@ -17,7 +17,7 @@ export async function getArticleList(
 
   const article_list = (await collection
     .find({})
-    .sort({ date: -1 })
+    .sort({ createAt: -1 })
     .project({ content: 0, _id: 0 })
     .limit(5)
     .skip((index - 1) * 5)

@@ -110,7 +110,9 @@ function ArticleLi({ article_data }: { article_data: ArticleListType }) {
           <div className="blog-list-content">
             <h3 className="text-on-surface">{article_data.title}</h3>
             <div className="blog-list-time">
-              <span className="text-on-surface-v/80">{article_data.date}</span>
+              <span className="text-on-surface-v/80">
+                {article_data.createAt}
+              </span>
             </div>
             <p className="text-on-surface-v">{article_data.desc}</p>
             <div className="blog-list-tag">
