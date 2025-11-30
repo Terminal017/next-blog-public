@@ -3,5 +3,6 @@ Allow: /
 
 Disallow: /_next/
 Disallow: /api/
+Disallow: /control/
 
 Sitemap: https://startrails.site/sitemap.xml

@@ -9,6 +9,23 @@ import crypto from 'crypto'
 import type { User } from '@auth/core/types'
 import { ObjectId } from 'mongodb'
 
+//扩展next-auth的User与Session接口类型
+declare module 'next-auth' {
+  interface User {
+    role?: string
+  }
+
+  interface Session {
+    user: {
+      id: string
+      role?: string
+      email?: string | null
+      name?: string | null
+      image?: string | null
+    }
+  }
+}
+
 //将数据写入user_profile集合
 async function add_user_image(user: User) {
   //如果它是空的说明SignIn被取消了，让它报错停止登录
@@ -63,6 +80,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     //登录后将用户基本信息拷贝进新的数据库，上传图片到存储桶
     async signIn({ user }) {
       return await add_user_image(user)
+    },
+    async session({ session, user }) {
+      // 添加管理员身份信息
+      if (user.role) {
+        session.user.role = user.role
+      }
+      return session
     },
   },
 })
