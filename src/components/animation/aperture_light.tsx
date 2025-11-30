@@ -1,16 +1,10 @@
-"use client"
+'use client'
 
-import "@/styles/ani/aperture.css"
-import { motion, AnimatePresence } from "motion/react"
+import '@/styles/ani/aperture.css'
+import { motion, AnimatePresence } from 'motion/react'
 import { useState, useEffect, useRef, MouseEvent } from 'react'
 
-interface ApertureLightType {
-  x: number
-  y: number
-  r: number
-  key: string
-  radius: string
-}
+import type { ApertureLightType } from '@/components/type'
 
 export default function ApertureLight() {
   const [apertures, setApertures] = useState<ApertureLightType[]>([])
@@ -25,7 +19,7 @@ export default function ApertureLight() {
     }
   }, [])
 
-  const border_list = ["6%", "50%"]
+  const border_list = ['6%', '50%']
   const handleClick = (e: MouseEvent<HTMLDivElement>) => {
     const aperture_item = {
       x: e.clientX,

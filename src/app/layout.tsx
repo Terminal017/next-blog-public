@@ -1,6 +1,6 @@
 import '@/styles/globals.css'
-import Header from '@/ui/head_nav'
-import { roboto, misans } from '@/ui/fonts/font'
+import Header from '@/components/head_nav'
+import { roboto, misans } from '@/styles/fonts/font'
 import { cookies } from 'next/headers'
 import { Analytics } from '@vercel/analytics/next'
 //类型导入
@@ -47,6 +47,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  /* 使用cookie获取主题用于SSR渲染
+   * localStorage方案：
+   * (1) 使用useEffect，在水合后执行，会有短暂闪烁。
+   * (2) 在head里注入脚本让它第一时间运行。注意，一般来说React仅管理指定的root节点内的内容，
+   * 但next根布局组件会渲染整个HTML骨架，导致html标签也参加水合检查，需要添加suppressHydrationWarning忽略。
+   * 还有，开发模式下记得禁用多余的插件（你也不想再看到：哇，翻译插件在改我注入的代码！）
+   */
   const cookieStore = await cookies()
   const theme = cookieStore.get('theme')?.value || 'light'
   return (

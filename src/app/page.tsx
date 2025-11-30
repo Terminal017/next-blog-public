@@ -2,8 +2,8 @@
 
 import '@/styles/home_page.css'
 import HomePage from './base_content'
-import ApertureDark from '@/ui/animation/aperture_dark' //导入主页动画组件
-import ApertureLight from '@/ui/animation/aperture_light'
+import ApertureDark from '@/components/animation/aperture_dark' //导入主页动画组件
+import ApertureLight from '@/components/animation/aperture_light'
 import { AnimatePresence } from 'motion/react'
 import { useState, useEffect } from 'react'
 import { motion } from 'motion/react'

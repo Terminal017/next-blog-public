@@ -1,19 +1,11 @@
 'use client'
 
-import BubbleHeader from '@/ui/bubble_header'
+import BubbleHeader from '@/components/bubble_header'
 import { useState, useEffect, useActionState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { add_new_friend } from '@/lib/server/handle_friendlink'
-import { MessageRemind, useMessage } from '@/ui/mini_component'
-
-interface friendlinkType {
-  title: string
-  site: string
-  avatar: string
-  description: string
-  email: string
-  datetime: Date
-}
+import { add_new_friend } from '@/features/server/handle_friendlink'
+import { MessageRemind, useMessage } from '@/components/message_com'
+import type { friendlinkType } from '@/types/index'
 
 export default function FriendLinkList({
   friendlink_data,

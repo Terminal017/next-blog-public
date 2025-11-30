@@ -3,19 +3,10 @@
 import '@/styles/ani/aperture.css'
 import { motion, AnimatePresence } from 'motion/react'
 import { useState, useEffect, useRef, MouseEvent } from 'react'
-
-interface ApertureType {
-  x: number
-  y: number
-  r: number
-  key: string
-  delay: number
-  duration: number
-  width: number
-}
+import type { ApertureDarkType } from '@/components/type'
 
 export default function ApertureDark() {
-  const [apertures, setApertures] = useState<ApertureType[]>([])
+  const [apertures, setApertures] = useState<ApertureDarkType[]>([])
   const [presstime, setPressTime] = useState(0)
   const timeRef = useRef<NodeJS.Timeout[]>([])
 
@@ -69,7 +60,7 @@ export default function ApertureDark() {
       y: e.clientY,
       r: new_r > 40 ? new_r : 40,
     }
-    const newItems: ApertureType[] = []
+    const newItems: ApertureDarkType[] = []
 
     for (let i = 0; i < count_aperture; i++) {
       const newItem = {

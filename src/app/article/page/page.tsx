@@ -1,5 +1,5 @@
-import BlogList from '@/ui/blog_list'
-import { getArticleList } from '@/lib/server/articles_post'
+import BlogList from '@/app/article/blog_list'
+import { getArticleList } from '@/features/posts/get_articles'
 
 export default async function AritclePage() {
   const [article_sum, article_list] = await getArticleList(1)

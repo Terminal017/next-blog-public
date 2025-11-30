@@ -3,17 +3,7 @@
 import '@/styles/ani/bubble.css'
 import { motion } from 'motion/react'
 import { useEffect, useState, useCallback, useRef } from 'react'
-
-interface BubbleType {
-  id: number
-  size: number
-  left: number
-  delay: number
-  duration: number
-  xTarget: number
-  yTarget: number
-  reset: boolean
-}
+import type { BubbleType } from '@/components/type'
 
 export default function BubbleHeader({
   content,

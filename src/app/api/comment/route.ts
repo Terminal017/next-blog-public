@@ -1,35 +1,9 @@
 import type { NextRequest } from 'next/server'
 import { auth } from '../../../../auth'
-
-import getDB from '@/lib/mongodb'
+import getDB from '@/features/mongodb'
 import { ObjectId } from 'mongodb'
 
-interface CommentType {
-  _id: ObjectId
-  comment: string
-  datetime: Date
-  user: { name: string; image: string }
-  //state语言：1表示active, 0表示deleted
-  state: number
-  own_check: boolean //表示是否为作者
-  parentID: string
-  rootID: string
-  like: number
-  liked: boolean
-  parent_user?: string
-}
-
-interface CommentData {
-  slug: string
-  comment: string
-  parentID: string
-  rootID: string
-}
-
-interface LikeData {
-  comment_id: string
-  liked: boolean
-}
+import type { CommentType, CommentData, LikeData } from '../type'
 
 //构造评论嵌套结构
 function buildResponse(data: CommentType[]) {
@@ -43,17 +17,9 @@ function buildResponse(data: CommentType[]) {
       _id: item._id.toString(),
       datetime: item.datetime.toISOString().split('T')[0],
       children: [] as any[],
-      parent_user: '',
     }
 
     commentMap.set(processedItem._id, processedItem)
-
-    if (item.parentID) {
-      const parentComment = commentMap.get(item.parentID)
-      if (parentComment) {
-        processedItem.parent_user = parentComment.user.name
-      }
-    }
 
     if (item.rootID === '') {
       result.push(processedItem)

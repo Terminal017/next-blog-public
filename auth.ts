@@ -1,9 +1,9 @@
 import NextAuth from 'next-auth'
 import Google from 'next-auth/providers/google'
 import { MongoDBAdapter } from '@auth/mongodb-adapter'
-import client from '@/lib/db'
-import getDB from '@/lib/mongodb'
-import { uploadImageToR2 } from '@/lib/server/r2'
+import client from '@/features/db'
+import getDB from '@/features/mongodb'
+import { uploadImageToR2 } from '@/features/server/r2'
 import crypto from 'crypto'
 
 import type { User } from '@auth/core/types'

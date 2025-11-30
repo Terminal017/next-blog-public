@@ -1,5 +1,5 @@
 import '@/styles/about.css'
-import BubbleHeader from '@/ui/bubble_header'
+import BubbleHeader from '@/components/bubble_header'
 
 export default function About() {
   return (

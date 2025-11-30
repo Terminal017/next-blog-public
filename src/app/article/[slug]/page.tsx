@@ -1,51 +1,46 @@
 import { notFound } from 'next/navigation'
-import { article_map } from '../../../lib/data'
 import { MDXRemote } from 'next-mdx-remote-client/rsc'
 import { getFrontmatter } from 'next-mdx-remote-client/utils'
 import { get_mdx_options, mdx_components } from './mdx-process'
-import { getArticleContent } from '@/lib/server/articles_post'
+import { getArticleContent } from '@/features/posts/get_articles'
 import { CommentList } from './comment_list'
-import ArticleTOC from '@/ui/toc'
+import ArticleTOC from '@/components/toc'
 import { auth } from '../../../../auth'
 
 import type { Metadata } from 'next'
 import type { MDXRemoteProps } from 'next-mdx-remote-client/rsc'
+import type { HeadingType } from '@/types/index'
 
 //导出的dynamicParams定义方法不在路由表中的行为，为false时表示访问不存在的会自动进入404页面
 export const dynamicParams = false
 
 //设置metadata
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}): Promise<Metadata> {
-  const { slug } = await params
-  const article = article_map[slug] || {}
-  return {
-    title: article.title,
-    description: article.desc,
-    authors: [{ name: 'Star Trial' }],
-    openGraph: {
-      title: article.title,
-      description: article.desc,
-      url: `https://startrails.site/article/${slug}`,
-      type: 'article',
-      publishedTime: article.date,
-      authors: ['Star Trial'],
-      tags: article.tags,
-    },
-    twitter: {
-      title: article.title,
-      description: article.desc,
-    },
-  }
-}
-
-interface HeadingType {
-  text: string
-  id: string
-}
+// export async function generateMetadata({
+//   params,
+// }: {
+//   params: Promise<{ slug: string }>
+// }): Promise<Metadata> {
+//   const { slug } = await params
+//   const article = article_map[slug] || {}
+//   return {
+//     title: article.title,
+//     description: article.desc,
+//     authors: [{ name: 'Star Trial' }],
+//     openGraph: {
+//       title: article.title,
+//       description: article.desc,
+//       url: `https://startrails.site/article/${slug}`,
+//       type: 'article',
+//       publishedTime: article.date,
+//       authors: ['Star Trial'],
+//       tags: article.tags,
+//     },
+//     twitter: {
+//       title: article.title,
+//       description: article.desc,
+//     },
+//   }
+// }
 
 //设置动态路由，其实params是返回后续URL值的期约
 export default async function Page({

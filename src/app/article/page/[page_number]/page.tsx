@@ -1,6 +1,6 @@
-import BlogList from '@/ui/blog_list'
+import BlogList from '@/app/article/blog_list'
 import { notFound } from 'next/navigation'
-import { getArticleList } from '@/lib/server/articles_post'
+import { getArticleList } from '@/features/posts/get_articles'
 
 export default async function AritclePage({
   params,

@@ -1,18 +1,10 @@
 'use client'
 import '@/styles/blist.css'
-import BubbleHeader from '@/ui/bubble_header'
+import BubbleHeader from '@/components/bubble_header'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-
-interface ArticleListType {
-  slug: string
-  title: string
-  img: string
-  date: string
-  desc: string
-  tags: string[]
-}
+import type { ArticleListType } from '@/types/index'
 
 export default function BlogList({
   page_number,
@@ -128,7 +120,7 @@ function ArticleLi({ article_data }: { article_data: ArticleListType }) {
                     key={tag}
                     className="text-on-surface-v bg-surface-v hover:bg-surface-tint/10"
                   >
-                    {`#${tag}`}
+                    {`${tag}`}
                   </div>
                 )
               })}

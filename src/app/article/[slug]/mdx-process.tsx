@@ -3,18 +3,15 @@ import remarkSlug from 'remark-slug'
 import rehypePrismPlus from 'rehype-prism-plus'
 import { visit } from 'unist-util-visit'
 import CodeBlock from './code_copy'
-
 import { Root as RootType, Heading } from 'mdast'
+
+import type { HeadingType } from '@/types/index'
+
 /**
  * 读取MDX文件内容
  * @param {string} slug - 文章的slug
  * @returns {Promise<string>} 文件内容
  */
-
-interface HeadingType {
-  text: string
-  id: string
-}
 
 // 提取标题信息放入headings
 function remarkExtractHeadings(headings: HeadingType[]) {

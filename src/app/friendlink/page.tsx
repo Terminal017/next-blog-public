@@ -1,14 +1,7 @@
-import FriendLinkList from '@/ui/friendlink_list'
-import getDB from '@/lib/mongodb'
+import FriendLinkList from '@/app/friendlink/friendlink_list'
+import getDB from '@/features/mongodb'
 
-interface friendlinkType {
-  title: string
-  site: string
-  avatar: string
-  description: string
-  email: string
-  datetime: Date
-}
+import type { friendlinkType } from '@/types/index'
 
 export default async function Friendlink() {
   const database = await getDB()

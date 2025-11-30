@@ -1,13 +1,5 @@
 import getDB from '../mongodb'
-
-interface ArticleListType {
-  slug: string
-  title: string
-  img: string
-  date: string
-  desc: string
-  tags: string[]
-}
+import { ArticleListType } from '@/types/index'
 
 interface ArticleListData extends ArticleListType {
   content: string
@@ -37,6 +29,7 @@ export async function getArticleList(
   return [articles_sum, article_list]
 }
 
+//服务端直接获取文章内容
 export async function getArticleContent(slug: string) {
   const db = await getDB()
   const collection = db.collection<ArticleListData>('articles')

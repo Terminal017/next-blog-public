@@ -1,14 +1,8 @@
-import BubbleHeader from '@/ui/bubble_header'
+import BubbleHeader from '@/components/bubble_header'
 import '@/styles/plist.css'
 import Image from 'next/image'
+import type { ProjectsDataProps } from '@/components/type'
 
-interface ProjectsDataProps {
-  link: string
-  img: string
-  title: string
-  desc: string
-  tags: string[]
-}
 export default function ProjectsList() {
   const data_list: ProjectsDataProps[] = []
   data_list.push({

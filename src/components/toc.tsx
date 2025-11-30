@@ -1,14 +1,11 @@
-"use client"
+'use client'
 
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef } from 'react'
 
-interface HeadingType {
-  text: string
-  id: string
-}
+import type { HeadingType } from '@/types/index'
 
-export default function ArticleTOC({ headings }: {headings: HeadingType[]}) {
-  const [activeId, setActiveId] = useState("")
+export default function ArticleTOC({ headings }: { headings: HeadingType[] }) {
+  const [activeId, setActiveId] = useState('')
   const clickedRef = useRef(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -29,13 +26,13 @@ export default function ArticleTOC({ headings }: {headings: HeadingType[]}) {
       },
       // Observer 的配置选项
       {
-        rootMargin: "-20px 0px -75% 0px", // 设置观察区域
+        rootMargin: '-20px 0px -75% 0px', // 设置观察区域
         threshold: 0.1, // 定义了元素多少比例，当10%的元素可见时触发
-      }
+      },
     )
 
     const headingElements = document.querySelectorAll(
-      "article.article-container h3"
+      'article.article-container h3',
     )
 
     //观察所有元素
@@ -93,7 +90,7 @@ export default function ArticleTOC({ headings }: {headings: HeadingType[]}) {
               <li key={heading.id}>
                 <span
                   className={`toc-item ${
-                    activeId === heading.id ? "toc-item-active" : ""
+                    activeId === heading.id ? 'toc-item-active' : ''
                   }`}
                   onClick={(e) => handleTocItemClick(e, heading.id)}
                 >

@@ -1,5 +1,5 @@
 'use server'
-import getDB from '@/lib/mongodb'
+import getDB from '@/features/mongodb'
 
 export async function add_new_friend(_: any, newfriend_data: FormData) {
   const check_data = ['name', 'site', 'avatar', 'description', 'email']
