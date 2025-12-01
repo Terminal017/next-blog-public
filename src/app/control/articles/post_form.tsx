@@ -45,7 +45,9 @@ export default function PostForm({
     if (e.key === 'Enter') {
       e.preventDefault()
       const val = tagInput.trim()
-      if (!val) return
+      if (!val) {
+        return
+      }
       if (!formData.tags.includes(val)) {
         setFormData((prev) => ({ ...prev, tags: [...prev.tags, val] }))
       }
@@ -99,7 +101,7 @@ export default function PostForm({
         className="bg-surface border-outline my-20 flex
         w-[40rem] max-w-9/10 flex-col rounded-md shadow-md"
       >
-        <div className="bg-surface-high flex-shrink-0 rounded-t-md px-8 py-5">
+        <div className="bg-surface-highest flex-shrink-0 rounded-t-md px-8 py-5">
           <h2 className="text-xl font-semibold">文章信息</h2>
         </div>
         {/* 表单部分,超出内容允许滚动 */}

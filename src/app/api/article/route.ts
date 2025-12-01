@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
     if (field && (order === '1' || order === '-1')) {
       sortObj[field] = order === '1' ? 1 : -1
     } else {
-      sortObj['createAt'] = -1
+      sortObj.createAt = -1
     }
 
     //数据库查询结果

@@ -1,6 +1,12 @@
-import { article_data } from '@/features/data'
+import getDB from '@/features/mongodb'
 
 export default async function sitemap() {
+  const database = await getDB()
+  const collection = database.collection('articles')
+  const article_data = await collection
+    .find({}, { projection: { slug: 1, updateAt: 1 } })
+    .toArray()
+
   const sitemap_static = [
     {
       url: 'https://startrails.site/',
@@ -27,7 +33,7 @@ export default async function sitemap() {
   const sitemap_article = article_data.map((item) => {
     return {
       url: `https://startrails.site/article/${item.slug}`,
-      lastModified: new Date(item.date),
+      lastModified: new Date(item.updateAt),
       priority: 0.5,
     }
   })

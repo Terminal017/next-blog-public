@@ -6,7 +6,6 @@ import ApertureDark from '@/components/animation/aperture_dark' //导入主页�
 import ApertureLight from '@/components/animation/aperture_light'
 import { AnimatePresence } from 'motion/react'
 import { useState, useEffect } from 'react'
-import { motion } from 'motion/react'
 
 export default function Home() {
   const [theme, setTheme] = useState(false)

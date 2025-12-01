@@ -7,7 +7,7 @@ import { CommentList } from './comment_list'
 import ArticleTOC from '@/components/toc'
 import { auth } from '../../../../auth'
 
-import type { Metadata } from 'next'
+// import type { Metadata } from 'next'
 import type { MDXRemoteProps } from 'next-mdx-remote-client/rsc'
 import type { HeadingType } from '@/types/index'
 
