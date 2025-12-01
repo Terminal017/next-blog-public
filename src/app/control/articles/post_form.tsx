@@ -1,16 +1,44 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
+import type { ArticleFormType } from '@/types/index'
 
 export default function PostForm({
+  formState,
   setFormState,
   onSuccess,
 }: {
-  setFormState: (open: string) => void
+  formState: { state: boolean; slug: string | null }
+  setFormState: React.Dispatch<
+    React.SetStateAction<{ state: boolean; slug: string | null }>
+  >
   onSuccess: () => void
 }) {
-  const [tags, setTags] = useState<string[]>([])
   const [tagInput, setTagInput] = useState('')
+  const [formData, setFormData] = useState<ArticleFormType>({
+    slug: '',
+    title: '',
+    img: '',
+    desc: '',
+    tags: [],
+    content: '',
+  })
+
+  //副作用：修改文章状态下获取文章数据以填充表单
+  useEffect(() => {
+    //修改文章数据获取并填充表单
+    if (formState.slug) {
+      fetch(`/api/article?slug=${formState.slug}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setFormData(data)
+        })
+        .catch((error) => {
+          console.error('获取文章数据错误', error)
+        })
+    }
+  }, [formState.slug])
 
   // 处理 Enter 添加标签
   const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -18,33 +46,46 @@ export default function PostForm({
       e.preventDefault()
       const val = tagInput.trim()
       if (!val) return
-      if (!tags.includes(val)) setTags([...tags, val])
+      if (!formData.tags.includes(val)) {
+        setFormData((prev) => ({ ...prev, tags: [...prev.tags, val] }))
+      }
       setTagInput('')
     }
   }
 
   // 删除标签
   const removeTag = (tag: string) => {
-    setTags(tags.filter((t) => t !== tag))
+    const new_tags = formData.tags.filter((t) => t !== tag)
+    setFormData((prev) => ({ ...prev, tags: new_tags }))
   }
 
-  //提交表单函数
-  async function postArticle(formdata: FormData) {
-    const new_date = new Date().toISOString()
+  //受控表单提交函数
+  async function postArticle(e: React.FormEvent) {
+    e.preventDefault()
+    const new_date = new Date().toISOString().split('T')[0]
     //完善表单数据
-    formdata.set('tags', JSON.stringify(tags))
-    formdata.append('createAt', new_date.split('T')[0])
-    formdata.append('updateAt', new_date.split('T')[0])
+    const submitData = {
+      ...formData,
+      tags: formData.tags,
+      createAt: new_date,
+      updateAt: new_date,
+    }
 
     const res = await fetch('/api/article', {
-      method: 'POST',
-      body: formdata,
+      method: formState.slug ? 'PUT' : 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(submitData),
     })
+
     if (res.ok) {
       //关闭表单并刷新数据
-      setFormState('close')
+      setFormState({ state: false, slug: null })
       onSuccess()
     } else {
+      const data = await res.text()
+      console.log(data)
       console.error('文章提交失败')
     }
   }
@@ -62,59 +103,81 @@ export default function PostForm({
           <h2 className="text-xl font-semibold">文章信息</h2>
         </div>
         {/* 表单部分,超出内容允许滚动 */}
-        <form className="flex-1 overflow-y-auto" action={postArticle}>
+        <form className="flex-1 overflow-y-auto" onSubmit={postArticle}>
           <div className="flex flex-col space-y-5 px-8 py-4">
             <div className="space-y-2">
               <label className="block font-medium">文章名称</label>
               {/*input在focus状态会缩小1px的padding以扩大1px的border*/}
               <input
                 type="text"
+                value={formData.title}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, title: e.target.value }))
+                }
                 name="title"
                 className="border-outline/50 focus:border-primary/90 m-[1px] w-full
                  rounded-lg border-[1px] px-3 py-2 transition-colors duration-200
                  focus:border-2 focus:px-[11px] focus:py-[7px] focus:outline-none"
                 placeholder="Title"
-              ></input>
+                required
+              />
             </div>
             <div className="space-y-2">
               <label className="block font-medium">路由slug</label>
               <input
                 type="text"
+                value={formData.slug}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, slug: e.target.value }))
+                }
                 name="slug"
                 className="border-outline/50 focus:border-primary/90 m-[1px] w-full
                  rounded-lg border-[1px] px-3 py-2 transition-colors duration-200
                  focus:border-2 focus:px-[11px] focus:py-[7px] focus:outline-none"
                 placeholder="Router"
-              ></input>
+                readOnly={!!formState.slug}
+                required
+              />
+              {/* 修改状态下slug不可更改，这是为了维护用户体验和保护评论关联 */}
             </div>
             <div className="space-y-2">
               <label className="block font-medium">文章描述</label>
               <input
                 type="text"
+                value={formData.desc}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, desc: e.target.value }))
+                }
                 name="desc"
                 className="border-outline/50 focus:border-primary/90 m-[1px] w-full
                  rounded-lg border-[1px] px-3 py-2 transition-colors duration-200
                  focus:border-2 focus:px-[11px] focus:py-[7px] focus:outline-none"
                 placeholder="Description"
-              ></input>
+                required
+              />
             </div>
             <div className="space-y-2">
               <label className="block font-medium">图片</label>
               <input
                 type="url"
+                value={formData.img}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, img: e.target.value }))
+                }
                 name="img"
                 className="border-outline/50 focus:border-primary/90 m-[1px] w-full
                  rounded-lg border-[1px] px-3 py-2 transition-colors duration-200
                  focus:border-2 focus:px-[11px] focus:py-[7px] focus:outline-none"
                 placeholder="https://img.startrails.site/img/A.webp"
-              ></input>
+                required
+              />
             </div>
             <div className="space-y-2">
               <label className="block font-medium">标签</label>
 
               {/* 标签展示与输入 */}
               <div className="flex cursor-default flex-wrap gap-2">
-                {tags.map((tag) => (
+                {formData.tags.map((tag) => (
                   <span
                     key={tag}
                     className="bg-surface-high border-outline-v flex items-center rounded
@@ -153,12 +216,18 @@ export default function PostForm({
               <label className="block font-medium">文章内容</label>
               <textarea
                 name="content"
-                className="border-outline/50 focus:border-primary/90 m-[1px] min-h-36
+                value={formData.content}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, content: e.target.value }))
+                }
+                rows={10}
+                className="border-outline/50 focus:border-primary/90 m-[1px]
                  w-full resize-none rounded-lg border-[1px] px-3 py-2
                  transition-colors duration-200 focus:border-2 focus:px-[11px]
                  focus:py-[7px] focus:outline-none"
                 placeholder="MDX"
-              ></textarea>
+                required
+              />
             </div>
             <div className="my-4 flex w-full justify-around">
               <button
@@ -167,7 +236,7 @@ export default function PostForm({
               transition-colors duration-200 hover:bg-red-400"
                 onClick={(e) => {
                   e.preventDefault()
-                  setFormState('close')
+                  setFormState({ state: false, slug: null })
                 }}
               >
                 取消

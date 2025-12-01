@@ -1,12 +1,12 @@
 //这里存放所有/app路由里面用到的类型，重复类型来源基本都在app路由中
 
-import type { ObjectId } from 'mongodb'
 // 文章列表类型
 export interface ArticleListType {
   slug: string
   title: string
   img: string
   createAt: string
+  updateAt: string
   desc: string
   tags: string[]
 }
@@ -55,4 +55,13 @@ export interface ArticleInfType {
   title: string
   createAt: string
   updateAt: string
+}
+
+export interface ArticleFormType {
+  slug: string
+  title: string
+  img: string
+  desc: string
+  tags: string[]
+  content: string
 }

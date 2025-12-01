@@ -10,7 +10,13 @@ import PostForm from '@/app/control/articles/post_form'
 export default function ControlArticles() {
   const [article_list, setArticleList] = useState<ArticleInfType[]>([])
   const [loading, setLoading] = useState(true)
-  const [formState, setFormState] = useState('close')
+  const [formState, setFormState] = useState<{
+    state: boolean
+    slug: string | null
+  }>({
+    state: false,
+    slug: null,
+  })
 
   const fetchArticles = async () => {
     try {
@@ -74,7 +80,7 @@ export default function ControlArticles() {
             <button
               className="border-outline/80 hover:border-primary hover:text-primary
               rounded-lg border px-3 py-1 text-lg font-medium"
-              onClick={() => setFormState('add')}
+              onClick={() => setFormState({ state: true, slug: null })}
             >
               Add New
             </button>
@@ -105,10 +111,18 @@ export default function ControlArticles() {
                     <td className="py-4 pl-8 font-medium">{article.title}</td>
                     <td className="px-4 py-4">{article.createAt}</td>
                     <td className="px-4 py-4">{article.updateAt}</td>
+                    {/* 修改按钮，触发表单并传入文章slug */}
                     <td className="px-4 py-4">
                       <motion.button
                         className="flex h-6 w-6 items-end"
-                        initial={{ rotate: 0, scale: 1, color: 'inherit' }}
+                        onClick={() =>
+                          setFormState({ state: true, slug: article.slug })
+                        }
+                        initial={{
+                          rotate: 0,
+                          scale: 1,
+                          color: 'var(--md-sys-color-on-background)',
+                        }}
                         whileHover={{
                           rotate: [0, -10, 10, 0],
                           scale: 1.1,
@@ -126,11 +140,15 @@ export default function ControlArticles() {
                         </svg>
                       </motion.button>
                     </td>
+                    {/* 删除按钮,点击触发DELETE请求 */}
                     <td className="px-4 py-4">
                       <motion.button
                         className="flex h-6 w-6 items-end"
                         onClick={() => deleteArticle(article.slug)}
-                        initial={{ scale: 1, color: 'inherit' }}
+                        initial={{
+                          scale: 1,
+                          color: 'var(--md-sys-color-on-background)',
+                        }}
                         whileHover={{
                           scale: 1.15,
                           color: 'var(--md-sys-color-primary)',
@@ -171,13 +189,17 @@ export default function ControlArticles() {
               >
                 <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
               </svg>
-              <span className="text-lg">中控台</span>
+              <span className="text-lg font-medium">中控台</span>
             </Link>
           </div>
         </div>
       </main>
-      {formState !== 'close' && (
-        <PostForm setFormState={setFormState} onSuccess={fetchArticles} />
+      {formState.state && (
+        <PostForm
+          formState={formState}
+          setFormState={setFormState}
+          onSuccess={fetchArticles}
+        />
       )}
     </>
   )
