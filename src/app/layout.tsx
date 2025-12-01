@@ -2,7 +2,6 @@ import '@/styles/globals.css'
 import Header from '@/components/head_nav'
 import { roboto, misans } from '@/styles/fonts/font'
 import { cookies } from 'next/headers'
-import { Analytics } from '@vercel/analytics/next'
 //类型导入
 import { Metadata, Viewport } from 'next'
 
@@ -63,7 +62,6 @@ export default async function RootLayout({
       >
         <Header />
         {children}
-        <Analytics />
       </body>
     </html>
   )

@@ -51,7 +51,7 @@ export interface friendlinkType {
 
 // 管理页面文章信息类型
 export interface ArticleInfType {
-  _id: ObjectId
+  slug: string
   title: string
   createAt: string
   updateAt: string
