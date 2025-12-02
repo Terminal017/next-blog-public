@@ -1,13 +1,16 @@
 import Link from 'next/link'
 import { auth } from '../../../auth'
-import { notFound } from 'next/navigation'
 
 // 中控台主页面
 export default async function ControlPage() {
   const session = await auth()
 
   if (!session || !session.user || session.user.role !== 'admin') {
-    notFound()
+    return (
+      <div className="flex w-full justify-center">
+        <h2 className="mt-32 text-2xl font-medium">无权限访问此页面</h2>
+      </div>
+    )
   }
 
   return (
