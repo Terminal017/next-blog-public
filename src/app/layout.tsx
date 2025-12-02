@@ -1,7 +1,6 @@
 import '@/styles/globals.css'
 import Header from '@/components/head_nav'
 import { roboto, misans } from '@/styles/fonts/font'
-// import { cookies } from 'next/headers'
 //类型导入
 import { Metadata, Viewport } from 'next'
 
@@ -46,20 +45,55 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  /* 使用cookie获取主题用于SSR渲染
+  /* 可以使用cookie获取主题用于SSR渲染，现已替换为localStorage方案，保证部分页面可以静态导出
    * localStorage方案：
    * (1) 使用useEffect，在水合后执行，会有短暂闪烁。
    * (2) 在head里注入脚本让它第一时间运行。注意，一般来说React仅管理指定的root节点内的内容，
    * 但next根布局组件会渲染整个HTML骨架，导致html标签也参加水合检查，需要添加suppressHydrationWarning忽略。
    * 还有，开发模式下记得禁用多余的插件（你也不想再看到：哇，翻译插件在改我注入的代码！）
    */
-  // const cookieStore = await cookies()
-  // const theme = cookieStore.get('theme')?.value || 'light'
-  const theme = 'light'
+
   return (
-    <html lang="zh-CN" className={theme}>
+    <html lang="zh-CN" suppressHydrationWarning className="dark">
+      <head>
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              /* 默认背景色，防止白屏 */
+              html.light body {
+                background-color: #F6FAFE;
+              }
+              
+              html.dark body{
+                background-color: #0F1417;
+              }
+            `,
+          }}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  // 注入JS代码，从 localStorage 获取主题并立刻更新到HTML标签
+                  var theme = localStorage.getItem('theme') || 'light';
+                  
+                  if (!localStorage.getItem('theme')) {
+                    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    theme = prefersDark ? 'dark' : 'light';
+                  }
+  
+                  document.documentElement.className = theme;
+                } catch (e) {
+                  console.error('Failed to load theme:', e);
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
       <body
-        className={`bg-background text-on-background ${roboto.variable} ${misans.variable}`}
+        className={`text-on-background ${roboto.variable} ${misans.variable}`}
       >
         <Header />
         {children}

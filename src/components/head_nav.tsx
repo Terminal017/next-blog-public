@@ -8,25 +8,15 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 export default function Header() {
-  const [mode, setMode] = useState('light') //定义深浅模式的state
+  const [mode, setMode] = useState<'light' | 'dark'>('dark') //定义深浅模式的state
   const [isMenuOpen, setIsMenuOpen] = useState(false) //定义移动端菜单的状态
   const pathname = usePathname()
 
   useEffect(() => {
-    const match = document.cookie.match(/theme=(dark|light)/)
-    let theme = match ? match[1] : null
-
-    //如果没有 cookie，则检测系统偏好
-    if (!theme) {
-      const prefersDark = window.matchMedia(
-        '(prefers-color-scheme: dark)',
-      ).matches
-      theme = prefersDark ? 'dark' : 'light'
-      document.cookie = `theme=${theme}; path=/; max-age=${60 * 60 * 24 * 365}`
+    const currentTheme = document.documentElement.className as 'light' | 'dark'
+    if (currentTheme) {
+      setMode(currentTheme)
     }
-
-    setMode(theme)
-    document.documentElement.className = theme
   }, [])
 
   //切换深浅模式函数
@@ -34,7 +24,7 @@ export default function Header() {
     const newmode = mode === 'light' ? 'dark' : 'light'
     setMode(newmode)
     document.documentElement.classList = newmode
-    document.cookie = `theme=${newmode}; path=/; max-age=${60 * 60 * 24 * 365}`
+    localStorage.setItem('theme', newmode)
   }
 
   const navlist = [

@@ -42,7 +42,6 @@ export async function getArticleContent(slug: string) {
   const collection = db.collection<ArticleListData>('articles')
 
   const doc_content = await collection.findOne({ slug: slug })
-  console.log('重复请求文章内容')
 
   return doc_content?.content || ''
 }
