@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { auth } from '../../../../auth'
 import getDB from '@/features/mongodb'
 import type { ArticleFormType } from '@/types'
+import { revalidateTag, unstable_expireTag } from 'next/cache'
 
 interface ArticleReqType extends ArticleFormType {
   createAt: string
@@ -98,6 +99,7 @@ export async function POST(request: NextRequest) {
     const result = await collection.insertOne(insert_data)
 
     if (result.acknowledged) {
+      revalidateTag('articles')
       return new Response('添加成功')
     } else {
       return new Response('添加文章失败', { status: 500 })
@@ -139,6 +141,9 @@ export async function PUT(request: NextRequest) {
 
     //检查是否有匹配的文章被修改
     if (result.matchedCount === 1) {
+      // 重新验证与文章相关的缓存标签
+      revalidateTag(`article-content-${slug}`)
+      revalidateTag('articles')
       return new Response('修改成功')
     } else {
       return new Response('文章不存在', { status: 404 })
@@ -163,6 +168,9 @@ export async function DELETE(request: NextRequest) {
     const collection = database.collection('articles')
     const result = await collection.deleteOne({ slug: articleSlug })
     if (result.deletedCount === 1) {
+      //文章删除后删除文章缓存
+      unstable_expireTag(`article-content-${articleSlug}`)
+      revalidateTag('articles')
       return new Response('删除成功')
     } else {
       return new Response('文章不存在或已被删除', { status: 404 })

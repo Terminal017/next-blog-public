@@ -42,7 +42,7 @@ export const dynamicParams = false
 //   }
 // }
 
-//设置动态路由，其实params是返回后续URL值的期约
+//设置动态路由，params是返回后续URL值的期约
 export default async function Page({
   params,
 }: {

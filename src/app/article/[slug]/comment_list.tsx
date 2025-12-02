@@ -420,14 +420,16 @@ function CommentItem({
                   >
                     {replyid === child_item._id ? '取消回复' : '回复'}
                   </button>
-                  <button
-                    className="hover:bg-surface-highest rounded-4xl px-4 py-2"
-                    onClick={() =>
-                      del_comment(child_item._id, child_item.rootID)
-                    }
-                  >
-                    删除
-                  </button>
+                  {child_item.own_check && (
+                    <button
+                      className="hover:bg-surface-highest rounded-4xl px-4 py-2"
+                      onClick={() =>
+                        del_comment(child_item._id, child_item.rootID)
+                      }
+                    >
+                      删除
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  experimental: { useCache: true },
   //添加允许外部图片的域名
   images: {
     unoptimized: true,

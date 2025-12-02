@@ -1,7 +1,7 @@
 import '@/styles/globals.css'
 import Header from '@/components/head_nav'
 import { roboto, misans } from '@/styles/fonts/font'
-import { cookies } from 'next/headers'
+// import { cookies } from 'next/headers'
 //类型导入
 import { Metadata, Viewport } from 'next'
 
@@ -53,8 +53,9 @@ export default async function RootLayout({
    * 但next根布局组件会渲染整个HTML骨架，导致html标签也参加水合检查，需要添加suppressHydrationWarning忽略。
    * 还有，开发模式下记得禁用多余的插件（你也不想再看到：哇，翻译插件在改我注入的代码！）
    */
-  const cookieStore = await cookies()
-  const theme = cookieStore.get('theme')?.value || 'light'
+  // const cookieStore = await cookies()
+  // const theme = cookieStore.get('theme')?.value || 'light'
+  const theme = 'light'
   return (
     <html lang="zh-CN" className={theme}>
       <body
