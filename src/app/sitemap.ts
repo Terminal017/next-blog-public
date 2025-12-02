@@ -28,6 +28,11 @@ export default async function sitemap() {
       lastModified: new Date(),
       priority: 0.7,
     },
+    {
+      url: 'https://startrails.site/friendlink',
+      lastModified: new Date(),
+      priority: 0.7,
+    },
   ]
 
   const sitemap_article = article_data.map((item) => {
