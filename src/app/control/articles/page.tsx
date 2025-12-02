@@ -21,7 +21,7 @@ export default function ControlArticles() {
   const fetchArticles = async () => {
     try {
       setLoading(true)
-      const res = await fetch('/api/article?page=1&sort=createAt:-1')
+      const res = await fetch('/api/control/article?page=1&sort=createAt:-1')
 
       if (res.ok) {
         const data = await res.json()
@@ -55,7 +55,7 @@ export default function ControlArticles() {
 
   async function deleteArticle(article_slug: string) {
     try {
-      const res = await fetch('/api/article', {
+      const res = await fetch('/api/control/article', {
         method: 'DELETE',
         body: JSON.stringify({ slug: article_slug }),
       })

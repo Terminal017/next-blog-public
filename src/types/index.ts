@@ -65,3 +65,18 @@ export interface ArticleFormType {
   tags: string[]
   content: string
 }
+
+export interface ArticleClientGET {
+  title: string
+  date: string
+  content: any
+  headings: HeadingType[]
+}
+
+// 文章Metadata类型
+export interface ArticleMetaType {
+  title: string
+  desc: string
+  createAt: string
+  tags: string[]
+}

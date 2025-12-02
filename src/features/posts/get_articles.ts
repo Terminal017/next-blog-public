@@ -1,5 +1,5 @@
 import getDB from '../mongodb'
-import { ArticleListType } from '@/types/index'
+import { ArticleListType, ArticleMetaType } from '@/types/index'
 import { unstable_cacheTag } from 'next/cache'
 
 interface ArticleListData extends ArticleListType {
@@ -44,4 +44,18 @@ export async function getArticleContent(slug: string) {
   const doc_content = await collection.findOne({ slug: slug })
 
   return doc_content?.content || ''
+}
+
+export async function getArticleMetadata(slug: string) {
+  'use cache'
+  unstable_cacheTag(`article-meta-${slug}`)
+  const db = await getDB()
+  const collection = db.collection<ArticleMetaType>('articles')
+
+  const doc_meta = await collection.findOne(
+    { slug: slug },
+    { projection: { title: 1, desc: 1, createAt: 1, tags: 1, _id: 0 } },
+  )
+
+  return doc_meta
 }

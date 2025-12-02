@@ -29,7 +29,7 @@ export default function PostForm({
   useEffect(() => {
     //修改文章数据获取并填充表单
     if (formState.slug) {
-      fetch(`/api/article?slug=${formState.slug}`)
+      fetch(`/api/control/article?slug=${formState.slug}`)
         .then((res) => res.json())
         .then((data) => {
           setFormData(data)
@@ -73,7 +73,7 @@ export default function PostForm({
       updateAt: new_date,
     }
 
-    const res = await fetch('/api/article', {
+    const res = await fetch('/api/control/article', {
       method: formState.slug ? 'PUT' : 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -86,8 +86,6 @@ export default function PostForm({
       setFormState({ state: false, slug: null })
       onSuccess()
     } else {
-      const data = await res.text()
-      console.log(data)
       console.error('文章提交失败')
     }
   }
