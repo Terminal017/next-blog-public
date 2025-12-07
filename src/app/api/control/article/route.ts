@@ -6,6 +6,7 @@ import getDB from '@/features/mongodb'
 import type { ArticleFormType } from '@/types'
 import { revalidateTag, unstable_expireTag } from 'next/cache'
 import { get_abstract } from '@/features/gemini/abstract'
+import getChunkDoc from '@/features/gemini/chunks'
 
 interface ArticleReqType extends ArticleFormType {
   createAt: string
@@ -107,6 +108,12 @@ export async function POST(request: NextRequest) {
 
     if (result.acknowledged) {
       revalidateTag('articles')
+      //文章切片异步生成
+      generateChunksAsync(formdata.content, formdata.slug, database).catch(
+        (error) => {
+          console.error('文章切片生成失败：', error)
+        },
+      )
       return new Response('添加成功')
     } else {
       return new Response('添加文章失败', { status: 500 })
@@ -190,5 +197,58 @@ export async function DELETE(request: NextRequest) {
   } catch (error) {
     console.error('删除文章错误：', error)
     return new Response('服务端发生错误', { status: 500 })
+  }
+}
+
+//异步生成文章切片并创建向量索引
+async function generateChunksAsync(
+  content: string,
+  slug: string,
+  database: any,
+) {
+  try {
+    const chunkDoc = await getChunkDoc(content, slug)
+    const collection = database.collection('article_chunks')
+    await collection.insertMany(chunkDoc)
+    //创建向量索引，这是Altas的功能，本地数据库不存在该功能
+    const isAtlas = process.env.MONGODB_URI?.includes('mongodb.net')
+    if (isAtlas) {
+      try {
+        //检查索引是否已存在
+        const indexes = await collection.listSearchIndexes().toArray()
+        const indexExists = indexes.some(
+          (idx: any) => idx.name === 'article_chunks_vector_idx',
+        )
+
+        //只在索引不存在时创建
+        if (!indexExists) {
+          await collection.createSearchIndex({
+            name: 'article_chunks_vector_idx',
+            definition: {
+              mappings: {
+                dynamic: false,
+                fields: {
+                  embedding: {
+                    type: 'knnVector',
+                    dimensions: 768,
+                    similarity: 'cosine',
+                  },
+                  slug: { type: 'string' },
+                },
+              },
+            },
+          })
+          console.log('向量索引创建成功')
+        }
+      } catch (indexError) {
+        //警告索引创建存在问题
+        console.warn('索引操作失败:', indexError)
+      }
+    }
+
+    console.log(`文章 ${slug} 切片生成完成`)
+  } catch (error) {
+    console.error(`文章 ${slug} 切片生成失败:`, error)
+    throw error
   }
 }

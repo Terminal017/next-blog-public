@@ -4,8 +4,8 @@ import ArticleAIChat from './article_AIchat'
 export default function ArticleAbstract({ abstract }: { abstract: string }) {
   return (
     <>
-      <ArticleAIChat />
-      <div className="border-outline-v my-6 w-full rounded-md border px-4 pt-3 pb-4">
+      {/* <ArticleAIChat /> */}
+      <div className="border-outline-v mt-6 mb-10 w-full rounded-md border px-4 pt-3 pb-4">
         <div className="flex flex-row items-center gap-1">
           <div className="flex h-5 w-5 items-center">
             <svg
