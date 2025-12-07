@@ -16,6 +16,7 @@ export default function PostForm({
   onSuccess: () => void
 }) {
   const [tagInput, setTagInput] = useState('')
+  const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState<ArticleFormType>({
     slug: '',
     title: '',
@@ -29,10 +30,12 @@ export default function PostForm({
   useEffect(() => {
     //修改文章数据获取并填充表单
     if (formState.slug) {
+      setLoading(true)
       fetch(`/api/control/article?slug=${formState.slug}`)
         .then((res) => res.json())
         .then((data) => {
           setFormData(data)
+          setLoading(false)
         })
         .catch((error) => {
           console.error('获取文章数据错误', error)
@@ -64,6 +67,7 @@ export default function PostForm({
   //受控表单提交函数
   async function postArticle(e: React.FormEvent) {
     e.preventDefault()
+    setLoading(true)
     const new_date = new Date().toISOString().split('T')[0]
     //完善表单数据
     const submitData = {
@@ -82,11 +86,12 @@ export default function PostForm({
     })
 
     if (res.ok) {
-      //关闭表单并刷新数据
+      //关闭表单并刷新数据，组件会被卸载（React规定渲染会在事件函数结束后，onSuccess会被执行）
       setFormState({ state: false, slug: null })
       onSuccess()
     } else {
       console.error('文章提交失败')
+      setLoading(false) //失败时调回loading状态
     }
   }
 
@@ -104,7 +109,11 @@ export default function PostForm({
         </div>
         {/* 表单部分,超出内容允许滚动 */}
         <form className="flex-1 overflow-y-auto" onSubmit={postArticle}>
-          <div className="flex flex-col space-y-5 px-8 py-4">
+          {/* 加载状态禁止操作，避免误触 */}
+          <fieldset
+            disabled={loading}
+            className="flex flex-col space-y-5 px-8 py-4"
+          >
             <div className="space-y-2">
               <label className="block font-medium">文章名称</label>
               {/*input在focus状态会缩小1px的padding以扩大1px的border*/}
@@ -232,8 +241,8 @@ export default function PostForm({
             <div className="my-4 flex w-full justify-around">
               <button
                 type="button"
-                className="bg-surface-high rounded-sm px-8 py-2 text-xl
-              transition-colors duration-200 hover:bg-red-400"
+                className={`bg-surface-high rounded-sm px-8 py-2 text-xl
+              transition-colors duration-200 ${loading ? '' : 'hover:bg-red-400'}`}
                 onClick={(e) => {
                   e.preventDefault()
                   setFormState({ state: false, slug: null })
@@ -243,13 +252,13 @@ export default function PostForm({
               </button>
               <button
                 type="submit"
-                className="bg-surface-high rounded-sm px-8 py-2 text-xl
-              transition-colors duration-200 hover:bg-green-400"
+                className={`bg-surface-high rounded-sm px-8 py-2 text-xl
+              transition-colors duration-200 ${loading ? '' : 'hover:bg-green-400'}`}
               >
-                确认
+                {loading ? '正在处理...' : '提交'}
               </button>
             </div>
-          </div>
+          </fieldset>
         </form>
       </div>
     </div>

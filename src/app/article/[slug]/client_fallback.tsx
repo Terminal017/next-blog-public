@@ -71,7 +71,7 @@ export default function ClientArticle({ slug }: { slug: string }) {
 // Ai摘要的客户端组件版本
 function ArticleAbstract({ abstract }: { abstract: string }) {
   return (
-    <div className="border-outline-v mt-6 w-full rounded-md border p-4">
+    <div className="border-outline-v my-6 w-full rounded-md border p-4">
       <div className="flex flex-row items-center gap-1">
         <div className="flex h-5 w-5 items-center">
           <svg
