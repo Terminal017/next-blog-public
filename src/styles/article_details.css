@@ -93,6 +93,7 @@ body:has(> .article-details-page) > .header {
   text-align: center;
   line-height: 1.4;
   color: var(--md-sys-color-on-primary-container);
+  text-wrap: balance;
 }
 
 .article-container h3 {

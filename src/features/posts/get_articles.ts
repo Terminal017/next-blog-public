@@ -4,6 +4,7 @@ import { unstable_cacheTag } from 'next/cache'
 
 interface ArticleListData extends ArticleListType {
   content: string
+  abstract: string
 }
 
 export async function getArticleList(
@@ -43,7 +44,12 @@ export async function getArticleContent(slug: string) {
 
   const doc_content = await collection.findOne({ slug: slug })
 
-  return doc_content?.content || ''
+  return {
+    title: doc_content?.title || '',
+    datetime: doc_content?.createAt || '',
+    mdxContent: doc_content?.content || '',
+    abstract: doc_content?.abstract || '',
+  }
 }
 
 export async function getArticleMetadata(slug: string) {

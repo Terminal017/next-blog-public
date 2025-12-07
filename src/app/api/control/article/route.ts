@@ -5,6 +5,7 @@ import { auth } from '../../../../../auth'
 import getDB from '@/features/mongodb'
 import type { ArticleFormType } from '@/types'
 import { revalidateTag, unstable_expireTag } from 'next/cache'
+import { get_abstract } from '@/features/gemini/abstract'
 
 interface ArticleReqType extends ArticleFormType {
   createAt: string
@@ -87,6 +88,8 @@ export async function POST(request: NextRequest) {
   try {
     const formdata: ArticleReqType = await request.json()
 
+    const article_abstract = await get_abstract(formdata.content)
+
     const insert_data = {
       slug: formdata.slug,
       title: formdata.title,
@@ -96,6 +99,7 @@ export async function POST(request: NextRequest) {
       content: formdata.content,
       createAt: formdata.createAt,
       updateAt: formdata.updateAt,
+      abstract: article_abstract, //AI摘要
     }
     const database = await getDB()
     const collection = database.collection('articles')
@@ -125,6 +129,8 @@ export async function PUT(request: NextRequest) {
     const formdata: ArticleReqType = await request.json()
     const slug = formdata.slug
 
+    const article_abstract = await get_abstract(formdata.content)
+
     const update_data = {
       title: formdata.title,
       img: formdata.img,
@@ -132,6 +138,7 @@ export async function PUT(request: NextRequest) {
       tags: formdata.tags,
       content: formdata.content,
       updateAt: formdata.updateAt,
+      abstract: article_abstract,
     }
 
     //根据slug修改数据库中文章数据
