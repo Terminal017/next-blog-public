@@ -1,10 +1,15 @@
-import ArticleAIChat from './article_AIchat'
+import { ButtonAIChat } from './article_AIchat'
 
 // AI摘要组件
-export default function ArticleAbstract({ abstract }: { abstract: string }) {
+export default function ArticleAbstract({
+  abstract,
+  slug,
+}: {
+  abstract: string
+  slug: string
+}) {
   return (
     <>
-      {/* <ArticleAIChat /> */}
       <div className="border-outline-v mt-6 mb-10 w-full rounded-md border px-4 pt-3 pb-4">
         <div className="flex flex-row items-center gap-1">
           <div className="flex h-5 w-5 items-center">
@@ -17,13 +22,7 @@ export default function ArticleAbstract({ abstract }: { abstract: string }) {
             </svg>
           </div>
           <div className="text-base font-medium tracking-widest">AI摘要</div>
-          <button
-            className="hover:bg-second-container ml-auto rounded-sm px-2
-          py-1 text-base font-medium transition-colors duration-200
-          ease-in-out"
-          >
-            Ask AI
-          </button>
+          <ButtonAIChat slug={slug} />
         </div>
         <div className="text-on-background/70 mt-1 text-sm">{abstract}</div>
       </div>

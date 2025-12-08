@@ -4,7 +4,7 @@ export function CoreIcon({ className = '' }: { className?: string }) {
     <svg
       viewBox="0 0 200 200"
       xmlns="http://www.w3.org/2000/svg"
-      className={className}
+      className={`${className} h-full w-full`}
     >
       <circle
         cx="100"

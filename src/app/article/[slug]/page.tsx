@@ -106,7 +106,7 @@ export default async function Page({
       <article className="article-container">
         <h1>{content.title}</h1>
         <time>{content.datetime}</time>
-        <ArticleAbstract abstract={content.abstract} />
+        <ArticleAbstract abstract={content.abstract} slug={slug} />
         <MDXRemote
           source={content.mdxContent}
           options={mdx_options as MDXRemoteProps['options']}
