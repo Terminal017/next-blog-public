@@ -11,6 +11,17 @@ import getChunkDoc from '@/features/gemini/chunks'
 interface ArticleReqType extends ArticleFormType {
   createAt: string
   updateAt: string
+  changeChunk: boolean //是否需要更新切片
+}
+
+interface UpdateArticleData {
+  title: string
+  img: string
+  desc: string
+  tags: string[]
+  content: string
+  updateAt: string
+  abstract?: string
 }
 
 // 获取文章列表或单个文章数据
@@ -136,16 +147,20 @@ export async function PUT(request: NextRequest) {
     const formdata: ArticleReqType = await request.json()
     const slug = formdata.slug
 
-    const article_abstract = await get_abstract(formdata.content)
-
-    const update_data = {
+    const update_data: UpdateArticleData = {
       title: formdata.title,
       img: formdata.img,
       desc: formdata.desc,
       tags: formdata.tags,
       content: formdata.content,
       updateAt: formdata.updateAt,
-      abstract: article_abstract,
+    }
+
+    //仅在内容更改时更新AI摘要
+    if (formdata.changeChunk) {
+      const article_abstract = await get_abstract(formdata.content)
+      update_data.abstract = article_abstract
+      console.log('AI摘要已更新')
     }
 
     //根据slug修改数据库中文章数据
@@ -162,6 +177,19 @@ export async function PUT(request: NextRequest) {
       revalidateTag(`article-content-${slug}`)
       revalidateTag(`article-meta-${slug}`)
       revalidateTag('articles')
+      //文章切片异步更新
+      if (formdata.changeChunk) {
+        const chunkCollection = database.collection('article_chunks')
+        //删除旧切片
+        await chunkCollection.deleteMany({ slug: slug }).catch((error) => {
+          console.error('删除旧文章切片失败：', error)
+        })
+        //生成新切片
+        generateChunksAsync(formdata.content, slug, database).catch((error) => {
+          console.error('文章切片生成失败：', error)
+        })
+        console.log('文章切片更新已触发')
+      }
       return new Response('修改成功')
     } else {
       return new Response('文章不存在', { status: 404 })
@@ -172,6 +200,7 @@ export async function PUT(request: NextRequest) {
   }
 }
 
+//删除文章
 export async function DELETE(request: NextRequest) {
   //验证管理员身份
   const session = await auth()
@@ -190,6 +219,12 @@ export async function DELETE(request: NextRequest) {
       unstable_expireTag(`article-content-${articleSlug}`)
       unstable_expireTag(`article-meta-${articleSlug}`)
       revalidateTag('articles')
+
+      //异步删除
+      const chunkCollection = database.collection('article_chunks')
+      await chunkCollection.deleteMany({ slug: articleSlug }).catch((error) => {
+        console.error('删除文章切片错误：', error)
+      })
       return new Response('删除成功')
     } else {
       return new Response('文章不存在或已被删除', { status: 404 })

@@ -1,19 +1,39 @@
 import { GoogleGenAI } from '@google/genai'
 
-// 简单句子分割（这里还需要优化，代码不应该拆分）
+// 句子分割（中文标点分割，保留代码块）
 function splitToSentences(text: string) {
-  // 用正则按句号、问号、感叹号、换行切分，保留标点
-  return text
-    .split(/(?<=[。！？\?!\n])/)
-    .map((s) => s.trim())
+  const sentences: string[] = []
+
+  // 提取并保护代码块
+  const codeBlocks: string[] = []
+  const textWithPlaceholders = text.replace(/```[\s\S]*?```/g, (match) => {
+    codeBlocks.push(match) // 保存原始代码块
+    return `__CODE_BLOCK_${codeBlocks.length - 1}__` // 替换为占位符
+  })
+
+  // 按中文标点分割
+  const parts = textWithPlaceholders
+    .split(/(?<=[。！？\n])/) // 在标点后分割（后向断言）
+    .map((s) => s.trim()) // 去除空格
     .filter(Boolean) // 移除空字符串
+
+  //还原代码块
+  parts.forEach((part) => {
+    const restored = part.replace(
+      /__CODE_BLOCK_(\d+)__/g, // 匹配占位符
+      (_, idx) => codeBlocks[parseInt(idx)], // 还原为原代码块
+    )
+    sentences.push(restored)
+  })
+
+  return sentences
 }
 
 // 处理切片函数：按句子累积成 chunk，并保留重叠（滑窗）
 export function chunkTextBySentences(
   text: string, // 文章文本
-  targetChars = 150, // 每个 chunk 目标字符数
-  overlapChars = 30, // 重叠字符数
+  targetChars = 250, // 每个 chunk 目标字符数
+  overlapChars = 50, // 重叠字符数
 ) {
   const sentences = splitToSentences(text)
   const chunks: string[] = []

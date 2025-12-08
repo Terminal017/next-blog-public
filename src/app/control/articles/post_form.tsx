@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import type { ArticleFormType } from '@/types/index'
 
@@ -26,6 +26,9 @@ export default function PostForm({
     content: '',
   })
 
+  // 用于比对修改文章时内容是否变化
+  const prevContentRef = useRef('')
+
   //副作用：修改文章状态下获取文章数据以填充表单
   useEffect(() => {
     //修改文章数据获取并填充表单
@@ -36,6 +39,7 @@ export default function PostForm({
         .then((data) => {
           setFormData(data)
           setLoading(false)
+          prevContentRef.current = data.content
         })
         .catch((error) => {
           console.error('获取文章数据错误', error)
@@ -75,6 +79,7 @@ export default function PostForm({
       tags: formData.tags,
       createAt: new_date,
       updateAt: new_date,
+      changeChunk: formData.content !== prevContentRef.current, //内容变化标记
     }
 
     const res = await fetch('/api/control/article', {
