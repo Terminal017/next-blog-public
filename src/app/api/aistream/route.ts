@@ -1,14 +1,17 @@
 import { NextRequest } from 'next/server'
 import getDB from '@/features/mongodb'
 import { GoogleGenAI } from '@google/genai'
-import { get_gemini_ans } from '@/features/gemini/question'
+import { get_gemini_stream } from '@/features/gemini/question'
 
 //处理用户问答请求
 export async function POST(request: NextRequest) {
   try {
     const { question, slug } = await request.json()
     if (!question || !slug) {
-      return Response.json({ ans: '客户端请求错误' }, { status: 400 })
+      return Response.json(
+        { error: true, message: '客户端请求错误' },
+        { status: 400 },
+      )
     }
 
     const ai = new GoogleGenAI({})
@@ -24,7 +27,10 @@ export async function POST(request: NextRequest) {
 
     const questionVector = response.embeddings?.[0].values
     if (!questionVector) {
-      return Response.json({ ans: '暂时无法响应' }, { status: 500 })
+      return Response.json(
+        { error: true, message: '暂时无法响应' },
+        { status: 500 },
+      )
     }
 
     //在数据库中进行向量搜索，
@@ -66,7 +72,10 @@ export async function POST(request: NextRequest) {
     }
 
     if (reuslt_chunks.length === 0) {
-      return Response.json({ ans: '文章信息检索失败' }, { status: 500 })
+      return Response.json(
+        { error: true, message: '文章信息检索失败' },
+        { status: 500 },
+      )
     }
     // 构建提示词
     const prompt_instruction = `
@@ -88,13 +97,51 @@ export async function POST(request: NextRequest) {
       用户问题：
       ${question}
 `
+    //获取Gemini流式回答
+    const ans_stream = await get_gemini_stream(
+      prompt_instruction,
+      prompt_content,
+    )
 
-    console.log('用户问题提示词：', prompt_instruction, prompt_content)
-    const answer = await get_gemini_ans(prompt_instruction, prompt_content)
-    console.log('用户问题Embedding结果：', answer)
+    // 内容获取检查
+    if (!ans_stream) {
+      return Response.json(
+        { error: true, message: '暂时无法响应' },
+        { status: 500 },
+      )
+    }
 
-    return Response.json({ ans: answer })
-  } catch (error) {
-    return Response.json({ ans: '服务端发生错误' }, { status: 500 })
+    // 创建服务器返回给前端的流
+    const stream = new ReadableStream({
+      //start回调在流开始时被调用，参数controller是流的写入控制器
+      //controller用来推送数据（enqueue）、报告错误（error）或结束流（close）
+      async start(controller) {
+        try {
+          for await (const chunk of ans_stream) {
+            const text = chunk.text
+            //把JS 字符串编码成 UTF-8 字节流并推入流中
+            controller.enqueue(new TextEncoder().encode(text))
+          }
+        } catch (e) {
+          controller.error(e)
+        } finally {
+          controller.close()
+        }
+      },
+    })
+
+    //把ReadableStream包装成HTTP请求
+    return new Response(stream, {
+      headers: {
+        //标识这是纯文本流
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cache-Control': 'no-cache',
+      },
+    })
+  } catch {
+    return Response.json(
+      { error: true, message: '服务端发生错误' },
+      { status: 500 },
+    )
   }
 }

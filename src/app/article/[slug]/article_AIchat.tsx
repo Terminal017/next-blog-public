@@ -1,11 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { CoreIcon } from '@/components/icons'
+import { motion } from 'motion/react'
 
 type MessageType = {
+  id: string
   role: 'user' | 'assistant'
-  content: string
+  content: string[]
 }
 
 //AI问答按钮组件
@@ -38,39 +40,127 @@ export function ArticleAIChat({
   onClose: () => void
 }) {
   const [question, setQuestion] = useState('')
+  const [isStreaming, setIsStreaming] = useState(false) //判断回答传输是否终止
   const [messageList, setMessageList] = useState<MessageType[]>([
     {
+      id: '1',
       role: 'assistant',
-      content:
+      content: [
         '你好！我是一个经过文章训练的AI助手，欢迎询问我任何有关文章内容的问题',
+      ],
     },
   ])
 
+  //保存终止流式输出方式
+  const abortControllerRef = useRef<AbortController | null>(null)
+
   //发送问题
-  function sendQuestion(message: string) {
+  async function sendQuestion(message: string) {
+    //如果有正在进行的流式回答，阻止新的提问
+    if (isStreaming) {
+      return
+    }
+
+    const userId = crypto.randomUUID()
+    const assistantId = crypto.randomUUID()
+
     //添加用户问题到消息列表
-    setMessageList((prev) => [...prev, { role: 'user', content: message }])
+    setMessageList((prev) => [
+      ...prev,
+      { id: userId, role: 'user', content: [message] },
+    ])
     setQuestion('')
+
+    //插入占位符
+    setMessageList((prev) => [
+      ...prev,
+      { id: assistantId, role: 'assistant', content: [''] },
+    ])
+
+    // 创建 Controller，保存引用
+    const controller = new AbortController()
+    abortControllerRef.current = controller
+
+    setIsStreaming(true)
+
     //调用API获取回答
-    const ans = fetch('/api/aistream', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        question: message,
-        slug: slug,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        //添加AI回答到消息列表
-        setMessageList((prev) => [
-          ...prev,
-          { role: 'assistant', content: data.ans },
-        ])
+    try {
+      const response = await fetch('/api/aistream', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question: message,
+          slug: slug,
+        }),
+        signal: controller.signal, //标记信号
       })
+
+      if (!response.ok) {
+        const res_data = await response.json()
+        setMessageList((prev) =>
+          prev.map((msg) =>
+            msg.id === assistantId
+              ? { ...msg, content: [res_data.message || '模型未响应'] }
+              : msg,
+          ),
+        )
+        return
+      }
+
+      const reader = response.body!.getReader()
+      const decoder = new TextDecoder()
+
+      //读取流并增量写入answer
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) {
+          break
+        }
+        const text = decoder.decode(value)
+        setMessageList((prev) =>
+          prev.map((msg) =>
+            msg.id === assistantId
+              ? { ...msg, content: [...msg.content, text] }
+              : msg,
+          ),
+        )
+      }
+    } catch (err) {
+      //用户手动终止
+      if (err instanceof DOMException && err.name === 'AbortError') {
+        setMessageList((prev) =>
+          prev.map((msg) =>
+            msg.id === assistantId
+              ? { ...msg, content: [...msg.content, '\n已终止'] }
+              : msg,
+          ),
+        )
+      } else {
+        setMessageList((prev) =>
+          prev.map((msg) =>
+            msg.id === assistantId
+              ? { ...msg, content: [...msg.content, '\n客户端错误'] }
+              : msg,
+          ),
+        )
+      }
+    } finally {
+      //结束重设状态
+      setIsStreaming(false)
+      abortControllerRef.current = null
+    }
   }
+
+  //禁用外层背景滚动
+  useEffect(() => {
+    const { overflow } = document.body.style
+    document.body.style.overflow = 'clip'
+    return () => {
+      document.body.style.overflow = overflow
+    }
+  })
 
   return (
     <div
@@ -104,7 +194,7 @@ export function ArticleAIChat({
                     className="bg-second-container mr-11 max-w-3/4 rounded-md px-4
                   py-2 max-md:mr-0"
                   >
-                    <p>{msg.content}</p>
+                    <p>{msg.content.join()}</p>
                   </div>
                 </div>
               )
@@ -119,7 +209,17 @@ export function ArticleAIChat({
                     <CoreIcon />
                   </div>
                   <div className="pt-1">
-                    <p>{msg.content}</p>
+                    {msg.content?.map((block, index) => (
+                      <motion.span
+                        key={index}
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.18 }}
+                        className="whitespace-pre-wrap"
+                      >
+                        {block}
+                      </motion.span>
+                    ))}
                   </div>
                 </div>
               )
@@ -156,33 +256,69 @@ export function ArticleAIChat({
               required
             ></textarea>
             <button
-              disabled={!question}
-              onClick={() => sendQuestion(question)}
+              disabled={!question.trim() && !isStreaming}
+              onClick={() => {
+                if (isStreaming) {
+                  //终止回答
+                  abortControllerRef.current?.abort()
+                } else {
+                  sendQuestion(question)
+                }
+              }}
               className={`${
-                question
-                  ? 'hover:bg-surface-highest text-purple-400 dark:text-blue-400'
-                  : 'text-surface-highest'
+                isStreaming
+                  ? 'text-on-surface/80'
+                  : question
+                    ? 'hover:bg-surface-highest text-purple-400 dark:text-blue-400'
+                    : 'text-surface-highest'
               } 
               rounded-md p-2.5 disabled:cursor-not-allowed`}
             >
-              <svg
-                stroke="currentColor"
-                fill="currentColor"
-                strokeWidth="0"
-                viewBox="0 0 512 512"
-                role="presentation"
-                aria-hidden="true"
-                focusable="false"
-                className="-rotate-30"
-                height="1em"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M476.59 227.05l-.16-.07L49.35 49.84A23.56 23.56 0 0027.14 52 24.65 24.65 0 0016 72.59v113.29a24 24 0 0019.52 23.57l232.93 43.07a4 4 0 010 7.86L35.53 303.45A24 24 0 0016 327v113.31A23.57 23.57 0 0026.59 460a23.94 23.94 0 0013.22 4 24.55 24.55 0 009.52-1.93L476.4 285.94l.19-.09a32 32 0 000-58.8z"></path>
-              </svg>
+              {isStreaming ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 -960 960 960"
+                  fill="currentColor"
+                  height="1.5em"
+                  width="1.5em"
+                >
+                  <path d="M320-320h320v-320H320v320ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                </svg>
+              ) : (
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  strokeWidth="0"
+                  viewBox="0 0 512 512"
+                  role="presentation"
+                  aria-hidden="true"
+                  focusable="false"
+                  className="-rotate-30"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M476.59 227.05l-.16-.07L49.35 49.84A23.56 23.56 0 0027.14 52 24.65 24.65 0 0016 72.59v113.29a24 24 0 0019.52 23.57l232.93 43.07a4 4 0 010 7.86L35.53 303.45A24 24 0 0016 327v113.31A23.57 23.57 0 0026.59 460a23.94 23.94 0 0013.22 4 24.55 24.55 0 009.52-1.93L476.4 285.94l.19-.09a32 32 0 000-58.8z"></path>
+                </svg>
+              )}
             </button>
           </div>
         </div>
+      </div>
+      <div className="fixed top-9/10 left-1/2 hidden -translate-x-1/2 max-md:block">
+        <button
+          onClick={onClose}
+          className="text-on-background/80 bg-surface-highest h-12 w-12
+        rounded-full p-2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 -960 960 960"
+            fill="currentColor"
+          >
+            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+          </svg>
+        </button>
       </div>
     </div>
   )

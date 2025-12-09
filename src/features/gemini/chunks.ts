@@ -43,8 +43,8 @@ export function chunkTextBySentences(
     const s = sentences[i]
     // 判断是否可以继续添加到当前 chunk
     // 加上新句子不超长或当前chunk为空
-    if ((current + ' ' + s).length <= targetChars || current.length === 0) {
-      current = current ? current + ' ' + s : s
+    if (current.length + s.length + 1 <= targetChars || current.length === 0) {
+      current = current ? `${current} ${s}` : s
     } else {
       // 当前 chunk 已满,保存 chunk
       chunks.push(current.trim())
@@ -56,11 +56,13 @@ export function chunkTextBySentences(
         overlap = current.slice(Math.max(0, current.length - overlapChars))
       }
       // 新 chunk = 重叠部分 + 当前句子
-      current = overlap + ' ' + s
+      current = `${overlap} ${s}`
     }
   }
   // 处理最后一个 chunk
-  if (current.trim()) chunks.push(current.trim())
+  if (current.trim()) {
+    chunks.push(current.trim())
+  }
   return chunks
 }
 
