@@ -1,6 +1,7 @@
 ### 项目概述
 
 Next.js + TypeScript + Tailwind CSS搭建的个人博客
+
 网站地址：[https://startrails.site](https://startrails.site)
 
 ### 运行环境
@@ -20,36 +21,37 @@ npm install
 2. 启动数据库并初始化数据库数据
 
 ```shell
-#检查本地数据库是否启用
+# 检查本地数据库是否启用
 mongosh
-#初始化数据
+# 初始化数据
 npm run db:init
 ```
 
 3. 启动开发服务器
 
-```
+```shell
 npm run dev
 ```
 
 4. 访问构建版本
 
-```
-#构建生产包
+```shell
+# 构建生产包
 npm run build
-#创建构建版本
+# 创建构建版本
 npm start
 ```
 
 ### 测试与生产说明
 
-1. 项目默认为测试状态，以管理员身份Admin登录，拥有任何权限。
+1. 项目默认为测试状态，以管理员身份Admin登录，拥有任何权限。<br/>
 
 2. 额外功能启用的前置条件：获取凭证并添加到环境变量（.env.local中），完整格式参考.env.example
 
-- Google登录功能：需要获取Google OAuth，前往[谷歌云控制台](https://console.cloud.google.com/apis/dashboard)
+- Google登录功能：需要获取Google OAuth凭证，前往[谷歌云控制台](https://console.cloud.google.com/apis/dashboard)
 - 图片存储功能：需要获取CloudFlare R2的凭证，前往[Cloudflare仪表盘](https://dash.cloudflare.com/)
 - AI功能：需要获取Gemini API密钥，前往[Google AI Studio](https://aistudio.google.com/app/api-keys)
+  <br/>
 
 3. 获取凭证后，需要构建完整生产版本前清理测试代码
    代码坐标：
@@ -75,4 +77,6 @@ src/
 ├── features/    所有业务相关函数
 ├── lib/         所有非业务的可复用工具函数
 ├── styles/      样式和主题
+├── auth.ts/     Auth配置
+├── .env.local   本地开发环境变量
 ```
