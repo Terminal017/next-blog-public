@@ -100,7 +100,12 @@ export async function POST(request: NextRequest) {
   try {
     const formdata: ArticleReqType = await request.json()
 
-    const article_abstract = await get_abstract(formdata.content)
+    let article_abstract = ''
+    if (process.env.GEMINI_API_KEY) {
+      article_abstract = await get_abstract(formdata.content)
+    } else {
+      console.warn('GEMINI_API_KEY 未配置，摘要生成已跳过')
+    }
 
     const insert_data = {
       slug: formdata.slug,
@@ -120,11 +125,14 @@ export async function POST(request: NextRequest) {
     if (result.acknowledged) {
       revalidateTag('articles')
       //文章切片异步生成
-      generateChunksAsync(formdata.content, formdata.slug, database).catch(
-        (error) => {
-          console.error('文章切片生成失败：', error)
-        },
-      )
+      if (process.env.GEMINI_API_KEY) {
+        generateChunksAsync(formdata.content, formdata.slug, database).catch(
+          (error) => {
+            console.error('文章切片生成失败：', error)
+          },
+        )
+      }
+
       return new Response('添加成功')
     } else {
       return new Response('添加文章失败', { status: 500 })
@@ -158,7 +166,12 @@ export async function PUT(request: NextRequest) {
 
     //仅在内容更改时更新AI摘要
     if (formdata.changeChunk) {
-      const article_abstract = await get_abstract(formdata.content)
+      let article_abstract = ''
+      if (process.env.GEMINI_API_KEY) {
+        article_abstract = await get_abstract(formdata.content)
+      } else {
+        console.warn('GEMINI_API_KEY 未配置，摘要修改已跳过')
+      }
       update_data.abstract = article_abstract
       console.log('AI摘要已更新')
     }
@@ -185,9 +198,14 @@ export async function PUT(request: NextRequest) {
           console.error('删除旧文章切片失败：', error)
         })
         //生成新切片
-        generateChunksAsync(formdata.content, slug, database).catch((error) => {
-          console.error('文章切片生成失败：', error)
-        })
+        if (process.env.GEMINI_API_KEY) {
+          generateChunksAsync(formdata.content, slug, database).catch(
+            (error) => {
+              console.error('文章切片生成失败：', error)
+            },
+          )
+        }
+
         console.log('文章切片更新已触发')
       }
       return new Response('修改成功')

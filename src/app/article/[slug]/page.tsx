@@ -64,7 +64,20 @@ export default async function Page({
   params: Promise<{ slug: string }>
 }) {
   //获取用户登录信息
-  const session = await auth()
+  // const session = await auth()
+
+  //测试的伪造session
+  const session = {
+    user: {
+      id: 'user-001',
+      role: 'admin',
+      email: 'test001@gmail.com',
+      name: 'Test User',
+      image:
+        'https://lh3.googleusercontent.com/a/ACg8ocLG8Jk5Btg0SHI-NABEJwdhhfRKj2wRzaZTXODhMEQdlYa-smg=s96-c',
+    },
+    expires: '2026-012-12T10:15:30.123Z',
+  }
 
   const { slug } = await params
 
