@@ -56,8 +56,12 @@ MONGODB_URI=mongodb://localhost:27017/star_database
 
 3. 项目的登录验证已经被预先更替为测试用例，可以直接以管理员登录身份测试项目，获取凭证后删除测试用例即可。
 代码坐标：
-[登录验证](https://github.com/Terminal017/next-blog-public/blob/main/src/app/article/%5Bslug%5D/page.tsx#L67)：在`app/article/[slug]/page.tsx`第67行
-[评论验证](https://github.com/Terminal017/next-blog-public/blob/main/src/app/api/comment/route.ts#L2)：在`app/api/comment/routs.ts`第2行
+
+
+- [登录验证](https://github.com/Terminal017/next-blog-public/blob/main/src/app/article/%5Bslug%5D/page.tsx#L67)：在`app/article/[slug]/page.tsx`第67行
+- [评论验证](https://github.com/Terminal017/next-blog-public/blob/main/src/app/api/comment/route.ts#L2)：在`app/api/comment/routs.ts`第2行
+- [中控台](https://github.com/Terminal017/next-blog-public/blob/main/src/app/control/page.tsx#L7)：`app/control/page.tsx`第7行
+- [中控台API](https://github.com/Terminal017/next-blog-public/blob/main/src/app/api/control/article/route.ts#L4)：`app/api/control/route.ts`第4行
 
 4. AI功能在未获取凭证情况下默认不启用。 
 

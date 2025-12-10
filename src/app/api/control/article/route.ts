@@ -1,12 +1,27 @@
 // 这个路由用于控制中心查询修改文章
 
 import { NextRequest } from 'next/server'
-import { auth } from '../../../../../auth'
+// import { auth } from '../../../../../auth'
 import getDB from '@/features/mongodb'
 import type { ArticleFormType } from '@/types'
 import { revalidateTag, unstable_expireTag } from 'next/cache'
 import { get_abstract } from '@/features/gemini/abstract'
 import getChunkDoc from '@/features/gemini/chunks'
+
+// 伪造的 Session，用于本地或测试
+async function auth() {
+  return {
+    user: {
+      role: 'admin',
+      email: 'test001@gmail.com',
+      name: 'Test User',
+      image:
+        'https://lh3.googleusercontent.com/a/ACg8ocLG8Jk5Btg0SHI-NABEJwdhhfRKj2wRzaZTXODhMEQdlYa-smg=s96-c',
+      expires: '2026-012-12T10:15:30.123Z',
+      id: 'user-001',
+    },
+  } as any
+}
 
 interface ArticleReqType extends ArticleFormType {
   createAt: string

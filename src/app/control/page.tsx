@@ -4,7 +4,19 @@ import { CoreIcon } from '@/components/icons'
 
 // 中控台主页面
 export default async function ControlPage() {
-  const session = await auth()
+  // const session = await auth()
+  //测试session
+  const session = {
+    user: {
+      id: 'user-001',
+      role: 'admin',
+      email: 'test001@gmail.com',
+      name: 'Test User',
+      image:
+        'https://lh3.googleusercontent.com/a/ACg8ocLG8Jk5Btg0SHI-NABEJwdhhfRKj2wRzaZTXODhMEQdlYa-smg=s96-c',
+    },
+    expires: '2026-012-12T10:15:30.123Z',
+  }
 
   if (!session || !session.user || session.user.role !== 'admin') {
     return (
