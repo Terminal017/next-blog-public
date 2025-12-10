@@ -31,7 +31,8 @@ export async function GET(request: NextRequest) {
         })
         return Response.json({
           title: doc_content.title,
-          date: doc_content.date,
+          date: doc_content.ceatedAt,
+          abstract: doc_content.abstract,
           content: mdxSource,
           headings: headings,
         })

@@ -1,5 +1,4 @@
 import { MDXRemote } from 'next-mdx-remote-client/rsc'
-import { getFrontmatter } from 'next-mdx-remote-client/utils'
 import { get_mdx_options, mdx_components } from './mdx-process'
 import { getArticleContent } from '@/features/posts/get_articles'
 import { getArticleMetadata } from '@/features/posts/get_articles'
@@ -8,6 +7,7 @@ import ArticleTOC from '@/components/toc'
 import { auth } from '../../../../auth'
 import ClientArticle from './client_fallback'
 import { notFound } from 'next/navigation'
+import ArticleAbstract from './article_abstract'
 
 import type { Metadata } from 'next'
 import type { MDXRemoteProps } from 'next-mdx-remote-client/rsc'
@@ -69,7 +69,12 @@ export default async function Page({
   const { slug } = await params
 
   //文章内容和服务端降级状态
-  let content = ''
+  let content: {
+    title: string
+    datetime: string
+    mdxContent: string
+    abstract: string
+  } = { title: '', datetime: '', mdxContent: '', abstract: '' }
   let ssrFailed = false
 
   // 服务端获取文章内容，获取失败进行降级状态
@@ -80,7 +85,7 @@ export default async function Page({
   }
 
   //如果查询不存在的路由则返回404页面
-  if (!ssrFailed && !content) {
+  if (!ssrFailed && !content.mdxContent) {
     notFound()
   }
 
@@ -96,27 +101,14 @@ export default async function Page({
   const headings: HeadingType[] = []
   const mdx_options = get_mdx_options(headings)
 
-  //提取元标签
-  const { frontmatter } = getFrontmatter(content) as {
-    frontmatter: Record<string, string>
-  }
-
-  const title = frontmatter.title || 'unknown title'
-  const dateTime = frontmatter.datetime
-    ? new Date(frontmatter.datetime).toLocaleDateString('zh-CN', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })
-    : 'unknown time'
-
   return (
     <>
       <article className="article-container">
-        <h1>{title}</h1>
-        <time>{dateTime}</time>
+        <h1>{content.title}</h1>
+        <time>{content.datetime}</time>
+        <ArticleAbstract abstract={content.abstract} slug={slug} />
         <MDXRemote
-          source={content}
+          source={content.mdxContent}
           options={mdx_options as MDXRemoteProps['options']}
           components={mdx_components}
         />

@@ -69,6 +69,7 @@ export interface ArticleFormType {
 export interface ArticleClientGET {
   title: string
   date: string
+  abstract: string
   content: any
   headings: HeadingType[]
 }

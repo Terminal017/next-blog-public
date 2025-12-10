@@ -76,7 +76,7 @@ body:has(> .article-details-page) > .header {
   background-color: var(--md-sys-state-layer-hover-on-surface);
 }
 
-.article-container time {
+.article-container > time {
   display: block;
   font-weight: 400;
   font-size: 1rem;
@@ -87,15 +87,16 @@ body:has(> .article-details-page) > .header {
   color: color-mix(in srgb, var(--md-sys-color-on-surface), transparent 50%);
 }
 
-.article-container h1 {
+.article-container > h1 {
   font-weight: 600;
   font-size: 2.25rem;
   text-align: center;
   line-height: 1.4;
   color: var(--md-sys-color-on-primary-container);
+  text-wrap: balance;
 }
 
-.article-container h3 {
+.article-container > h3 {
   font-weight: 600;
   font-size: 1.5rem;
   line-height: 1.25;
@@ -104,7 +105,7 @@ body:has(> .article-details-page) > .header {
   color: var(--md-sys-color-on-primary-container);
 }
 
-.article-container p {
+.article-container > p {
   font-size: 1rem;
   line-height: 1.5;
   margin-top: 0;

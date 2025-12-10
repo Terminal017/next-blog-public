@@ -6,10 +6,12 @@ import { LoadingAni } from '@/components/animation/ani_loading'
 import { motion } from 'motion/react'
 import Link from 'next/link'
 import PostForm from '@/app/control/articles/post_form'
+import Message_check from '@/components/message_check'
 
 export default function ControlArticles() {
   const [article_list, setArticleList] = useState<ArticleInfType[]>([])
   const [loading, setLoading] = useState(true)
+  const [deleteSlug, setDeleteSlug] = useState<string | null>(null)
   const [formState, setFormState] = useState<{
     state: boolean
     slug: string | null
@@ -73,6 +75,16 @@ export default function ControlArticles() {
 
   return (
     <>
+      {deleteSlug && (
+        <Message_check
+          message={`确认删除吗？文章路由为${deleteSlug}`}
+          onConfirm={async () => {
+            await deleteArticle(deleteSlug)
+            setDeleteSlug(null) // 关闭弹窗
+          }}
+          onCancel={() => setDeleteSlug(null)}
+        />
+      )}
       <main className="container-main">
         <div className="mt-12 grid w-[60rem] max-w-9/10">
           <div className="mt-12 mb-6 flex w-full flex-row items-end justify-between">
@@ -144,7 +156,7 @@ export default function ControlArticles() {
                     <td className="px-4 py-4">
                       <motion.button
                         className="flex h-6 w-6 items-end"
-                        onClick={() => deleteArticle(article.slug)}
+                        onClick={() => setDeleteSlug(article.slug)}
                         initial={{
                           scale: 1,
                           color: 'var(--md-sys-color-on-background)',

@@ -5,10 +5,23 @@ import { auth } from '../../../../../auth'
 import getDB from '@/features/mongodb'
 import type { ArticleFormType } from '@/types'
 import { revalidateTag, unstable_expireTag } from 'next/cache'
+import { get_abstract } from '@/features/gemini/abstract'
+import getChunkDoc from '@/features/gemini/chunks'
 
 interface ArticleReqType extends ArticleFormType {
   createAt: string
   updateAt: string
+  changeChunk: boolean //是否需要更新切片
+}
+
+interface UpdateArticleData {
+  title: string
+  img: string
+  desc: string
+  tags: string[]
+  content: string
+  updateAt: string
+  abstract?: string
 }
 
 // 获取文章列表或单个文章数据
@@ -87,6 +100,8 @@ export async function POST(request: NextRequest) {
   try {
     const formdata: ArticleReqType = await request.json()
 
+    const article_abstract = await get_abstract(formdata.content)
+
     const insert_data = {
       slug: formdata.slug,
       title: formdata.title,
@@ -96,6 +111,7 @@ export async function POST(request: NextRequest) {
       content: formdata.content,
       createAt: formdata.createAt,
       updateAt: formdata.updateAt,
+      abstract: article_abstract, //AI摘要
     }
     const database = await getDB()
     const collection = database.collection('articles')
@@ -103,6 +119,12 @@ export async function POST(request: NextRequest) {
 
     if (result.acknowledged) {
       revalidateTag('articles')
+      //文章切片异步生成
+      generateChunksAsync(formdata.content, formdata.slug, database).catch(
+        (error) => {
+          console.error('文章切片生成失败：', error)
+        },
+      )
       return new Response('添加成功')
     } else {
       return new Response('添加文章失败', { status: 500 })
@@ -125,13 +147,20 @@ export async function PUT(request: NextRequest) {
     const formdata: ArticleReqType = await request.json()
     const slug = formdata.slug
 
-    const update_data = {
+    const update_data: UpdateArticleData = {
       title: formdata.title,
       img: formdata.img,
       desc: formdata.desc,
       tags: formdata.tags,
       content: formdata.content,
       updateAt: formdata.updateAt,
+    }
+
+    //仅在内容更改时更新AI摘要
+    if (formdata.changeChunk) {
+      const article_abstract = await get_abstract(formdata.content)
+      update_data.abstract = article_abstract
+      console.log('AI摘要已更新')
     }
 
     //根据slug修改数据库中文章数据
@@ -148,6 +177,19 @@ export async function PUT(request: NextRequest) {
       revalidateTag(`article-content-${slug}`)
       revalidateTag(`article-meta-${slug}`)
       revalidateTag('articles')
+      //文章切片异步更新
+      if (formdata.changeChunk) {
+        const chunkCollection = database.collection('article_chunks')
+        //删除旧切片
+        await chunkCollection.deleteMany({ slug: slug }).catch((error) => {
+          console.error('删除旧文章切片失败：', error)
+        })
+        //生成新切片
+        generateChunksAsync(formdata.content, slug, database).catch((error) => {
+          console.error('文章切片生成失败：', error)
+        })
+        console.log('文章切片更新已触发')
+      }
       return new Response('修改成功')
     } else {
       return new Response('文章不存在', { status: 404 })
@@ -158,6 +200,7 @@ export async function PUT(request: NextRequest) {
   }
 }
 
+//删除文章
 export async function DELETE(request: NextRequest) {
   //验证管理员身份
   const session = await auth()
@@ -176,6 +219,12 @@ export async function DELETE(request: NextRequest) {
       unstable_expireTag(`article-content-${articleSlug}`)
       unstable_expireTag(`article-meta-${articleSlug}`)
       revalidateTag('articles')
+
+      //异步删除
+      const chunkCollection = database.collection('article_chunks')
+      await chunkCollection.deleteMany({ slug: articleSlug }).catch((error) => {
+        console.error('删除文章切片错误：', error)
+      })
       return new Response('删除成功')
     } else {
       return new Response('文章不存在或已被删除', { status: 404 })
@@ -183,5 +232,58 @@ export async function DELETE(request: NextRequest) {
   } catch (error) {
     console.error('删除文章错误：', error)
     return new Response('服务端发生错误', { status: 500 })
+  }
+}
+
+//异步生成文章切片并创建向量索引
+async function generateChunksAsync(
+  content: string,
+  slug: string,
+  database: any,
+) {
+  try {
+    const chunkDoc = await getChunkDoc(content, slug)
+    const collection = database.collection('article_chunks')
+    await collection.insertMany(chunkDoc)
+    //创建向量索引，这是Altas的功能，本地数据库不存在该功能
+    const isAtlas = process.env.MONGODB_URI?.includes('mongodb.net')
+    if (isAtlas) {
+      try {
+        //检查索引是否已存在
+        const indexes = await collection.listSearchIndexes().toArray()
+        const indexExists = indexes.some(
+          (idx: any) => idx.name === 'article_chunks_vector_idx',
+        )
+
+        //只在索引不存在时创建
+        if (!indexExists) {
+          await collection.createSearchIndex({
+            name: 'article_chunks_vector_idx',
+            definition: {
+              mappings: {
+                dynamic: false,
+                fields: {
+                  embedding: {
+                    type: 'knnVector',
+                    dimensions: 768,
+                    similarity: 'cosine',
+                  },
+                  slug: { type: 'string' },
+                },
+              },
+            },
+          })
+          console.log('向量索引创建成功')
+        }
+      } catch (indexError) {
+        //警告索引创建存在问题
+        console.warn('索引操作失败:', indexError)
+      }
+    }
+
+    console.log(`文章 ${slug} 切片生成完成`)
+  } catch (error) {
+    console.error(`文章 ${slug} 切片生成失败:`, error)
+    throw error
   }
 }
