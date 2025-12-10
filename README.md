@@ -44,16 +44,17 @@ npm start
 
 ### 测试与生产说明
 
-1. 项目默认为测试状态，以管理员身份Admin登录，拥有任何权限。<br/>
+1. 项目默认为测试状态，以管理员身份Admin登录，拥有任何权限。
 
 2. 额外功能启用的前置条件：获取凭证并添加到环境变量（.env.local中），完整格式参考.env.example
 
 - Google登录功能：需要获取Google OAuth凭证，前往[谷歌云控制台](https://console.cloud.google.com/apis/dashboard)
 - 图片存储功能：需要获取CloudFlare R2的凭证，前往[Cloudflare仪表盘](https://dash.cloudflare.com/)
 - AI功能：需要获取Gemini API密钥，前往[Google AI Studio](https://aistudio.google.com/app/api-keys)
-  <br/>
+
 
 3. 获取凭证后，需要构建完整生产版本前清理测试代码
+
    代码坐标：
 
 - [登录验证](https://github.com/Terminal017/next-blog-public/blob/main/src/app/article/%5Bslug%5D/page.tsx#L67)：在`app/article/[slug]/page.tsx`第67行
