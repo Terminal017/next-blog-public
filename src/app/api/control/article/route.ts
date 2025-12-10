@@ -14,7 +14,7 @@ async function auth() {
     user: {
       role: 'admin',
       email: 'test001@gmail.com',
-      name: 'Test User',
+      name: 'Admin',
       image:
         'https://lh3.googleusercontent.com/a/ACg8ocLG8Jk5Btg0SHI-NABEJwdhhfRKj2wRzaZTXODhMEQdlYa-smg=s96-c',
       expires: '2026-012-12T10:15:30.123Z',

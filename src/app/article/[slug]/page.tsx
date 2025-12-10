@@ -72,7 +72,7 @@ export default async function Page({
       id: 'user-001',
       role: 'admin',
       email: 'test001@gmail.com',
-      name: 'Test User',
+      name: 'Admin',
       image:
         'https://lh3.googleusercontent.com/a/ACg8ocLG8Jk5Btg0SHI-NABEJwdhhfRKj2wRzaZTXODhMEQdlYa-smg=s96-c',
     },

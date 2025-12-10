@@ -148,7 +148,7 @@ export default function PostForm({
                 className="border-outline/50 focus:border-primary/90 m-[1px] w-full
                  rounded-lg border-[1px] px-3 py-2 transition-colors duration-200
                  focus:border-2 focus:px-[11px] focus:py-[7px] focus:outline-none"
-                placeholder="Router"
+                placeholder="Router(示例：dark-mode)"
                 readOnly={!!formState.slug}
                 required
               />

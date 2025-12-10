@@ -6,7 +6,7 @@ const collectionName = 'users'
 
 const doc = {
   _id: 'user-001',
-  name: 'Test User',
+  name: 'Admin',
   email: 'test001@gmail.com',
   image:
     'https://lh3.googleusercontent.com/a/ACg8ocLG8Jk5Btg0SHI-NABEJwdhhfRKj2wRzaZTXODhMEQdlYa-smg=s96-',
