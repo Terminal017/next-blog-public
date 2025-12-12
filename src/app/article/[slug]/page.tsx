@@ -102,6 +102,9 @@ export default async function Page({
     notFound()
   }
 
+  //强制客户端渲染，测试服务端降级
+  // ssrFailed = true
+
   if (ssrFailed) {
     return (
       <>

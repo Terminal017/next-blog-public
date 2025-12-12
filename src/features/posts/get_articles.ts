@@ -2,7 +2,12 @@ import getDB from '../mongodb'
 import { ArticleListType, ArticleMetaType } from '@/types/index'
 import { unstable_cacheTag } from 'next/cache'
 
-interface ArticleListData extends ArticleListType {
+type ArticleListResult = Omit<ArticleListType, 'createAt' | 'updateAt'> & {
+  createAt: Date
+  updateAt: Date
+}
+
+interface ArticleListData extends ArticleListResult {
   content: string
   abstract: string
 }
@@ -14,13 +19,13 @@ export async function getArticleList(
   'use cache'
   unstable_cacheTag(`articles`)
   const db = await getDB()
-  const collection = db.collection<ArticleListType>('articles')
+  const collection = db.collection<ArticleListResult>('articles')
 
   const articles_sum = await collection.countDocuments().catch(() => {
     return 0
   })
 
-  const article_list = (await collection
+  const article_get_list = (await collection
     .find({})
     .sort({ createAt: -1 })
     .project({ content: 0, _id: 0 })
@@ -29,8 +34,13 @@ export async function getArticleList(
     .toArray()
     .catch(() => {
       return []
-    })) as ArticleListType[]
+    })) as ArticleListResult[]
 
+  const article_list = article_get_list.map((item) => ({
+    ...item,
+    createAt: item.createAt?.toISOString().split('T')[0],
+    updateAt: item.updateAt?.toISOString().split('T')[0],
+  }))
   return [articles_sum, article_list]
 }
 
@@ -46,12 +56,13 @@ export async function getArticleContent(slug: string) {
 
   return {
     title: doc_content?.title || '',
-    datetime: doc_content?.createAt || '',
+    datetime: doc_content?.createAt.toISOString().split('T')[0] || '',
     mdxContent: doc_content?.content || '',
     abstract: doc_content?.abstract || '',
   }
 }
 
+//服务端获取文章Metadata
 export async function getArticleMetadata(slug: string) {
   'use cache'
   unstable_cacheTag(`article-meta-${slug}`)
@@ -63,5 +74,10 @@ export async function getArticleMetadata(slug: string) {
     { projection: { title: 1, desc: 1, createAt: 1, tags: 1, _id: 0 } },
   )
 
-  return doc_meta
+  if (!doc_meta) return null
+
+  return {
+    ...doc_meta,
+    createAt: doc_meta.createAt.toISOString().split('T')[0],
+  }
 }

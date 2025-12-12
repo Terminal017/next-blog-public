@@ -78,6 +78,6 @@ export interface ArticleClientGET {
 export interface ArticleMetaType {
   title: string
   desc: string
-  createAt: string
+  createAt: Date
   tags: string[]
 }

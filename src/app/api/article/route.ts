@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
         })
         return Response.json({
           title: doc_content.title,
-          date: doc_content.ceatedAt,
+          date: doc_content.createAt.toISOString().split('T')[0],
           abstract: doc_content.abstract,
           content: mdxSource,
           headings: headings,

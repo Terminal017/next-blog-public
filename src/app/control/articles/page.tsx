@@ -209,6 +209,7 @@ export default function ControlArticles() {
       {formState.state && (
         <PostForm
           formState={formState}
+          slugData={article_list.map((article) => article.slug)}
           setFormState={setFormState}
           onSuccess={fetchArticles}
         />

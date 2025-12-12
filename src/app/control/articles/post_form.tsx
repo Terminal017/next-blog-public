@@ -6,10 +6,12 @@ import type { ArticleFormType } from '@/types/index'
 
 export default function PostForm({
   formState,
+  slugData,
   setFormState,
   onSuccess,
 }: {
   formState: { state: boolean; slug: string | null }
+  slugData: string[]
   setFormState: React.Dispatch<
     React.SetStateAction<{ state: boolean; slug: string | null }>
   >
@@ -72,7 +74,25 @@ export default function PostForm({
   async function postArticle(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    const new_date = new Date().toISOString().split('T')[0]
+
+    //检查slug是否合法
+    if (!formState.slug) {
+      const inputSlug = formData.slug.trim()
+      const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+      if (!slugPattern.test(inputSlug)) {
+        alert('slug格式错误，应为一位英文单词，可以包含-和数字')
+        setLoading(false)
+        return
+      }
+      // 检查slug是否存在
+      if (slugData.includes(inputSlug)) {
+        alert('该 slug 已存在，请使用新的slug')
+        setLoading(false)
+        return
+      }
+    }
+
+    const new_date = new Date().toISOString()
     //完善表单数据
     const submitData = {
       ...formData,
@@ -82,6 +102,7 @@ export default function PostForm({
       changeChunk: formData.content !== prevContentRef.current, //内容变化标记
     }
 
+    // 新增文章/修改文章请求
     const res = await fetch('/api/control/article', {
       method: formState.slug ? 'PUT' : 'POST',
       headers: {

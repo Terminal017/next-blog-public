@@ -35,7 +35,7 @@ interface UpdateArticleData {
   desc: string
   tags: string[]
   content: string
-  updateAt: string
+  updateAt: Date
   abstract?: string
 }
 
@@ -89,13 +89,20 @@ export async function GET(request: NextRequest) {
     }
 
     //数据库查询结果
-    const articles_list = await collection
+    const articles_get_list = await collection
       .find({})
       .sort(sortObj)
       .project({ slug: 1, title: 1, createAt: 1, updateAt: 1 })
       .limit(10)
       .skip((page - 1) * 10)
       .toArray()
+
+    //格式化日期显示
+    const articles_list = articles_get_list.map((item) => ({
+      ...item,
+      createAt: item.createAt?.toISOString().split('T')[0],
+      updateAt: item.updateAt?.toISOString().split('T')[0],
+    }))
 
     return Response.json(articles_list)
   } catch (error) {
@@ -129,12 +136,21 @@ export async function POST(request: NextRequest) {
       desc: formdata.desc,
       tags: formdata.tags,
       content: formdata.content,
-      createAt: formdata.createAt,
-      updateAt: formdata.updateAt,
+      createAt: new Date(formdata.createAt),
+      updateAt: new Date(formdata.updateAt),
       abstract: article_abstract, //AI摘要
     }
     const database = await getDB()
     const collection = database.collection('articles')
+    //检查slug是否已存在
+    const exists = await collection.findOne(
+      { slug: insert_data.slug },
+      { projection: { _id: 1 } },
+    )
+    if (exists) {
+      return new Response('slug 已存在', { status: 409 })
+    }
+
     const result = await collection.insertOne(insert_data)
 
     if (result.acknowledged) {
@@ -176,7 +192,7 @@ export async function PUT(request: NextRequest) {
       desc: formdata.desc,
       tags: formdata.tags,
       content: formdata.content,
-      updateAt: formdata.updateAt,
+      updateAt: new Date(formdata.updateAt),
     }
 
     //仅在内容更改时更新AI摘要
